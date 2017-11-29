@@ -30,22 +30,19 @@ namespace Narrator
         [SerializeField][HideInInspector] public Rect windowRect;
         [SerializeField] [HideInInspector] public Vector2 position;
         [SerializeField][HideInInspector] public Rect entryBox;
-        [SerializeField][HideInInspector] public List<ExitBox> exitBoxes;
+        [SerializeField] [HideInInspector] public List<Content> contents;
 
         [SerializeField] public Character charac;
-        [SerializeField] public string speak;
-        [SerializeField] public List<string> choices;
 
         public void DrawWindow()
         {
-            if(type == Type.speak)
-                speak = EditorGUILayout.TextArea(speak);
-            else if(type == Type.choice)
+            if (contents.Count > 1)
+                type = Type.choice;
+
+            for (int i = 0; i < contents.Count; i++)
             {
-                for(int i = 0; i < choices.Count; i++)
-                {
-                    choices[i] = EditorGUILayout.TextArea(choices[i]);
-                }
+                if(type != Type.entry)
+                    contents[i].text = EditorGUILayout.TextArea(contents[i].text);
             }
         }
 
@@ -55,22 +52,99 @@ namespace Narrator
             {
                 entryBox = new Rect(windowRect.x - 10.0f, windowRect.y + windowRect.height * 0.2f, 10.0f, 10.0f);
                 GUI.Box(entryBox, "");
-            }
 
-            if (type == Type.choice)
-            {
-                for (int i = 0; i < choices.Count; i++)
+                for (int i = 0; i < contents.Count; i++)
                 {
-                    exitBoxes[i].rect = new Rect(windowRect.x + windowRect.width, windowRect.y + windowRect.height * (0.25f + i * 0.2f), 10.0f, 10.0f);
-                    GUI.Box(exitBoxes[i].rect, "");
+                    contents[i].exitBox = new Rect(windowRect.x + windowRect.width, windowRect.y + windowRect.height * (0.25f + i * 0.2f), 10.0f, 10.0f);
+                    GUI.Box(contents[i].exitBox, "");
                 }
             }
+
             else
             {
-                exitBoxes[0].rect = new Rect(windowRect.x + windowRect.width, windowRect.y + windowRect.height * 0.8f, 10.0f, 10.0f);
-                GUI.Box(exitBoxes[0].rect, "");
-            }
+                contents[0].exitBox = new Rect(windowRect.x + windowRect.width, windowRect.y + windowRect.height * 0.5f, 10.0f, 10.0f);
+                GUI.Box(contents[0].exitBox, "");
+            }       
         }
     }
 
+
+    [System.Serializable]
+    public class Content
+    {
+        public string text;
+        public Rect exitBox;
+        public List<NextNode> nextNodes;
+
+        public void Initialize()
+        {
+            text = "";
+            nextNodes = new List<NextNode>();
+            exitBox = new Rect();
+        }
+
+        public void Initialize(Rect _rect)
+        {
+            nextNodes = new List<NextNode>();
+            exitBox = new Rect(_rect);
+        }
+
+        public void AddNextNode(int _index)
+        {
+            NextNode node = new NextNode();
+            node.index = _index;
+            node.conditions = new List<Condition>();
+            nextNodes.Add(node);
+        }
+
+        public void RemoveNextNode(int _index)
+        {
+            if (nextNodes.Count >= _index)
+                nextNodes.RemoveAt(_index);
+            else
+                Debug.LogError("Can't remove next node: current node isn't linked to it");
+        }
+    }
+
+
+    [System.Serializable]
+    public class NextNode
+    {
+        public int index;
+        public List<Condition> conditions;
+    }
+
+    [System.Serializable]
+    public class Condition
+    {
+        public string name;
+        public Parameters.TYPE type;
+        public Parameters.CONDITION condition;
+        public int intMarker;
+        public float floatMarker;
+        public bool boolMarker;
+
+
+        public bool IsComplete(Parameters _params)
+        {
+            if (_params == null)
+            {
+                Debug.LogError("Cannot test condition, parameters are null object");
+                return false;
+            }
+
+            switch(type)
+            {
+                case Parameters.TYPE.f:
+                    return _params.TestFloat(name, condition, floatMarker);
+                case Parameters.TYPE.b:
+                    return _params.TestBool(name, condition, boolMarker);
+                case Parameters.TYPE.i:
+                    return _params.TestInt(name, condition, intMarker);
+                default:
+                    Debug.LogError("Cannot test condition, type is unknown");
+                    return false;
+            }
+        }
+    }
 }

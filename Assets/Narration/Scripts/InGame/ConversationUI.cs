@@ -19,20 +19,22 @@ namespace Narrator
         [SerializeField] private Button nextButton;
         [SerializeField] private Button[] choicesButtons;
 
+        List<string> choices = new List<string>();
+
 
         // Use this for initialization
         void Start()
         {
             currentNode = conversation.Entry;
-            GetNextNode();
+            GoToNextNode();
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (currentNode.charac.IsPlayable == true)
+            if (currentNode.type == Node.Type.choice)
                 DisplayChoices();
-            else
+            else if(currentNode.type == Node.Type.speak)
                 DisplayDialog();
         }
 
@@ -46,16 +48,13 @@ namespace Narrator
         void DisplayChoices()
         {
             targetText.enabled = false;
+            nextButton.enabled = false;
 
-            ChoiceNode choiceNode = currentNode as ChoiceNode;
-            for (int i = 0; i < choiceNode.exitBoxes.Count; i++)
+            for (int i = 0; i < choices.Count; i++)
             {
                 choicesButtons[i].gameObject.SetActive(true);
-                choicesButtons[i].GetComponentInChildren<Text>().text = choiceNode.choices[i];
+                choicesButtons[i].GetComponentInChildren<Text>().text = choices[i];
             }
-
-
-
         }
 
         void DisplayDialog()
@@ -64,17 +63,19 @@ namespace Narrator
                 speakerText.text = currentNode.charac.Name;
 
             targetText.enabled = true;
+            nextButton.enabled = true;
+
             SpeakNode speakNode = currentNode as SpeakNode;
-            targetText.text = speakNode.speak;
+            targetText.text = choices[0];
 
             for (int i = 0; i < choicesButtons.Length; i++)
                 choicesButtons[i].gameObject.SetActive(false);
         }
 
-        public void GetNextNode()
+        public void GoToNextNode()
         {
             
-            if (currentNode.exitBoxes[0].nextNodes.Capacity == 0)
+            if (currentNode.contents[0].nextNodes.Count == 0)
             {
                 Debug.Log("fin de la conversation");
                 gameObject.SetActive(false);
@@ -83,7 +84,35 @@ namespace Narrator
             {
                 int indexNextNode = 0;
                 // déterminer le next node
-                currentNode = conversation.Dialogs.dictionary[currentNode.exitBoxes[0].nextNodes[indexNextNode]];
+
+                // Actualisation du noeud courant
+                currentNode = conversation.Dialogs.dictionary[currentNode.contents[0].nextNodes[indexNextNode].index];
+                // Actualisation du (des) texte(s) affiché(s)
+                choices.Clear();
+                for(int i = 0; i < currentNode.contents.Count; i++)
+                    choices.Add(currentNode.contents[i].text);
+            }
+        }
+
+        public void ChoseNextNode(int _index)
+        {
+
+            if (currentNode.contents[_index].nextNodes.Capacity == 0)
+            {
+                Debug.Log("fin de la conversation");
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                int indexNextNode = 0;
+                // déterminer le next node
+
+                // Actualisation du noeud courant
+                currentNode = conversation.Dialogs.dictionary[currentNode.contents[_index].nextNodes[indexNextNode].index];
+                // Actualisation du (des) texte(s) affiché(s)
+                choices.Clear();
+                for (int i = 0; i < currentNode.contents.Count; i++)
+                    choices.Add(currentNode.contents[i].text);
             }
         }
 

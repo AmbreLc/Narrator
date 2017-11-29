@@ -102,10 +102,10 @@ namespace Narrator
             if (startIndex == -1 || endIndex == -1)
                 Debug.LogError("Error : dialog missing in conversation, cannot link");
             else if (startIndex == 0)
-                entry.exitBoxes[_startIndex].nextNodes.Add(endIndex);
+                entry.contents[_startIndex].AddNextNode(endIndex);
             else
             {
-                dialogs.dictionary[startIndex].exitBoxes[_startIndex].nextNodes.Add(endIndex);
+                dialogs.dictionary[startIndex].contents[_startIndex].AddNextNode(endIndex);
             }
         }
 
@@ -134,9 +134,9 @@ namespace Narrator
             if (startIndex == -1 || endIndex == -1)
                 Debug.LogError("Error : dialog missing in conversation, cannot link");
             else if (startIndex == 0)
-                entry.exitBoxes[_startIndex].nextNodes.Remove(endIndex);
+                entry.contents[_startIndex].RemoveNextNode(endIndex);
             else
-                dialogs.dictionary[startIndex].exitBoxes[_startIndex].nextNodes.Remove(endIndex);
+                dialogs.dictionary[startIndex].contents[_startIndex].RemoveNextNode(endIndex);
         
         }
 

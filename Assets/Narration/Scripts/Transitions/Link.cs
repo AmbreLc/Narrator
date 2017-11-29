@@ -4,13 +4,6 @@ using System.Collections.Generic;
 
 namespace Narrator
 {
-    public struct Condition
-    {
-        public Parameters.TYPE type;
-        public string name;
-        public Parameters.CONDITION condition;
-    }
-
     public class Link
     {
         public Node start;
@@ -78,7 +71,7 @@ namespace Narrator
             Vector3 startPos;
             Vector3 endPos;
 
-            startPos = new Vector3(start.exitBoxes[startBoxIndex].rect.x + start.exitBoxes[startBoxIndex].rect.width / 2, start.exitBoxes[startBoxIndex].rect.y + start.exitBoxes[startBoxIndex].rect.height / 2, 0);
+            startPos = new Vector3(start.contents[startBoxIndex].exitBox.x + start.contents[startBoxIndex].exitBox.width / 2, start.contents[startBoxIndex].exitBox.y + start.contents[startBoxIndex].exitBox.height / 2, 0);
 
 
             if (moving == true)

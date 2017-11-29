@@ -6,6 +6,7 @@ namespace Narrator
     [System.Serializable]
     public class Parameters
     {
+        [System.Serializable]
         public enum TYPE
         {
             f,
@@ -13,6 +14,7 @@ namespace Narrator
             i
         };
 
+        [System.Serializable]
         public enum CONDITION
         {
             equal,
@@ -20,19 +22,19 @@ namespace Narrator
             superior
         }
 
-        [SerializeField] Dictionary<string, float> floatValues;
-        [SerializeField] Dictionary<string, int> intValues;
-        [SerializeField] Dictionary<string, bool> boolValues;
+        [SerializeField] FloatDic floatValues;
+        [SerializeField] IntDic intValues;
+        [SerializeField] BoolDic boolValues;
 
-        public Dictionary<string, float> FloatValues
+        public FloatDic FloatValues
         {
             get { return floatValues; }
         }
-        public Dictionary<string, int> IntValues
+        public IntDic IntValues
         {
             get { return intValues; }
         }
-        public Dictionary<string, bool> BoolValues
+        public BoolDic BoolValues
         {
             get { return boolValues; }
         }
@@ -45,10 +47,14 @@ namespace Narrator
 
         public Parameters()
         {
-            floatValues = new Dictionary<string, float>();
-            intValues = new Dictionary<string, int>();
-            boolValues = new Dictionary<string, bool>();
+            floatValues = new FloatDic();
+            floatValues.dictionary = new Dictionary<string, float>();
 
+            intValues = new IntDic();
+            intValues.dictionary = new Dictionary<string, int>();
+
+            boolValues = new BoolDic();
+            boolValues.dictionary = new Dictionary<string, bool>();
             count = 0;
         }
 
@@ -56,51 +62,51 @@ namespace Narrator
         {
             string key = "NewFloat0";
             int index = 0;
-            while(FloatValues.ContainsKey(key) == true)
+            while(FloatValues.dictionary.ContainsKey(key) == true)
             {
                 index++;
                 key = "NewFloat" + index;
             }
-            FloatValues.Add(key, 0.0f);
+            FloatValues.dictionary.Add(key, 0.0f);
             count++;
         }
         public void AddInt()
         {
             string key = "NewInt0";
             int index = 0;
-            while (IntValues.ContainsKey(key) == true)
+            while (IntValues.dictionary.ContainsKey(key) == true)
             {
                 index++;
                 key = "NewInt" + index;
             }
-            IntValues.Add(key, 0);
+            IntValues.dictionary.Add(key, 0);
             count++;
         }
         public void AddBool()
         {
             string key = "NewBool0";
             int index = 0;
-            while (BoolValues.ContainsKey(key) == true)
+            while (BoolValues.dictionary.ContainsKey(key) == true)
             {
                 index++;
                 key = "NewBool" + index;
             }
-            BoolValues.Add(key, false);
+            BoolValues.dictionary.Add(key, false);
             count++;
         }
 
         public void Clear()
         {
-            floatValues.Clear();
-            boolValues.Clear();
-            intValues.Clear();
+            floatValues.dictionary.Clear();
+            boolValues.dictionary.Clear();
+            intValues.dictionary.Clear();
             count = 0;
         }
 
         public float GetFloat(string _key)
         {
-            if (floatValues.ContainsKey(_key))
-                return floatValues[_key];
+            if (floatValues.dictionary.ContainsKey(_key))
+                return floatValues.dictionary[_key];
             else
             {
                 Debug.LogError("Conversation doesn't have any " + _key + " in float parameters");
@@ -109,8 +115,8 @@ namespace Narrator
         }
         public int GetInt(string _key)
         {
-            if (intValues.ContainsKey(_key))
-                return intValues[_key];
+            if (intValues.dictionary.ContainsKey(_key))
+                return intValues.dictionary[_key];
             else
             {
                 Debug.LogError("Conversation doesn't have any " + _key + " in int parameters");
@@ -119,8 +125,8 @@ namespace Narrator
         }
         public bool GetBool(string _key)
         {
-            if (boolValues.ContainsKey(_key))
-                return boolValues[_key];
+            if (boolValues.dictionary.ContainsKey(_key))
+                return boolValues.dictionary[_key];
             else
             {
                 Debug.LogError("Conversation doesn't have any " + _key + " in bool parameters");
@@ -130,24 +136,87 @@ namespace Narrator
 
         public void SetFloat(string _key, float _value)
         {
-            if(floatValues.ContainsKey(_key))
-                floatValues[_key] = _value;
+            if(floatValues.dictionary.ContainsKey(_key))
+                floatValues.dictionary[_key] = _value;
             else
                 Debug.LogError("Conversation doesn't have any " + _key + " in float parameters");
         }
         public void SetInt(string _key, int _value)
         {
-            if (intValues.ContainsKey(_key))
-                intValues[_key] = _value;
+            if (intValues.dictionary.ContainsKey(_key))
+                intValues.dictionary[_key] = _value;
             else
                 Debug.LogError("Conversation doesn't have any " + _key + " in int parameters");
         }
         public void SetBool(string _key, bool _value)
         {
-            if (boolValues.ContainsKey(_key))
-                boolValues[_key] = _value;
+            if (boolValues.dictionary.ContainsKey(_key))
+                boolValues.dictionary[_key] = _value;
             else
                 Debug.LogError("Conversation doesn't have any " + _key + " in bool parameters");
         }
+
+
+        public bool TestFloat(string _key, CONDITION _condition, float _marker)
+        {
+            if(floatValues.dictionary.ContainsKey(_key) == false)
+            {
+                Debug.LogError("Float key not found");
+                return false;
+            }
+            float value = floatValues.dictionary[_key];
+
+            switch(_condition)
+            {
+                case CONDITION.inferior:
+                    return value < _marker;
+                case CONDITION.superior:
+                    return value > _marker;
+                default:
+                    Debug.LogError("The current condition cannot be tested on a float value");
+                    return false;
+            }
+        }
+        public bool TestInt(string _key, CONDITION _condition, int _marker)
+        {
+            if (intValues.dictionary.ContainsKey(_key) == false)
+            {
+                Debug.LogError("Int key not found");
+                return false;
+            }
+            int value = intValues.dictionary[_key];
+
+            switch (_condition)
+            {
+                case CONDITION.inferior:
+                    return value < _marker;
+                case CONDITION.superior:
+                    return value > _marker;
+                case CONDITION.equal:
+                    return value == _marker;
+                default:
+                    Debug.LogError("The current condition cannot be tested on an integer value");
+                    return false;
+            }
+        }
+        public bool TestBool(string _key, CONDITION _condition, bool _marker)
+        {
+            if (boolValues.dictionary.ContainsKey(_key) == false)
+            {
+                Debug.LogError("Bool key not found");
+                return false;
+            }
+            bool value = boolValues.dictionary[_key];
+
+            switch (_condition)
+            {
+                case CONDITION.equal:
+                    return value == _marker;
+                default:
+                    Debug.LogError("The current condition cannot be tested on a boolean value");
+                    return false;
+            }
+        }
+
     }
 }

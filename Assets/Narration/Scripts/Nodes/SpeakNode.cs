@@ -21,17 +21,36 @@ namespace Narrator
     {
         public void CreateSpeakNode()
         {
-            speak = "What sould I say ?";
             charac = new Character();
             type = Type.speak;
-            choices = new List<string>();
-            choices.Add("My choice");
 
             entryBox = new Rect(windowRect.x - 10.0f, windowRect.y + windowRect.height * 0.8f, 10.0f, 10.0f);
-            exitBoxes = new List<ExitBox>();
-            ExitBox box = new ExitBox();
-            box.Initialize(new Rect(windowRect.x + windowRect.width, windowRect.y + windowRect.height * 0.8f, 10.0f, 10.0f));
-            exitBoxes.Add(box);
+
+            contents = new List<Content>();
+            Content content = new Content();
+            content.Initialize();
+            content.text = "What should I say ?";
+            contents.Add(content);
+        }
+
+        public void CreateSpeakNode(int _choicesCount)
+        {
+            charac = new Character();
+            type = _choicesCount > 1 ? Type.choice : Type.speak;
+
+            entryBox = new Rect(windowRect.x - 10.0f, windowRect.y + windowRect.height * 0.8f, 10.0f, 10.0f);
+
+            contents = new List<Content>();
+
+            Content content = new Content();
+            content.Initialize();
+            content.text = "Choice A";
+            contents.Add(content);
+
+            content = new Content();
+            content.Initialize();
+            content.text = "Choice B";
+            contents.Add(content);
         }
     }
 

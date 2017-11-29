@@ -9,9 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79361de3e8ff26741b2e4f2f0f705471, type: 3}
-  m_Name: essai00
+  m_Name: 00
   m_EditorClassIdentifier: 
-  conversationName: essai00
+  conversationName: 00
   entry:
     type: 0
     windowRect:
@@ -23,132 +23,145 @@ MonoBehaviour:
     position: {x: 0, y: 0}
     entryBox:
       serializedVersion: 2
-      x: 240
-      y: 112
-      width: 10
-      height: 10
-    exitBoxes:
-    - rect:
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    contents:
+    - text: 
+      exitBox:
         serializedVersion: 2
         x: 350
-        y: 148
+        y: 130
         width: 10
         height: 10
-      nextNodes: 02000000
+      nextNodes:
+      - index: 1
+        conditions: []
+      - index: 1
+        conditions: []
     charac:
       name: 
       isPlayable: 0
       color: {r: 0, g: 0, b: 0, a: 0}
-    speak: 
-    choices:
-    - My choice
   dialogs:
     keys: 010000000200000003000000
     values:
-    - type: 1
-      windowRect:
-        serializedVersion: 2
-        x: 750
-        y: 105
-        width: 200
-        height: 100
-      position: {x: 516, y: 175}
-      entryBox:
-        serializedVersion: 2
-        x: 740
-        y: 125
-        width: 10
-        height: 10
-      exitBoxes:
-      - rect:
-          serializedVersion: 2
-          x: 950
-          y: 185
-          width: 10
-          height: 10
-        nextNodes: 
-      charac:
-        name: new character 0
-        isPlayable: 0
-        color: {r: 1, g: 1, b: 1, a: 1}
-      speak: What sould I say ?
-      choices:
-      - My choice
     - type: 2
       windowRect:
         serializedVersion: 2
-        x: 427
-        y: 66
+        x: 443
+        y: 100
         width: 200
         height: 100
-      position: {x: 573, y: 114}
+      position: {x: 456, y: 100}
       entryBox:
         serializedVersion: 2
-        x: 417
-        y: 86
+        x: 433
+        y: 120
         width: 10
         height: 10
-      exitBoxes:
-      - rect:
+      contents:
+      - text: Choice A
+        exitBox:
           serializedVersion: 2
-          x: 627
-          y: 91
+          x: 643
+          y: 125
           width: 10
           height: 10
-        nextNodes: 01000000
-      - rect:
+        nextNodes:
+        - index: 2
+          conditions: []
+        - index: 2
+          conditions: []
+      - text: Choice B
+        exitBox:
           serializedVersion: 2
-          x: 627
-          y: 111
+          x: 643
+          y: 145
           width: 10
           height: 10
-        nextNodes: 03000000
+        nextNodes:
+        - index: 3
+          conditions: []
+        - index: 3
+          conditions: []
       charac:
         name: Player1
         isPlayable: 1
         color: {r: 0.8, g: 0.8, b: 1, a: 1}
-      speak: 
-      choices:
-      - Choice A
-      - Choice B
     - type: 1
       windowRect:
         serializedVersion: 2
-        x: 741
-        y: 281
+        x: 727
+        y: 130
         width: 200
         height: 100
-      position: {x: 708, y: 285}
+      position: {x: 727, y: 130}
       entryBox:
         serializedVersion: 2
-        x: 731
-        y: 301
+        x: 717
+        y: 150
         width: 10
         height: 10
-      exitBoxes:
-      - rect:
+      contents:
+      - text: What should I say ?
+        exitBox:
           serializedVersion: 2
-          x: 941
-          y: 361
+          x: 927
+          y: 155
           width: 10
           height: 10
-        nextNodes: 
+        nextNodes: []
       charac:
-        name: new character 1
-        isPlayable: 0
-        color: {r: 1, g: 1, b: 1, a: 1}
-      speak: What sould I say ?
-      choices:
-      - My choice
+        name: Player1
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 716
+        y: 343
+        width: 200
+        height: 100
+      position: {x: 716, y: 343}
+      entryBox:
+        serializedVersion: 2
+        x: 706
+        y: 363
+        width: 10
+        height: 10
+      contents:
+      - text: What should I say ?
+        exitBox:
+          serializedVersion: 2
+          x: 916
+          y: 368
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: Player1
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
   dialogsCount: 3
   npcs:
   - name: new character 0
-    isPlayable: 0
-    color: {r: 1, g: 1, b: 1, a: 1}
-  - name: new character 1
     isPlayable: 0
     color: {r: 1, g: 1, b: 1, a: 1}
   pcs:
   - name: Player1
     isPlayable: 1
     color: {r: 0.8, g: 0.8, b: 1, a: 1}
+  parameters:
+    floatValues:
+      keys:
+      - NewFloat0
+      values:
+      - 0
+    intValues:
+      keys: []
+      values: 
+    boolValues:
+      keys: []
+      values: 

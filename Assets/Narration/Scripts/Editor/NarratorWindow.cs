@@ -237,7 +237,9 @@ namespace Narrator
                         selectedNodeIndex = i;
 
                         GenericMenu menu = new GenericMenu();
-                        menu.AddItem(new GUIContent("Link dialog"), false, SpeakMenu, "makeLink");
+                        if(currentConv.Dialogs.dictionary[i].charac.IsPlayable)
+                            menu.AddItem(new GUIContent("Add choice"), false, AddChoiceOnNode, i);
+                        menu.AddItem(new GUIContent("Add link"), false, SpeakMenu, "makeLink");
                         menu.AddSeparator("");
                         menu.AddItem(new GUIContent("Delete dialog"), false, SpeakMenu, "deleteNode");
 
@@ -274,12 +276,12 @@ namespace Narrator
                     GenericMenu menu = new GenericMenu();
                     for (int i = 0; i < characters.Count; i++)
                     {
-                        menu.AddItem(new GUIContent("Add speech/" + characters[i].Name), false, CreateDialog, characters[i]);
+                        menu.AddItem(new GUIContent("Add speech/" + characters[i].Name), false, CreateDialogNode, characters[i]);
                     }
                     for (int i = 0; i < characters.Count; i++)
                     {
                         if (characters[i].IsPlayable)
-                            menu.AddItem(new GUIContent("Add choice/" + characters[i].Name), false, CreateChoice, characters[i]);
+                            menu.AddItem(new GUIContent("Add choice/" + characters[i].Name), false, CreateChoiceNode, characters[i]);
                     }
                     menu.ShowAsContext();
                     e.Use();
@@ -411,21 +413,21 @@ namespace Narrator
                 links.Clear();
 
                 // Links
-                for (int i = 0; i < currentConv.Entry.exitBoxes[0].nextNodes.Count; i++)
+                for (int i = 0; i < currentConv.Entry.contents[0].nextNodes.Count; i++)
                 {
-                    links.Add(new Link(currentConv.Entry, 0, conversationList[currentConversationIndex].Dialogs.dictionary[currentConv.Entry.exitBoxes[0].nextNodes[i]], linkColor));
+                    links.Add(new Link(currentConv.Entry, 0, conversationList[currentConversationIndex].Dialogs.dictionary[currentConv.Entry.contents[0].nextNodes[i].index], linkColor));
                 }
 
                 // Pour chaque dialogue
                 for (int i = 1; i <= conversationList[currentConversationIndex].Dialogs.dictionary.Count; i++)
                 {
                     // Pour chaque boxe de sortie
-                    for (int j = 0; j < currentConv.Dialogs.dictionary[i].exitBoxes.Count; j ++)
+                    for (int j = 0; j < currentConv.Dialogs.dictionary[i].contents.Count; j ++)
                     {
                         // Récupération de tous les liens
-                        for (int k = 0; k < currentConv.Dialogs.dictionary[i].exitBoxes[j].nextNodes.Count; k++)
+                        for (int k = 0; k < currentConv.Dialogs.dictionary[i].contents[j].nextNodes.Count; k++)
                         {
-                            links.Add(new Link(currentConv.Dialogs.dictionary[i], j, conversationList[currentConversationIndex].Dialogs.dictionary[currentConv.Dialogs.dictionary[i].exitBoxes[j].nextNodes[k]], linkColor));
+                            links.Add(new Link(currentConv.Dialogs.dictionary[i], j, conversationList[currentConversationIndex].Dialogs.dictionary[currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].index], linkColor));
                         }
                     }
 
@@ -525,17 +527,17 @@ namespace Narrator
 
                 EditorGUILayout.LabelField("Float");
 
-                foreach (string str in parameters.FloatValues.Keys)
+                foreach (string str in parameters.FloatValues.dictionary.Keys)
                 {
                     GUILayout.BeginHorizontal();
                     newKey = EditorGUILayout.TextField(str);
                     if (newKey != str)
                     {
                         exKey = str;
-                        newFValue = EditorGUILayout.FloatField(parameters.FloatValues[str]);
+                        newFValue = EditorGUILayout.FloatField(parameters.FloatValues.dictionary[str]);
                         break;
                     }
-                    newFValue = EditorGUILayout.FloatField(parameters.FloatValues[str]);
+                    newFValue = EditorGUILayout.FloatField(parameters.FloatValues.dictionary[str]);
                     if (GUILayout.Button("x"))
                     {
                         isDeleting = true;
@@ -544,24 +546,24 @@ namespace Narrator
                     }
                     GUILayout.EndHorizontal();
                 }
-                SaveFloatModifications(exKey, newKey, newFValue, isDeleting);
+                //SaveFloatModifications(exKey, newKey, newFValue, isDeleting);
 
 
                 EditorGUILayout.LabelField("Int");
                 exKey = "";
                 newKey = "";
                 isDeleting = false;
-                foreach (string str in parameters.IntValues.Keys)
+                foreach (string str in parameters.IntValues.dictionary.Keys)
                 {
                     GUILayout.BeginHorizontal();
                     newKey = EditorGUILayout.TextField(str);
                     if (newKey != str)
                     {
                         exKey = str;
-                        newIValue = EditorGUILayout.IntField(parameters.IntValues[str]);
+                        newIValue = EditorGUILayout.IntField(parameters.IntValues.dictionary[str]);
                         break;
                     }
-                    newIValue = EditorGUILayout.IntField(parameters.IntValues[str]);
+                    newIValue = EditorGUILayout.IntField(parameters.IntValues.dictionary[str]);
                     if (GUILayout.Button("x"))
                     {
                         isDeleting = true;
@@ -570,23 +572,23 @@ namespace Narrator
                     }
                     GUILayout.EndHorizontal();
                 }
-                SaveIntModifications(exKey, newKey, newIValue, isDeleting);
+                //SaveIntModifications(exKey, newKey, newIValue, isDeleting);
 
                 EditorGUILayout.LabelField("Bool");
                 exKey = "";
                 newKey = "";
                 isDeleting = false;
-                foreach (string str in parameters.BoolValues.Keys)
+                foreach (string str in parameters.BoolValues.dictionary.Keys)
                 {
                     GUILayout.BeginHorizontal();
                     newKey = EditorGUILayout.TextField(str);
                     if (newKey != str)
                     {
                         exKey = str;
-                        newBValue = EditorGUILayout.Toggle(parameters.BoolValues[str]);
+                        newBValue = EditorGUILayout.Toggle(parameters.BoolValues.dictionary[str]);
                         break;
                     }
-                    newBValue = EditorGUILayout.Toggle(parameters.BoolValues[str]);
+                    newBValue = EditorGUILayout.Toggle(parameters.BoolValues.dictionary[str]);
                     if (GUILayout.Button("x"))
                     {
                         isDeleting = true;
@@ -595,7 +597,7 @@ namespace Narrator
                     }
                     GUILayout.EndHorizontal();
                 }
-                SaveBoolModifications(exKey, newKey, newBValue, isDeleting);
+                //SaveBoolModifications(exKey, newKey, newBValue, isDeleting);
             }
         }
 
@@ -625,22 +627,22 @@ namespace Narrator
 
         void SaveFloatModifications(string _exKey, string _newKey, float _newValue, bool _isDeleting)
         {
-            if (_isDeleting && parameters.FloatValues.ContainsKey(_exKey))
+            if (_isDeleting && parameters.FloatValues.dictionary.ContainsKey(_exKey))
             {
-                parameters.FloatValues.Remove(_exKey);
+                parameters.FloatValues.dictionary.Remove(_exKey);
                 conversationList[currentConversationIndex].Parameters = parameters;
             }
             else
             {
-                if (_exKey != string.Empty && parameters.FloatValues.ContainsKey(_newKey) == false)
+                if (_exKey != string.Empty && parameters.FloatValues.dictionary.ContainsKey(_newKey) == false)
                 {
-                    parameters.FloatValues.Remove(_exKey);
-                    parameters.FloatValues.Add(_newKey, _newValue);
+                    parameters.FloatValues.dictionary.Remove(_exKey);
+                    parameters.FloatValues.dictionary.Add(_newKey, _newValue);
                     conversationList[currentConversationIndex].Parameters = parameters;
                 }
-                else if (parameters.FloatValues.ContainsKey(_newKey) && _newValue != parameters.FloatValues[_newKey])
+                else if (parameters.FloatValues.dictionary.ContainsKey(_newKey) && _newValue != parameters.FloatValues.dictionary[_newKey])
                 {
-                    parameters.FloatValues[_newKey] = _newValue;
+                    parameters.FloatValues.dictionary[_newKey] = _newValue;
                     conversationList[currentConversationIndex].Parameters = parameters;
                 }
             }
@@ -648,22 +650,22 @@ namespace Narrator
 
         void SaveIntModifications(string _exKey, string _newKey, int _newValue, bool _isDeleting)
         {
-            if (_isDeleting && parameters.IntValues.ContainsKey(_exKey))
+            if (_isDeleting && parameters.IntValues.dictionary.ContainsKey(_exKey))
             {
-                parameters.IntValues.Remove(_exKey);
+                parameters.IntValues.dictionary.Remove(_exKey);
                 conversationList[currentConversationIndex].Parameters = parameters;
             }
             else
             {
-                if (_exKey != string.Empty && parameters.IntValues.ContainsKey(_newKey) == false)
+                if (_exKey != string.Empty && parameters.IntValues.dictionary.ContainsKey(_newKey) == false)
                 {
-                    parameters.IntValues.Remove(_exKey);
-                    parameters.IntValues.Add(_newKey, _newValue);
+                    parameters.IntValues.dictionary.Remove(_exKey);
+                    parameters.IntValues.dictionary.Add(_newKey, _newValue);
                     conversationList[currentConversationIndex].Parameters = parameters;
                 }
-                else if (parameters.IntValues.ContainsKey(_newKey) && _newValue != parameters.IntValues[_newKey])
+                else if (parameters.IntValues.dictionary.ContainsKey(_newKey) && _newValue != parameters.IntValues.dictionary[_newKey])
                 {
-                    parameters.IntValues[_newKey] = _newValue;
+                    parameters.IntValues.dictionary[_newKey] = _newValue;
                     conversationList[currentConversationIndex].Parameters = parameters;
                 }
             }
@@ -671,22 +673,22 @@ namespace Narrator
 
         void SaveBoolModifications(string _exKey, string _newKey, bool _newValue, bool _isDeleting)
         {
-            if (_isDeleting && parameters.BoolValues.ContainsKey(_exKey))
+            if (_isDeleting && parameters.BoolValues.dictionary.ContainsKey(_exKey))
             {
-                parameters.BoolValues.Remove(_exKey);
+                parameters.BoolValues.dictionary.Remove(_exKey);
                 conversationList[currentConversationIndex].Parameters = parameters;
             }
             else
             {
-                if (_exKey != string.Empty && parameters.BoolValues.ContainsKey(_newKey) == false)
+                if (_exKey != string.Empty && parameters.BoolValues.dictionary.ContainsKey(_newKey) == false)
                 {
-                    parameters.BoolValues.Remove(_exKey);
-                    parameters.BoolValues.Add(_newKey, _newValue);
+                    parameters.BoolValues.dictionary.Remove(_exKey);
+                    parameters.BoolValues.dictionary.Add(_newKey, _newValue);
                     conversationList[currentConversationIndex].Parameters = parameters;
                 }
-                else if (parameters.BoolValues.ContainsKey(_newKey) && _newValue != parameters.BoolValues[_newKey])
+                else if (parameters.BoolValues.dictionary.ContainsKey(_newKey) && _newValue != parameters.BoolValues.dictionary[_newKey])
                 {
-                    parameters.BoolValues[_newKey] = _newValue;
+                    parameters.BoolValues.dictionary[_newKey] = _newValue;
                     conversationList[currentConversationIndex].Parameters = parameters;
                 }
             }
@@ -719,7 +721,7 @@ namespace Narrator
 
 
         //________________ NODES ________________//
-        void CreateDialog(object _obj)
+        void CreateDialogNode(object _obj)
         {
             Character charac = (Character)_obj;
             SpeakNode newNode = new SpeakNode();
@@ -734,11 +736,11 @@ namespace Narrator
             AssetDatabase.SaveAssets();
         }
 
-        void CreateChoice(object _obj)
+        void CreateChoiceNode(object _obj)
         {
             Character charac = (Character)_obj;
-            ChoiceNode newNode = new ChoiceNode();
-            newNode.CreateChoiceNode();
+            SpeakNode newNode = new SpeakNode();
+            newNode.CreateSpeakNode(2);
             newNode.charac = charac;
             newNode.position = new Vector2(mousePos.x, mousePos.y);
             newNode.windowRect = new Rect(newNode.position.x, newNode.position.y, 200, 100);
@@ -747,6 +749,16 @@ namespace Narrator
 
             EditorUtility.SetDirty(currentConv);
             AssetDatabase.SaveAssets();
+        }
+
+        void AddChoiceOnNode(object _nodeIndex)
+        {
+            Content content = new Content();
+            content.text = "new choice";
+            content.Initialize();
+
+            int index = (int)_nodeIndex;
+            currentConv.Dialogs.dictionary[index].contents.Add(content);
         }
 
         void DrawSpeakNode(int _id)
@@ -811,13 +823,15 @@ namespace Narrator
         }
 
 
+
+
         //________________ LINKS ________________//
 
         void BeginDrawingLink()
         {
             if (tempLink == null)
             {
-                if (currentConv.Entry.exitBoxes[0].rect.Contains(mousePos))
+                if (currentConv.Entry.contents[0].exitBox.Contains(mousePos))
                 {
                     selectedNodeIndex = 0;
                     tempLink = new Link(currentConv.Entry, 0, linkColor);
@@ -826,9 +840,9 @@ namespace Narrator
                 {
                     for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
                     {
-                        for (int j = 0; j < currentConv.Dialogs.dictionary[i].choices.Count; j++)
+                        for (int j = 0; j < currentConv.Dialogs.dictionary[i].contents.Count; j++)
                         {
-                            if (currentConv.Dialogs.dictionary[i].exitBoxes[j].rect.Contains(mousePos))
+                            if (currentConv.Dialogs.dictionary[i].contents[j].exitBox.Contains(mousePos))
                             {
                                 selectedNodeIndex = i;
                                 tempLink = new Link(currentConv.Dialogs.dictionary[selectedNodeIndex], j, linkColor);
