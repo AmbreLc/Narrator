@@ -129,7 +129,11 @@ namespace Narrator
             for (int i = 0; i < links.Count; i++)
             {
                 links[i].Draw(mousePos);
-                GUI.Box(links[i].linkRect, ">");
+                GUI.Box(links[i].linkRect, "");
+                for(int j=0; j < links[i].conditions.Count; j++)
+                {
+                    // draw condition
+                }
             }
 
             // Display all nodes
@@ -873,7 +877,10 @@ namespace Narrator
 
         void AddParameterOnLink(object _link)
         {
-
+            Link link = (Link)_link;
+            Condition condition = new Condition();
+            //condition.
+            //link.conditions.Add()
         }
 
         void RemoveLink(object _link)

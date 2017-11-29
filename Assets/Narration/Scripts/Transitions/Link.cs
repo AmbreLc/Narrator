@@ -54,7 +54,6 @@ namespace Narrator
             conditions = new List<Condition>();
         }
 
-
         public void EndTrace(Node _end, ConversationSO _conversation)
         {
             if (_end != null)
@@ -65,6 +64,16 @@ namespace Narrator
             }
         }
 
+
+        public void AddCondition(Condition _condition)
+        {
+
+        }
+
+        public void UpdateCondition(int _index, Condition _newCondition)
+        {
+
+        }
 
         public void Draw(Vector2 _mousePos)
         {

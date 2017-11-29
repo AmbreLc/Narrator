@@ -30,7 +30,7 @@ namespace Narrator
         [SerializeField][HideInInspector] public Rect windowRect;
         [SerializeField] [HideInInspector] public Vector2 position;
         [SerializeField][HideInInspector] public Rect entryBox;
-        [SerializeField] [HideInInspector] public List<Content> contents;
+        [SerializeField] public List<Content> contents;
 
         [SerializeField] public Character charac;
 
@@ -146,5 +146,6 @@ namespace Narrator
                     return false;
             }
         }
+
     }
 }
