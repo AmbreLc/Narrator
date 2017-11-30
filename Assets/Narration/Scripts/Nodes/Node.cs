@@ -9,7 +9,10 @@
  *      
  */
 
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
+
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -34,6 +37,7 @@ namespace Narrator
 
         [SerializeField] public Character charac;
 
+#if UNITY_EDITOR
         public void DrawWindow()
         {
             if (contents.Count > 1)
@@ -45,7 +49,6 @@ namespace Narrator
                     contents[i].text = EditorGUILayout.TextArea(contents[i].text);
             }
         }
-
         public void DrawBox()
         {
             if (type != Type.entry)
@@ -66,6 +69,8 @@ namespace Narrator
                 GUI.Box(contents[0].exitBox, "");
             }       
         }
+#endif
+
     }
 
 

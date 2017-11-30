@@ -11,14 +11,20 @@
  * You can create a conversation asset in your hierarchy and fill it with the narrator
  */
 
-using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
+
+using UnityEngine;
 using System.Collections.Generic;
 
 
 namespace Narrator
 {
+#if UNITY_EDITOR
     [CreateAssetMenu(fileName = "Conversation.asset", menuName = "Conversation")]
+#endif
+
     [System.Serializable]
     public class ConversationSO : ScriptableObject
     {
@@ -26,8 +32,7 @@ namespace Narrator
         public string ConversationName
         {
             get { return conversationName; }
-            set { conversationName = value; EditorUtility.SetDirty(this);
-            }
+            set { conversationName = value; /*EditorUtility.SetDirty(this);*/ }
         }
 
         [SerializeField] private EntryNode entry;
@@ -172,8 +177,10 @@ namespace Narrator
 
             parameters = new Parameters();
 
+#if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
             UnityEditor.AssetDatabase.SaveAssets();
+#endif
         }
         
 

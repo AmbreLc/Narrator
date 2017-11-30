@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.UI;
 
 namespace Narrator
@@ -36,12 +34,6 @@ namespace Narrator
                 DisplayChoices();
             else if(currentNode.type == Node.Type.speak)
                 DisplayDialog();
-        }
-
-        [MenuItem("GameObject/Narrator/Conversation UI", false, 10)]
-        static void AddUIToScene()
-        {
-
         }
 
 

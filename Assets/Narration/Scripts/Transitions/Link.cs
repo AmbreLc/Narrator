@@ -1,4 +1,8 @@
-﻿using UnityEditor;
+﻿
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -91,8 +95,9 @@ namespace Narrator
             Vector3 startTan = startPos + Vector3.right * 50;
             Vector3 endTan = endPos + Vector3.left * 50;
 
+#if UNITY_EDITOR
             Handles.DrawBezier(startPos, endPos, startTan, endTan, color, null, 1);
-
+#endif
             linkRect.x = (startPos.x + endPos.x) * 0.5f - linkRect.width * 0.5f;
             linkRect.y = (startPos.y + endPos.y) * 0.5f - linkRect.height * 0.5f;
         }
