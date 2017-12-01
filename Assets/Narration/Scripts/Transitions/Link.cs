@@ -1,4 +1,8 @@
-﻿using UnityEditor;
+﻿
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -9,11 +13,13 @@ namespace Narrator
         public Node start;
         public Node end;
         public Color color;
-        public short startBoxIndex = 0;
+        public int startBoxIndex = 0;
+        public int nextNodeIndex = 0;
 
         public Rect linkRect;
 
         public List<Condition> conditions;
+        public List<Impact> impacts;
 
         
 
@@ -38,8 +44,11 @@ namespace Narrator
             moving = true;
             startBoxIndex = (short)_startIndex;
 
+            nextNodeIndex = _start.contents[_startIndex].nextNodes.Count + 1;
+
             linkRect = new Rect(0.0f, 0.0f, 20.0f, 20.0f);
             conditions = new List<Condition>();
+            impacts = new List<Impact>();
         }
 
         public Link(Node _start, int _startIndex, Node _end, Color _color) 
@@ -52,8 +61,8 @@ namespace Narrator
 
             linkRect = new Rect(0.0f, 0.0f, 20.0f, 20.0f);
             conditions = new List<Condition>();
+            impacts = new List<Impact>();
         }
-
 
         public void EndTrace(Node _end, ConversationSO _conversation)
         {
@@ -63,6 +72,20 @@ namespace Narrator
                 moving = false;
                 Save(_conversation);
             }
+        }
+
+
+        public void AddCondition()
+        {
+            Condition cond = new Condition();
+            conditions.Add(cond);
+        }
+
+
+        public void AddImpact()
+        {
+            Impact imp = new Impact();
+            impacts.Add(imp);
         }
 
 
@@ -82,8 +105,9 @@ namespace Narrator
             Vector3 startTan = startPos + Vector3.right * 50;
             Vector3 endTan = endPos + Vector3.left * 50;
 
+#if UNITY_EDITOR
             Handles.DrawBezier(startPos, endPos, startTan, endTan, color, null, 1);
-
+#endif
             linkRect.x = (startPos.x + endPos.x) * 0.5f - linkRect.width * 0.5f;
             linkRect.y = (startPos.y + endPos.y) * 0.5f - linkRect.height * 0.5f;
         }
@@ -96,6 +120,18 @@ namespace Narrator
         public void Delete()
         {
 
+        }
+
+        public void IsSelected()
+        {
+            linkRect.width = 200.0f;
+            linkRect.height = 200.0f;
+        }
+
+        public void IsUnselected()
+        {
+            linkRect.width = 20.0f;
+            linkRect.height = 20.0f;
         }
     }
 }

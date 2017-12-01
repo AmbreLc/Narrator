@@ -11,14 +11,20 @@
  * You can create a conversation asset in your hierarchy and fill it with the narrator
  */
 
-using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
+
+using UnityEngine;
 using System.Collections.Generic;
 
 
 namespace Narrator
 {
-    [CreateAssetMenu(fileName = "Conversation.asset", menuName = "Conversation")]
+#if UNITY_EDITOR
+    [CreateAssetMenu(fileName = "Conversation.asset", menuName = "Narrator/Conversation")]
+#endif
+
     [System.Serializable]
     public class ConversationSO : ScriptableObject
     {
@@ -26,8 +32,7 @@ namespace Narrator
         public string ConversationName
         {
             get { return conversationName; }
-            set { conversationName = value; EditorUtility.SetDirty(this);
-            }
+            set { conversationName = value; /*EditorUtility.SetDirty(this);*/ }
         }
 
         [SerializeField] private EntryNode entry;
@@ -43,26 +48,6 @@ namespace Narrator
         }
 
         [SerializeField] private int dialogsCount;
-
-        [SerializeField] private List<Character> npcs;
-        public List<Character> NPCs
-        {
-            get { return npcs; }
-        }
-
-        [SerializeField] private List<Character> pcs;
-        public List<Character> PCs
-        {
-            get { return pcs; }
-        }
-
-
-        [SerializeField] private Parameters parameters;
-        public Parameters Parameters
-        {
-            get { return parameters; }
-            set { parameters = value; }
-        }
 
 
         public void AddDialogNode(Node _newNode)
@@ -140,20 +125,46 @@ namespace Narrator
         
         }
 
-        public void AddCharacter(Character _character)
-        {
-            if (_character.IsPlayable == true && PCs.Contains(_character) == false)
-                PCs.Add(_character);
-            else if (_character.IsPlayable == false && NPCs.Contains(_character) == false)
-                NPCs.Add(_character);
-        }
-        public void DeleteCharacter(Character _character)
-        {
-            if (_character.IsPlayable == true && PCs.Contains(_character) == true)
-                PCs.Remove(_character);
-            else if (_character.IsPlayable == false && NPCs.Contains(_character) == true)
-                NPCs.Remove(_character);
 
+        public void AddCondition(Node _start, int _contentIndex, int _nextNodeIndex, Condition _condition)
+        {
+            _start.contents[_contentIndex].nextNodes[_nextNodeIndex].conditions.Add(_condition);
+
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
+        }
+
+        public void UpdateCondition(Node _start, int _contentIndex, int _nextNodeIndex, int _conditionIndex, Condition _condition)
+        {
+            _start.contents[_contentIndex].nextNodes[_nextNodeIndex].conditions[_conditionIndex] = _condition;
+
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
+        }
+
+
+        public void AddImpact(Node _start, int _contentIndex, int _nextNodeIndex, Impact _impact)
+        {
+            _start.contents[_contentIndex].nextNodes[_nextNodeIndex].impacts.Add(_impact);
+
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
+        }
+
+        public void UpdateImpact(Node _start, int _contentIndex, int _nextNodeIndex, int _impactIndex, Impact _impact)
+        {
+            _start.contents[_contentIndex].nextNodes[_nextNodeIndex].impacts[_impactIndex] = _impact;
+
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
         }
 
 
@@ -165,15 +176,11 @@ namespace Narrator
             entry.CreateEntryNode();
             dialogs = Dialogs.New<Dialogs>();
 
-            npcs = new List<Character>();
-            pcs = new List<Character>();
-            Color play1 = new Color(0.8f, 0.8f, 1.0f);
-            pcs.Add(new Character("Player1", true, play1));
 
-            parameters = new Parameters();
-
+#if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
             UnityEditor.AssetDatabase.SaveAssets();
+#endif
         }
         
 
