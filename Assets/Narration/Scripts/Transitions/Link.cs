@@ -13,11 +13,13 @@ namespace Narrator
         public Node start;
         public Node end;
         public Color color;
-        public short startBoxIndex = 0;
+        public int startBoxIndex = 0;
+        public int nextNodeIndex = 0;
 
         public Rect linkRect;
 
         public List<Condition> conditions;
+        public List<Impact> impacts;
 
         
 
@@ -42,8 +44,11 @@ namespace Narrator
             moving = true;
             startBoxIndex = (short)_startIndex;
 
+            nextNodeIndex = _start.contents[_startIndex].nextNodes.Count + 1;
+
             linkRect = new Rect(0.0f, 0.0f, 20.0f, 20.0f);
             conditions = new List<Condition>();
+            impacts = new List<Impact>();
         }
 
         public Link(Node _start, int _startIndex, Node _end, Color _color) 
@@ -56,6 +61,7 @@ namespace Narrator
 
             linkRect = new Rect(0.0f, 0.0f, 20.0f, 20.0f);
             conditions = new List<Condition>();
+            impacts = new List<Impact>();
         }
 
         public void EndTrace(Node _end, ConversationSO _conversation)
@@ -69,15 +75,19 @@ namespace Narrator
         }
 
 
-        public void AddCondition(Condition _condition)
+        public void AddCondition()
         {
-
+            Condition cond = new Condition();
+            conditions.Add(cond);
         }
 
-        public void UpdateCondition(int _index, Condition _newCondition)
-        {
 
+        public void AddImpact()
+        {
+            Impact imp = new Impact();
+            impacts.Add(imp);
         }
+
 
         public void Draw(Vector2 _mousePos)
         {
@@ -110,6 +120,18 @@ namespace Narrator
         public void Delete()
         {
 
+        }
+
+        public void IsSelected()
+        {
+            linkRect.width = 200.0f;
+            linkRect.height = 200.0f;
+        }
+
+        public void IsUnselected()
+        {
+            linkRect.width = 20.0f;
+            linkRect.height = 20.0f;
         }
     }
 }

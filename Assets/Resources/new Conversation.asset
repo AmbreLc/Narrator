@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79361de3e8ff26741b2e4f2f0f705471, type: 3}
+  m_Name: new Conversation
+  m_EditorClassIdentifier: 
+  conversationName: new Conversation
+  entry:
+    type: 0
+    windowRect:
+      serializedVersion: 2
+      x: 250
+      y: 100
+      width: 100
+      height: 60
+    position: {x: 0, y: 0}
+    entryBox:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    contents:
+    - text: 
+      exitBox:
+        serializedVersion: 2
+        x: 350
+        y: 130
+        width: 10
+        height: 10
+      nextNodes:
+      - index: 1
+        conditions: []
+        impacts: []
+      - index: 1
+        conditions: []
+        impacts:
+        - name: NewBool0
+          type: 1
+          intModifier: 0
+          floatModifier: 0
+          boolModifier: 1
+    charac:
+      name: 
+      isPlayable: 0
+      color: {r: 0, g: 0, b: 0, a: 0}
+  dialogs:
+    keys: 0100000002000000
+    values:
+    - type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 474
+        y: 204
+        width: 200
+        height: 100
+      position: {x: 474, y: 204}
+      entryBox:
+        serializedVersion: 2
+        x: 464
+        y: 224
+        width: 10
+        height: 10
+      contents:
+      - text: What should I say ?
+        exitBox:
+          serializedVersion: 2
+          x: 674
+          y: 229
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 2
+          conditions: []
+          impacts: []
+        - index: 2
+          conditions:
+          - name: NewBool0
+            type: 1
+            test: 0
+            intMarker: 0
+            floatMarker: 0
+            boolMarker: 0
+          impacts:
+          - name: NewBool0
+            type: 1
+            intModifier: 0
+            floatModifier: 0
+            boolModifier: 1
+      charac:
+        name: Josiane
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 827
+        y: 149
+        width: 200
+        height: 100
+      position: {x: 750, y: 148}
+      entryBox:
+        serializedVersion: 2
+        x: 817
+        y: 169
+        width: 10
+        height: 10
+      contents:
+      - text: What should I say ?
+        exitBox:
+          serializedVersion: 2
+          x: 1027
+          y: 174
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: Josiane
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+  dialogsCount: 2

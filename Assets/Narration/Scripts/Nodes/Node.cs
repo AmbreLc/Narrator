@@ -20,7 +20,7 @@ using System.Collections.Generic;
 namespace Narrator
 {
     [System.Serializable]
-    public class Node 
+    public class Node
     {
         public enum Type
         {
@@ -30,9 +30,9 @@ namespace Narrator
         };
 
         [SerializeField] public Type type;
-        [SerializeField][HideInInspector] public Rect windowRect;
+        [SerializeField] [HideInInspector] public Rect windowRect;
         [SerializeField] [HideInInspector] public Vector2 position;
-        [SerializeField][HideInInspector] public Rect entryBox;
+        [SerializeField] [HideInInspector] public Rect entryBox;
         [SerializeField] public List<Content> contents;
 
         [SerializeField] public Character charac;
@@ -45,7 +45,7 @@ namespace Narrator
 
             for (int i = 0; i < contents.Count; i++)
             {
-                if(type != Type.entry)
+                if (type != Type.entry)
                     contents[i].text = EditorGUILayout.TextArea(contents[i].text);
             }
         }
@@ -67,7 +67,7 @@ namespace Narrator
             {
                 contents[0].exitBox = new Rect(windowRect.x + windowRect.width, windowRect.y + windowRect.height * 0.5f, 10.0f, 10.0f);
                 GUI.Box(contents[0].exitBox, "");
-            }       
+            }
         }
 #endif
 
@@ -99,6 +99,7 @@ namespace Narrator
             NextNode node = new NextNode();
             node.index = _index;
             node.conditions = new List<Condition>();
+            node.impacts = new List<Impact>();
             nextNodes.Add(node);
         }
 
@@ -117,6 +118,7 @@ namespace Narrator
     {
         public int index;
         public List<Condition> conditions;
+        public List<Impact> impacts;
     }
 
     [System.Serializable]
@@ -124,7 +126,7 @@ namespace Narrator
     {
         public string name;
         public Parameters.TYPE type;
-        public Parameters.CONDITION condition;
+        public Parameters.OPERATOR test;
         public int intMarker;
         public float floatMarker;
         public bool boolMarker;
@@ -138,14 +140,14 @@ namespace Narrator
                 return false;
             }
 
-            switch(type)
+            switch (type)
             {
                 case Parameters.TYPE.f:
-                    return _params.TestFloat(name, condition, floatMarker);
+                    return _params.TestFloat(name, test, floatMarker);
                 case Parameters.TYPE.b:
-                    return _params.TestBool(name, condition, boolMarker);
+                    return _params.TestBool(name, test, boolMarker);
                 case Parameters.TYPE.i:
-                    return _params.TestInt(name, condition, intMarker);
+                    return _params.TestInt(name, test, intMarker);
                 default:
                     Debug.LogError("Cannot test condition, type is unknown");
                     return false;
@@ -153,4 +155,37 @@ namespace Narrator
         }
 
     }
+
+
+    [System.Serializable]
+    public class Impact
+    {
+        public string name;
+        public Parameters.TYPE type;
+        public int intModifier;
+        public float floatModifier;
+        public bool boolModifier;
+
+        public void ApplyImpact(Parameters _params)
+        {
+            switch (type)
+            {
+                case Parameters.TYPE.f:
+                    float fValue = _params.GetFloat(name);
+                    _params.SetFloat(name, fValue + floatModifier);
+                    break;
+                case Parameters.TYPE.b:
+                    _params.SetBool(name, boolModifier);
+                    break;
+                case Parameters.TYPE.i:
+                    int iValue = _params.GetInt(name);
+                    _params.SetInt(name, iValue + intModifier);
+                    break;
+                default:
+                    Debug.LogError("Cannot test condition, type is unknown");
+                    break;
+            }
+        }
+    }
+
 }

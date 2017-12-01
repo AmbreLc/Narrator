@@ -28,9 +28,9 @@ namespace Narrator
         {
             conversations,
             characters,
+            transitions,
             entryNode,
             dialogs,
-            transitions,
         }
 
         private Vector2 mousePos;
@@ -49,13 +49,13 @@ namespace Narrator
         List<ConversationSO> conversationList;
         string[] conversationsNames;
         int currentConversationIndex = 0;
-            // Characters & params list
+        // Conversation brain : Characters & params list
+        NarratorBrainSO brain;
         Rect leftWindow_Down = new Rect(0.0f, 200.0f, 200.0f, 200.0f);
         Rect charOrParamsRect = new Rect(0.0f, 0.0f, 200.0f, 20.0f);
         int charOrParamsIndex = 0;
         string[] charOrParams = new string[2];
         List<Character> characters = new List<Character>();
-        Parameters parameters;
 
 
         // Main window
@@ -63,13 +63,18 @@ namespace Narrator
         private Rect backgroundRect = new Rect(0.0f, 0.0f, 800.0f, 800.0f);
         private Vector2 backOffset;
         private Vector2 backDrag;
-        // Dialogs
+            // Dialogs
         private ConversationSO currentConv;
         private int selectedNodeIndex;
             // Links
         private List<Link> links = new List<Link>();
         private Link tempLink;
         private Color linkColor = Color.white;
+        // Selected link window
+        private int selectedLinkIndex = -1;
+        private int currentCondition = 0;
+        private int currentImpact = 0;
+
 
 
         //Menu item
@@ -88,8 +93,13 @@ namespace Narrator
         private void Start()
         {
             zoomPos = Vector2.zero;
+
+            LoadConversationBrain();
+
             InitializeLeftWindow_Conversations();
             InitializeLeftWindow_CharAndParams();
+            SelectedLink_Initialize();
+
             currentConv = CreateInstance<ConversationSO>();
             currentConv.CreateConversation();
             UpdateCurrentConversation();
@@ -154,6 +164,12 @@ namespace Narrator
                         GUI.backgroundColor = Color.white;
                     }
                 }
+            }
+
+            // Display selected link infos
+            if(selectedLinkIndex != -1)
+            {
+                links[selectedLinkIndex].linkRect = GUI.Window((int)windowID.transitions, links[selectedLinkIndex].linkRect, DrawSelectedLink, "Transition");
             }
 
             EndWindows();
@@ -229,35 +245,53 @@ namespace Narrator
             }
             else
             {
-                bool clickedOnWindow = false;
-                // clic sur l'un des dialogue sur la fenêtre principale
-                for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
+                // clic sur les infos d'une transition
+                bool clickedOnTransition = false;
+                if(selectedLinkIndex != -1)
                 {
-                    if (currentConv.Dialogs.dictionary[i] != null && currentConv.Dialogs.dictionary[i].windowRect.Contains(mousePos))
+                    if(links[selectedLinkIndex].linkRect.Contains(mousePos))
                     {
-
-                        // Faire un truc
-                        clickedOnWindow = true;
-                        selectedNodeIndex = i;
+                        clickedOnTransition = true;
 
                         GenericMenu menu = new GenericMenu();
-                        if(currentConv.Dialogs.dictionary[i].charac.IsPlayable)
-                            menu.AddItem(new GUIContent("Add choice"), false, AddChoiceOnNode, i);
-                        menu.AddItem(new GUIContent("Add link"), false, SpeakMenu, "makeLink");
+                        menu.AddItem(new GUIContent("Add condition"), false, AddConditionOnLink);
                         menu.AddSeparator("");
-                        menu.AddItem(new GUIContent("Delete dialog"), false, SpeakMenu, "deleteNode");
-
-                        //we use it so that it will show
+                        menu.AddItem(new GUIContent("Add impact"), false, AddImpactOnLink);
                         menu.ShowAsContext();
-                        //consumes the event
                         e.Use();
-                        break;
+                    }
+                }
+                // OU clic sur l'un des noeuds de dialogue
+                bool clickedOnWindow = false;
+                if (clickedOnTransition == false)
+                {
+                    for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
+                    {
+                        if (currentConv.Dialogs.dictionary[i] != null && currentConv.Dialogs.dictionary[i].windowRect.Contains(mousePos))
+                        {
+
+                            // Faire un truc
+                            clickedOnWindow = true;
+                            selectedNodeIndex = i;
+
+                            GenericMenu menu = new GenericMenu();
+                            if (currentConv.Dialogs.dictionary[i].charac.IsPlayable)
+                                menu.AddItem(new GUIContent("Add choice"), false, AddChoiceOnNode, i);
+                            menu.AddItem(new GUIContent("Add link"), false, SpeakMenu, "makeLink");
+                            menu.AddSeparator("");
+                            menu.AddItem(new GUIContent("Delete dialog"), false, SpeakMenu, "deleteNode");
+                            menu.ShowAsContext();
+                            e.Use();
+                            break;
+                        }
                     }
                 }
 
+                // OU clic sur l'un des liens
                 bool clickedOnLink = false;
-                if (clickedOnWindow == false)
+                if (clickedOnTransition == false && clickedOnWindow == false)
                 {
+                    
                     for (int i = 0; i < links.Count; i++)
                     {
                         if (links[i] != null && links[i].linkRect.Contains(mousePos))
@@ -274,8 +308,8 @@ namespace Narrator
                     }
                 }
 
-                // clic ailleurs
-                if (clickedOnWindow == false && clickedOnLink == false)
+                // OU clic ailleurs
+                if (clickedOnTransition == false && clickedOnWindow == false && clickedOnLink == false)
                 {
                     GenericMenu menu = new GenericMenu();
                     for (int i = 0; i < characters.Count; i++)
@@ -298,10 +332,38 @@ namespace Narrator
         /// </summary>
         private void HandleLeftClick()
         {
-            if (tempLink == null)
-                BeginDrawingLink();
-            else
-                EndDrawingLink();
+            // Affichage des infos d'un lien
+            bool clickedOnLink = false;
+            for (int i = 0; i < links.Count; i++)
+            {
+                if (links[i] != null && links[i].linkRect.Contains(mousePos))
+                {
+                    clickedOnLink = true;
+                    if (selectedLinkIndex != -1)
+                        links[selectedLinkIndex].IsUnselected();
+                    links[i].IsSelected();
+                    selectedLinkIndex = i;
+                    tempLink = null;
+                }
+            }
+            if (clickedOnLink == false && selectedLinkIndex != -1)
+            {
+                links[selectedLinkIndex].IsUnselected();
+                selectedLinkIndex = -1;
+                currentCondition = 0;
+                currentImpact = 0;
+            }
+
+            // OU dessin d'un lien
+            if (clickedOnLink == false)
+            {
+                if (tempLink == null)
+                    BeginDrawingLink();
+                else
+                    EndDrawingLink();
+            }
+
+           
         }
 
         /// <summary>
@@ -417,13 +479,21 @@ namespace Narrator
                 links.Clear();
 
                 // Links
+                Link link;
                 for (int i = 0; i < currentConv.Entry.contents[0].nextNodes.Count; i++)
                 {
-                    links.Add(new Link(currentConv.Entry, 0, conversationList[currentConversationIndex].Dialogs.dictionary[currentConv.Entry.contents[0].nextNodes[i].index], linkColor));
+                    link = new Link(currentConv.Entry, 0, currentConv.Dialogs.dictionary[currentConv.Entry.contents[0].nextNodes[i].index], linkColor);
+                    link.startBoxIndex = 0;
+                    link.nextNodeIndex = i;
+                    for(int k = 0; k < currentConv.Entry.contents[0].nextNodes[i].conditions.Count; k++)
+                    {
+                        link.conditions.Add(currentConv.Entry.contents[0].nextNodes[i].conditions[k]);
+                    }
+                    links.Add(link);
                 }
 
                 // Pour chaque dialogue
-                for (int i = 1; i <= conversationList[currentConversationIndex].Dialogs.dictionary.Count; i++)
+                for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
                 {
                     // Pour chaque boxe de sortie
                     for (int j = 0; j < currentConv.Dialogs.dictionary[i].contents.Count; j ++)
@@ -431,22 +501,26 @@ namespace Narrator
                         // Récupération de tous les liens
                         for (int k = 0; k < currentConv.Dialogs.dictionary[i].contents[j].nextNodes.Count; k++)
                         {
-                            links.Add(new Link(currentConv.Dialogs.dictionary[i], j, conversationList[currentConversationIndex].Dialogs.dictionary[currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].index], linkColor));
+                            link = new Link(currentConv.Dialogs.dictionary[i], j, currentConv.Dialogs.dictionary[currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].index], linkColor);
+                            link.startBoxIndex = j;
+                            link.nextNodeIndex = i -1;
+                            for (int l = 0; l < currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].conditions.Count; l++)
+                            {
+                                link.conditions.Add(currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].conditions[l]);
+                            }
+                            links.Add(link);
                         }
                     }
 
                 }
-
-                // characters
-                characters.Clear();
-                for (int i = 0; i < conversationList[currentConversationIndex].NPCs.Count; i++)
-                    characters.Add(conversationList[currentConversationIndex].NPCs[i]);
-                for (int i = 0; i < conversationList[currentConversationIndex].PCs.Count; i++)
-                    characters.Add(conversationList[currentConversationIndex].PCs[i]);
-
-                // parameters
-                parameters = conversationList[currentConversationIndex].Parameters;
             }
+
+            // characters
+            characters.Clear();
+            for (int i = 0; i < brain.NPCs.Count; i++)
+                characters.Add(brain.NPCs[i]);
+            for (int i = 0; i < brain.PCs.Count; i++)
+                characters.Add(brain.PCs[i]);
         }
 
 
@@ -459,9 +533,6 @@ namespace Narrator
         {
             charOrParams[0] = "Characters";
             charOrParams[1] = "Parameters";
-            parameters = new Parameters();
-            if(conversationList.Count > 0)
-                parameters = conversationList[currentConversationIndex].Parameters;
         }
 
         /// <summary>
@@ -487,30 +558,27 @@ namespace Narrator
         /// </summary>
         void DrawCharactersList()
         {
-            if(conversationList.Count > 0)
+            EditorGUILayout.LabelField("Player(s)");
+            for (int i = 0; i < characters.Count; i++)
             {
-                EditorGUILayout.LabelField("Player(s)");
-                for (int i = 0; i < characters.Count; i++)
+                if (characters[i].IsPlayable == true)
                 {
-                    if (characters[i].IsPlayable == true)
-                    {
-                        GUILayout.BeginHorizontal();
-                        characters[i].Name = EditorGUILayout.TextField(characters[i].Name);
-                        characters[i].Color = EditorGUILayout.ColorField(characters[i].Color);
-                        GUILayout.EndHorizontal();
-                    }
+                    GUILayout.BeginHorizontal();
+                    characters[i].Name = EditorGUILayout.TextField(characters[i].Name);
+                    characters[i].Color = EditorGUILayout.ColorField(characters[i].Color);
+                    GUILayout.EndHorizontal();
                 }
+            }
 
-                EditorGUILayout.LabelField("Character(s)");
-                for (int i = 0; i < characters.Count; i++)
+            EditorGUILayout.LabelField("Character(s)");
+            for (int i = 0; i < characters.Count; i++)
+            {
+                if (characters[i].IsPlayable == false)
                 {
-                    if (characters[i].IsPlayable == false)
-                    {
-                        GUILayout.BeginHorizontal();
-                        characters[i].Name = EditorGUILayout.TextField(characters[i].Name);
-                        characters[i].Color = EditorGUILayout.ColorField(characters[i].Color);
-                        GUILayout.EndHorizontal();
-                    }
+                    GUILayout.BeginHorizontal();
+                    characters[i].Name = EditorGUILayout.TextField(characters[i].Name);
+                    characters[i].Color = EditorGUILayout.ColorField(characters[i].Color);
+                    GUILayout.EndHorizontal();
                 }
             }
         }
@@ -520,28 +588,28 @@ namespace Narrator
         /// </summary>
         void DrawParametersList()
         {
-            if (conversationList.Count > 0)
+
+            string exKey = string.Empty;
+            string newKey = string.Empty;
+            float newFValue = 0.0f;
+            int newIValue = 0;
+            bool newBValue = false;
+            bool isDeleting = false;
+
+            EditorGUILayout.LabelField("Float");
+            if (brain != null)
             {
-                string exKey = string.Empty;
-                string newKey = string.Empty;
-                float newFValue = 0.0f;
-                int newIValue = 0;
-                bool newBValue = false;
-                bool isDeleting = false;
-
-                EditorGUILayout.LabelField("Float");
-
-                foreach (string str in parameters.FloatValues.dictionary.Keys)
+                foreach (string str in brain.Parameters.FloatValues.dictionary.Keys)
                 {
                     GUILayout.BeginHorizontal();
                     newKey = EditorGUILayout.TextField(str);
                     if (newKey != str)
                     {
                         exKey = str;
-                        newFValue = EditorGUILayout.FloatField(parameters.FloatValues.dictionary[str]);
+                        newFValue = EditorGUILayout.FloatField(brain.Parameters.FloatValues.dictionary[str]);
                         break;
                     }
-                    newFValue = EditorGUILayout.FloatField(parameters.FloatValues.dictionary[str]);
+                    newFValue = EditorGUILayout.FloatField(brain.Parameters.FloatValues.dictionary[str]);
                     if (GUILayout.Button("x"))
                     {
                         isDeleting = true;
@@ -551,23 +619,25 @@ namespace Narrator
                     GUILayout.EndHorizontal();
                 }
                 //SaveFloatModifications(exKey, newKey, newFValue, isDeleting);
+            }
 
-
-                EditorGUILayout.LabelField("Int");
-                exKey = "";
-                newKey = "";
-                isDeleting = false;
-                foreach (string str in parameters.IntValues.dictionary.Keys)
+            EditorGUILayout.LabelField("Int");
+            exKey = "";
+            newKey = "";
+            isDeleting = false;
+            if (brain != null)
+            {
+                foreach (string str in brain.Parameters.IntValues.dictionary.Keys)
                 {
                     GUILayout.BeginHorizontal();
                     newKey = EditorGUILayout.TextField(str);
                     if (newKey != str)
                     {
                         exKey = str;
-                        newIValue = EditorGUILayout.IntField(parameters.IntValues.dictionary[str]);
+                        newIValue = EditorGUILayout.IntField(brain.Parameters.IntValues.dictionary[str]);
                         break;
                     }
-                    newIValue = EditorGUILayout.IntField(parameters.IntValues.dictionary[str]);
+                    newIValue = EditorGUILayout.IntField(brain.Parameters.IntValues.dictionary[str]);
                     if (GUILayout.Button("x"))
                     {
                         isDeleting = true;
@@ -577,22 +647,25 @@ namespace Narrator
                     GUILayout.EndHorizontal();
                 }
                 //SaveIntModifications(exKey, newKey, newIValue, isDeleting);
+            }
 
-                EditorGUILayout.LabelField("Bool");
-                exKey = "";
-                newKey = "";
-                isDeleting = false;
-                foreach (string str in parameters.BoolValues.dictionary.Keys)
+            EditorGUILayout.LabelField("Bool");
+            exKey = "";
+            newKey = "";
+            isDeleting = false;
+            if (brain != null)
+            {
+                foreach (string str in brain.Parameters.BoolValues.dictionary.Keys)
                 {
                     GUILayout.BeginHorizontal();
                     newKey = EditorGUILayout.TextField(str);
                     if (newKey != str)
                     {
                         exKey = str;
-                        newBValue = EditorGUILayout.Toggle(parameters.BoolValues.dictionary[str]);
+                        newBValue = EditorGUILayout.Toggle(brain.Parameters.BoolValues.dictionary[str]);
                         break;
                     }
-                    newBValue = EditorGUILayout.Toggle(parameters.BoolValues.dictionary[str]);
+                    newBValue = EditorGUILayout.Toggle(brain.Parameters.BoolValues.dictionary[str]);
                     if (GUILayout.Button("x"))
                     {
                         isDeleting = true;
@@ -614,86 +687,76 @@ namespace Narrator
             switch (type)
             {
                 case Parameters.TYPE.f:
-                    parameters.AddFloat();
+                    brain.Parameters.AddFloat();
                     break;
                 case Parameters.TYPE.b:
-                    parameters.AddBool();
+                    brain.Parameters.AddBool();
                     break;
                 case Parameters.TYPE.i:
-                    parameters.AddInt();
+                    brain.Parameters.AddInt();
                     break;
             }
-            conversationList[currentConversationIndex].Parameters = parameters;
 
-            EditorUtility.SetDirty(currentConv);
+            EditorUtility.SetDirty(brain);
             AssetDatabase.SaveAssets();
         }
 
         void SaveFloatModifications(string _exKey, string _newKey, float _newValue, bool _isDeleting)
         {
-            if (_isDeleting && parameters.FloatValues.dictionary.ContainsKey(_exKey))
+            if (_isDeleting && brain.Parameters.FloatValues.dictionary.ContainsKey(_exKey))
             {
-                parameters.FloatValues.dictionary.Remove(_exKey);
-                conversationList[currentConversationIndex].Parameters = parameters;
+                brain.Parameters.FloatValues.dictionary.Remove(_exKey);
             }
             else
             {
-                if (_exKey != string.Empty && parameters.FloatValues.dictionary.ContainsKey(_newKey) == false)
+                if (_exKey != string.Empty && brain.Parameters.FloatValues.dictionary.ContainsKey(_newKey) == false)
                 {
-                    parameters.FloatValues.dictionary.Remove(_exKey);
-                    parameters.FloatValues.dictionary.Add(_newKey, _newValue);
-                    conversationList[currentConversationIndex].Parameters = parameters;
+                    brain.Parameters.FloatValues.dictionary.Remove(_exKey);
+                    brain.Parameters.FloatValues.dictionary.Add(_newKey, _newValue);
                 }
-                else if (parameters.FloatValues.dictionary.ContainsKey(_newKey) && _newValue != parameters.FloatValues.dictionary[_newKey])
+                else if (brain.Parameters.FloatValues.dictionary.ContainsKey(_newKey) && _newValue != brain.Parameters.FloatValues.dictionary[_newKey])
                 {
-                    parameters.FloatValues.dictionary[_newKey] = _newValue;
-                    conversationList[currentConversationIndex].Parameters = parameters;
+                    brain.Parameters.FloatValues.dictionary[_newKey] = _newValue;
                 }
             }
         }
 
         void SaveIntModifications(string _exKey, string _newKey, int _newValue, bool _isDeleting)
         {
-            if (_isDeleting && parameters.IntValues.dictionary.ContainsKey(_exKey))
+            if (_isDeleting && brain.Parameters.IntValues.dictionary.ContainsKey(_exKey))
             {
-                parameters.IntValues.dictionary.Remove(_exKey);
-                conversationList[currentConversationIndex].Parameters = parameters;
+                brain.Parameters.IntValues.dictionary.Remove(_exKey);
             }
             else
             {
-                if (_exKey != string.Empty && parameters.IntValues.dictionary.ContainsKey(_newKey) == false)
+                if (_exKey != string.Empty && brain.Parameters.IntValues.dictionary.ContainsKey(_newKey) == false)
                 {
-                    parameters.IntValues.dictionary.Remove(_exKey);
-                    parameters.IntValues.dictionary.Add(_newKey, _newValue);
-                    conversationList[currentConversationIndex].Parameters = parameters;
+                    brain.Parameters.IntValues.dictionary.Remove(_exKey);
+                    brain.Parameters.IntValues.dictionary.Add(_newKey, _newValue);
                 }
-                else if (parameters.IntValues.dictionary.ContainsKey(_newKey) && _newValue != parameters.IntValues.dictionary[_newKey])
+                else if (brain.Parameters.IntValues.dictionary.ContainsKey(_newKey) && _newValue != brain.Parameters.IntValues.dictionary[_newKey])
                 {
-                    parameters.IntValues.dictionary[_newKey] = _newValue;
-                    conversationList[currentConversationIndex].Parameters = parameters;
+                    brain.Parameters.IntValues.dictionary[_newKey] = _newValue;
                 }
             }
         }
 
         void SaveBoolModifications(string _exKey, string _newKey, bool _newValue, bool _isDeleting)
         {
-            if (_isDeleting && parameters.BoolValues.dictionary.ContainsKey(_exKey))
+            if (_isDeleting && brain.Parameters.BoolValues.dictionary.ContainsKey(_exKey))
             {
-                parameters.BoolValues.dictionary.Remove(_exKey);
-                conversationList[currentConversationIndex].Parameters = parameters;
+                brain.Parameters.BoolValues.dictionary.Remove(_exKey);
             }
             else
             {
-                if (_exKey != string.Empty && parameters.BoolValues.dictionary.ContainsKey(_newKey) == false)
+                if (_exKey != string.Empty && brain.Parameters.BoolValues.dictionary.ContainsKey(_newKey) == false)
                 {
-                    parameters.BoolValues.dictionary.Remove(_exKey);
-                    parameters.BoolValues.dictionary.Add(_newKey, _newValue);
-                    conversationList[currentConversationIndex].Parameters = parameters;
+                    brain.Parameters.BoolValues.dictionary.Remove(_exKey);
+                    brain.Parameters.BoolValues.dictionary.Add(_newKey, _newValue);
                 }
-                else if (parameters.BoolValues.dictionary.ContainsKey(_newKey) && _newValue != parameters.BoolValues.dictionary[_newKey])
+                else if (brain.Parameters.BoolValues.dictionary.ContainsKey(_newKey) && _newValue != brain.Parameters.BoolValues.dictionary[_newKey])
                 {
-                    parameters.BoolValues.dictionary[_newKey] = _newValue;
-                    conversationList[currentConversationIndex].Parameters = parameters;
+                    brain.Parameters.BoolValues.dictionary[_newKey] = _newValue;
                 }
             }
         }
@@ -717,9 +780,9 @@ namespace Narrator
                         isNameOk = false;
             }
             characters.Add(charac);
-            conversationList[currentConversationIndex].AddCharacter(charac);
+            brain.AddCharacter(charac);
 
-            EditorUtility.SetDirty(currentConv);
+            EditorUtility.SetDirty(brain);
             AssetDatabase.SaveAssets();
         }
 
@@ -890,6 +953,229 @@ namespace Narrator
             links.Remove(link);
         }
 
+        //__________SELECTED LINK______________//
+
+        void SelectedLink_Initialize()
+        {
+            selectedLinkIndex = -1;
+        }
+
+        void AddConditionOnLink()
+        {
+            if(selectedLinkIndex != -1)
+            {
+                links[selectedLinkIndex].AddCondition();
+                conversationList[currentConversationIndex].AddCondition(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, new Condition());
+            }
+        }
+
+        void AddImpactOnLink()
+        {
+            if(selectedLinkIndex != -1)
+            {
+                links[selectedLinkIndex].AddImpact();
+                conversationList[currentConversationIndex].AddImpact(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, new Impact());
+            }
+        }
+
+        void DrawSelectedLink(int _id)
+        {
+            GUILayout.Label("Conditions");
+            Condition cond = new Condition();
+            // Affichage de chaque condition posée sur le liens
+            for (int i = 0; i < links[selectedLinkIndex].conditions.Count; i++)
+            {
+                currentCondition = i;
+                cond = links[selectedLinkIndex].conditions[i];
+                GUILayout.BeginHorizontal();
+                // paramètre de la condition
+                if (EditorGUILayout.DropdownButton(new GUIContent(cond.name), FocusType.Keyboard))
+                {
+                    GenericMenu menu = new GenericMenu();
+                    for (int j = 0; j < brain.Parameters.Names.Count; j++)
+                    {
+                        menu.AddItem(new GUIContent(brain.Parameters.Names[j]), false, UpdateSelectedLinkParameter, j);
+                    }
+                    menu.ShowAsContext();
+                }
+                // operateur de la condition
+                switch (links[selectedLinkIndex].conditions[i].type)
+                {
+                    case Parameters.TYPE.b:
+                        break;
+                    case Parameters.TYPE.f:
+                        if (EditorGUILayout.DropdownButton(new GUIContent(cond.test.ToString()), FocusType.Keyboard))
+                        {
+                            GenericMenu menu = new GenericMenu();
+                            menu.AddItem(new GUIContent("less"), false, UpdateSelectedLinkOperator, Parameters.OPERATOR.less);
+                            menu.AddItem(new GUIContent("greater"), false, UpdateSelectedLinkOperator, Parameters.OPERATOR.greater);
+                            menu.ShowAsContext();
+                        }
+                        break;
+                    case Parameters.TYPE.i:
+                        if (EditorGUILayout.DropdownButton(new GUIContent(cond.test.ToString()), FocusType.Keyboard))
+                        {
+                            GenericMenu menu = new GenericMenu();
+                            menu.AddItem(new GUIContent("equals"), false, UpdateSelectedLinkOperator, Parameters.OPERATOR.equals);
+                            menu.AddItem(new GUIContent("less"), false, UpdateSelectedLinkOperator, Parameters.OPERATOR.less);
+                            menu.AddItem(new GUIContent("greater"), false, UpdateSelectedLinkOperator, Parameters.OPERATOR.greater);
+                            menu.ShowAsContext();
+                        }
+                        break;
+                    default:
+                        Debug.LogError("Can't display condition, unknown type");
+                        break;
+
+                }
+                // markeur de la condition
+                string marker = "marker";
+                switch (links[selectedLinkIndex].conditions[i].type)
+                {
+                    case Parameters.TYPE.b:
+                        marker = cond.boolMarker == true ? "true" : "false";
+                        if (EditorGUILayout.DropdownButton(new GUIContent(marker), FocusType.Keyboard))
+                        {
+                            GenericMenu menu = new GenericMenu();
+                            menu.AddItem(new GUIContent("true"), false, UpdateSelectedLinkMarker_bool, true);
+                            menu.AddItem(new GUIContent("false"), false, UpdateSelectedLinkMarker_bool, false);
+                            menu.ShowAsContext();
+                        }
+                        break;
+                    case Parameters.TYPE.f:
+                        float fValue = EditorGUILayout.FloatField(cond.floatMarker);
+                        //if (Mathf.Approximately(cond.floatMarker, fValue))
+                        //    UpdateSelectedLinkMarker_float(fValue);
+                        break;
+                    case Parameters.TYPE.i:
+                        int iValue = EditorGUILayout.IntField(cond.intMarker);
+                        if (cond.intMarker != iValue)
+                            UpdateSelectedLinkMarker_int(iValue);
+                        break;
+                    default:
+                        marker = "error";
+                        break;
+                }
+
+                GUILayout.EndHorizontal();
+            }
+
+            GUILayout.Space(1.0f);
+            GUILayout.Label("Impacts");
+            Impact imp = new Impact();
+            // Affichage de chaque impact qu'entrainera le lien une fois franchi
+            for (int i = 0; i < links[selectedLinkIndex].impacts.Count; i++)
+            {
+                currentImpact = i;
+                imp = links[selectedLinkIndex].impacts[i];
+                GUILayout.BeginHorizontal();
+                // paramètre de l'impact
+                if (EditorGUILayout.DropdownButton(new GUIContent(imp.name), FocusType.Keyboard))
+                {
+                    GenericMenu menu = new GenericMenu();
+                    for (int j = 0; j < brain.Parameters.Names.Count; j++)
+                    {
+                        menu.AddItem(new GUIContent(brain.Parameters.Names[j]), false, UpdateSelectedLinkParameter_Impact, j);
+                    }
+                    menu.ShowAsContext();
+                }
+                // valeur de l'impact
+                switch (links[selectedLinkIndex].impacts[i].type)
+                {
+                    case Parameters.TYPE.b:
+                        string boolStr = imp.boolModifier == true ? "true" : "false";
+                        if (EditorGUILayout.DropdownButton(new GUIContent(boolStr), FocusType.Keyboard))
+                        {
+                            GenericMenu menu = new GenericMenu();
+                            menu.AddItem(new GUIContent("true"), false, UpdateSelectedLinkMarkerImpact_bool, true);
+                            menu.AddItem(new GUIContent("false"), false, UpdateSelectedLinkMarkerImpact_bool, false);
+                            menu.ShowAsContext();
+                        }
+                        break;
+                    case Parameters.TYPE.f:
+                        float fValue = EditorGUILayout.FloatField(imp.floatModifier);
+                        //if (Mathf.Approximately(imp.floatModifier, fValue))
+                        //    UpdateSelectedLinkImpact(fValue);
+                        break;
+                    case Parameters.TYPE.i:
+                        int iValue = EditorGUILayout.IntField(imp.intModifier);
+                        if (imp.intModifier != iValue)
+                            UpdateSelectedLinkImpact(iValue);
+                        break;
+                    default:
+                        break;
+                }
+                GUILayout.EndHorizontal();
+            }
+        }
+
+        void UpdateSelectedLinkParameter(object _obj)
+        {
+            int index = (int)_obj;
+
+            links[selectedLinkIndex].conditions[currentCondition].name = brain.Parameters.Names[index];
+            links[selectedLinkIndex].conditions[currentCondition].type = brain.Parameters.GetType(links[selectedLinkIndex].conditions[currentCondition].name);
+            conversationList[currentConversationIndex].UpdateCondition(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].conditions[currentCondition]);
+
+        }
+
+        void UpdateSelectedLinkOperator(object _obj)
+        {
+            Parameters.OPERATOR op = (Parameters.OPERATOR)_obj;
+
+            links[selectedLinkIndex].conditions[currentCondition].test = op;
+            conversationList[currentConversationIndex].UpdateCondition(links[selectedLinkIndex].start, (int)links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].conditions[currentCondition]);
+        }
+
+        void UpdateSelectedLinkMarker_bool(object _obj)
+        {
+            bool value = (bool)_obj;
+
+            links[selectedLinkIndex].conditions[currentCondition].boolMarker = value;
+            conversationList[currentConversationIndex].UpdateCondition(links[selectedLinkIndex].start, (int)links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].conditions[currentCondition]);
+        }
+
+        void UpdateSelectedLinkMarker_int(object _obj)
+        {
+            int value = (int)_obj;
+
+            links[selectedLinkIndex].conditions[currentCondition].intMarker = value;
+            conversationList[currentConversationIndex].UpdateCondition(links[selectedLinkIndex].start, (int)links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].conditions[currentCondition]);
+        }
+
+        void UpdateSelectedLinkMarker_float(object _obj)
+        {
+            float value = (float)_obj;
+
+            links[selectedLinkIndex].conditions[currentCondition].floatMarker = value;
+            conversationList[currentConversationIndex].UpdateCondition(links[selectedLinkIndex].start, (int)links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].conditions[currentCondition]);
+        }
+
+        void UpdateSelectedLinkParameter_Impact(object _obj)
+        {
+            int index = (int)_obj;
+
+            links[selectedLinkIndex].impacts[currentImpact].name = brain.Parameters.Names[index];
+            links[selectedLinkIndex].impacts[currentImpact].type = brain.Parameters.GetType(links[selectedLinkIndex].impacts[currentImpact].name);
+            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].impacts[currentImpact]);
+        }
+
+        void UpdateSelectedLinkImpact(float _value)
+        {
+            links[selectedLinkIndex].impacts[currentImpact].floatModifier = _value;
+            links[selectedLinkIndex].impacts[currentImpact].intModifier = (int)_value;
+
+            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].impacts[currentImpact]);
+        }
+
+        void UpdateSelectedLinkMarkerImpact_bool(object _obj)
+        {
+            bool value = (bool)_obj;
+
+            links[selectedLinkIndex].impacts[currentImpact].boolModifier = value;
+            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, (int)links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].impacts[currentImpact]);
+        }
+
+
 
         //____________LOAD & SAVE DATA__________//
 
@@ -950,6 +1236,39 @@ namespace Narrator
                 }
             }
         }
+
+        /// <summary>
+        /// Get the ConversationBrainSO in Resources folder of the project
+        /// </summary>
+        void LoadConversationBrain()
+        {
+            string [] guid = AssetDatabase.FindAssets("t:NarratorBrainSO", null);
+
+            if (guid.Length == 1)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid[0]);
+                path = path.Replace(".asset", string.Empty);
+                path = path.Substring(path.IndexOf("Resources") + "Resources/".Length);
+                brain = Resources.Load<NarratorBrainSO>(path);
+                if (brain == null)
+                    Debug.LogError("Could not load brain at : " + path + "\n Is brain asset in a Resources folder ?");
+            }
+            // Generate a brain if there is none
+            else if (guid.Length == 0)
+            {
+                brain = CreateInstance<NarratorBrainSO>();
+                //AssetDatabase.CreateAsset(brain, "Assets/Resources/"); // "brain.asset");
+            }
+            
+            else
+            { 
+                Debug.LogError("More than one brain : caca");
+            }
+
+            if (brain.NPCs == null)
+                brain.CreateBrain();
+        }
+
 
     }// end class
 

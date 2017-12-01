@@ -11,15 +11,16 @@ namespace Narrator
         {
             f,
             b,
-            i
+            i,
+            none
         };
 
         [System.Serializable]
-        public enum CONDITION
+        public enum OPERATOR
         {
-            equal,
-            inferior,
-            superior
+            less,
+            greater,
+            equals,
         }
 
         [SerializeField] FloatDic floatValues;
@@ -45,6 +46,16 @@ namespace Narrator
             get { return count; }
         }
 
+        [SerializeField] private List<string> names;
+        public List<string> Names
+        {
+            get { return names; }
+            set { names = value; }
+        }
+
+        
+
+
         public Parameters()
         {
             floatValues = new FloatDic();
@@ -55,6 +66,8 @@ namespace Narrator
 
             boolValues = new BoolDic();
             boolValues.dictionary = new Dictionary<string, bool>();
+
+            names = new List<string>();
             count = 0;
         }
 
@@ -68,6 +81,7 @@ namespace Narrator
                 key = "NewFloat" + index;
             }
             FloatValues.dictionary.Add(key, 0.0f);
+            names.Add(key);
             count++;
         }
         public void AddInt()
@@ -80,6 +94,7 @@ namespace Narrator
                 key = "NewInt" + index;
             }
             IntValues.dictionary.Add(key, 0);
+            names.Add(key);
             count++;
         }
         public void AddBool()
@@ -92,6 +107,7 @@ namespace Narrator
                 key = "NewBool" + index;
             }
             BoolValues.dictionary.Add(key, false);
+            names.Add(key);
             count++;
         }
 
@@ -101,6 +117,7 @@ namespace Narrator
             boolValues.dictionary.Clear();
             intValues.dictionary.Clear();
             count = 0;
+            names.Clear();
         }
 
         public float GetFloat(string _key)
@@ -157,7 +174,7 @@ namespace Narrator
         }
 
 
-        public bool TestFloat(string _key, CONDITION _condition, float _marker)
+        public bool TestFloat(string _key, OPERATOR _condition, float _marker)
         {
             if(floatValues.dictionary.ContainsKey(_key) == false)
             {
@@ -168,16 +185,16 @@ namespace Narrator
 
             switch(_condition)
             {
-                case CONDITION.inferior:
+                case OPERATOR.less:
                     return value < _marker;
-                case CONDITION.superior:
+                case OPERATOR.greater:
                     return value > _marker;
                 default:
                     Debug.LogError("The current condition cannot be tested on a float value");
                     return false;
             }
         }
-        public bool TestInt(string _key, CONDITION _condition, int _marker)
+        public bool TestInt(string _key, OPERATOR _condition, int _marker)
         {
             if (intValues.dictionary.ContainsKey(_key) == false)
             {
@@ -188,18 +205,18 @@ namespace Narrator
 
             switch (_condition)
             {
-                case CONDITION.inferior:
+                case OPERATOR.less:
                     return value < _marker;
-                case CONDITION.superior:
+                case OPERATOR.greater:
                     return value > _marker;
-                case CONDITION.equal:
+                case OPERATOR.equals:
                     return value == _marker;
                 default:
                     Debug.LogError("The current condition cannot be tested on an integer value");
                     return false;
             }
         }
-        public bool TestBool(string _key, CONDITION _condition, bool _marker)
+        public bool TestBool(string _key, OPERATOR _condition, bool _marker)
         {
             if (boolValues.dictionary.ContainsKey(_key) == false)
             {
@@ -207,16 +224,22 @@ namespace Narrator
                 return false;
             }
             bool value = boolValues.dictionary[_key];
-
-            switch (_condition)
-            {
-                case CONDITION.equal:
-                    return value == _marker;
-                default:
-                    Debug.LogError("The current condition cannot be tested on a boolean value");
-                    return false;
-            }
+            return value == _marker;
         }
+
+        public TYPE GetType(string _key)
+        {
+            if (floatValues.dictionary.ContainsKey(_key))
+                return TYPE.f;
+            else if (intValues.dictionary.ContainsKey(_key))
+                return TYPE.i;
+            else if(boolValues.dictionary.ContainsKey(_key))
+                return TYPE.b;
+            else
+            return TYPE.none;
+        }
+
+     
 
     }
 }

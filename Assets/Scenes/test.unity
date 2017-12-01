@@ -1013,6 +1013,18 @@ Prefab:
       propertyPath: m_SizeDelta.y
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 114394920577573754, guid: 5ce0e3d124ea2ea49abf5dac4ba242c9,
+        type: 2}
+      propertyPath: conversation
+      value: 
+      objectReference: {fileID: 11400000, guid: 5908839ae4ac40b40b668697994d897d,
+        type: 2}
+    - target: {fileID: 114394920577573754, guid: 5ce0e3d124ea2ea49abf5dac4ba242c9,
+        type: 2}
+      propertyPath: brain
+      value: 
+      objectReference: {fileID: 11400000, guid: 3b4d8bc4c7d2c60458e00bc572b793d4,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5ce0e3d124ea2ea49abf5dac4ba242c9, type: 2}
   m_IsPrefabParent: 0
