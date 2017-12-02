@@ -115,12 +115,7 @@ namespace Narrator
         public void Save(ConversationSO _conversation)
         {
             _conversation.AddLinkToDialog(start, end, startBoxIndex);
-        }
-
-        public void Delete()
-        {
-
-        }
+        }   
 
         public void IsSelected()
         {

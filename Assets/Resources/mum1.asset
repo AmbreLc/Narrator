@@ -1,0 +1,194 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79361de3e8ff26741b2e4f2f0f705471, type: 3}
+  m_Name: mum1
+  m_EditorClassIdentifier: 
+  conversationName: mum1
+  entry:
+    id: -1
+    type: 0
+    windowRect:
+      serializedVersion: 2
+      x: -41
+      y: 36.5
+      width: 100
+      height: 60
+    position: {x: 0, y: 0}
+    entryBox:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    contents:
+    - text: 
+      exitBox:
+        serializedVersion: 2
+        x: 59
+        y: 66.5
+        width: 10
+        height: 10
+      nextNodes:
+      - index: 1
+        conditions: []
+        impacts: []
+    charac:
+      name: 
+      isPlayable: 0
+      color: {r: 0, g: 0, b: 0, a: 0}
+  dialogs:
+    keys: 01000000020000000300000004000000
+    values:
+    - id: 0
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 67
+        y: 136.5
+        width: 200
+        height: 100
+      position: {x: 460, y: 107}
+      entryBox:
+        serializedVersion: 2
+        x: 57
+        y: 156.5
+        width: 10
+        height: 10
+      contents:
+      - text: Hi darling, do you need anything ?
+        exitBox:
+          serializedVersion: 2
+          x: 267
+          y: 161.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 2
+          conditions: []
+          impacts: []
+      charac:
+        name: mum
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 1
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 372
+        y: 185.5
+        width: 200
+        height: 100
+      position: {x: 718, y: 186}
+      entryBox:
+        serializedVersion: 2
+        x: 362
+        y: 205.5
+        width: 10
+        height: 10
+      contents:
+      - text: Yes please !
+        exitBox:
+          serializedVersion: 2
+          x: 572
+          y: 210.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 3
+          conditions: []
+          impacts:
+          - name: money
+            type: 2
+            intModifier: 10
+            floatModifier: 10
+            boolModifier: 0
+          - name: ego
+            type: 2
+            intModifier: -10
+            floatModifier: -10
+            boolModifier: 0
+      - text: No thanks
+        exitBox:
+          serializedVersion: 2
+          x: 572
+          y: 230.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 4
+          conditions: []
+          impacts:
+          - name: ego
+            type: 2
+            intModifier: 10
+            floatModifier: 10
+            boolModifier: 0
+      charac:
+        name: Player1
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 2
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 650
+        y: 72.5
+        width: 200
+        height: 100
+      position: {x: 941, y: 136}
+      entryBox:
+        serializedVersion: 2
+        x: 640
+        y: 92.5
+        width: 10
+        height: 10
+      contents:
+      - text: Take some money !
+        exitBox:
+          serializedVersion: 2
+          x: 850
+          y: 97.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: mum
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 3
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 694
+        y: 269.5
+        width: 200
+        height: 100
+      position: {x: 985, y: 333}
+      entryBox:
+        serializedVersion: 2
+        x: 684
+        y: 289.5
+        width: 10
+        height: 10
+      contents:
+      - text: I see, you're your own person now, take care of yourself !
+        exitBox:
+          serializedVersion: 2
+          x: 894
+          y: 294.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: mum
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+  dialogsCount: 4

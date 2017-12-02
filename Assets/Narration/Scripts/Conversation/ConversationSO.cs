@@ -94,7 +94,7 @@ namespace Narrator
             }
         }
 
-        public void DeleteLinkFromDialog(Node _start, Node _end, int _startIndex)
+        public void DeleteLinkFromDialog(Node _start, Node _end, int _contentIndex)
         {
             int startIndex = -1;
             int endIndex = -1;
@@ -119,10 +119,15 @@ namespace Narrator
             if (startIndex == -1 || endIndex == -1)
                 Debug.LogError("Error : dialog missing in conversation, cannot link");
             else if (startIndex == 0)
-                entry.contents[_startIndex].RemoveNextNode(endIndex);
+                entry.contents[_contentIndex].RemoveNextNode(endIndex);
             else
-                dialogs.dictionary[startIndex].contents[_startIndex].RemoveNextNode(endIndex);
-        
+                dialogs.dictionary[startIndex].contents[_contentIndex].RemoveNextNode(endIndex);
+
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
+
         }
 
 
@@ -182,8 +187,7 @@ namespace Narrator
             UnityEditor.AssetDatabase.SaveAssets();
 #endif
         }
-        
-
+  
     }
 
 }

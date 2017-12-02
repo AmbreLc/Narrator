@@ -123,12 +123,17 @@ namespace Narrator
                     }
                 }
                 if (canGoNextNode)
+                {
+                    for (int j = 0; j < currentNode.contents[_contentIndex].nextNodes[i].impacts.Count; j++)
+                    {
+                        brain.ApplyImpact(currentNode.contents[_contentIndex].nextNodes[i].impacts[j]);
+                    }
                     return i;
+                }
             }
 
             return -1;
         }
-
     }
 
 }
