@@ -1,0 +1,386 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79361de3e8ff26741b2e4f2f0f705471, type: 3}
+  m_Name: doctor1
+  m_EditorClassIdentifier: 
+  conversationName: doctor1
+  entry:
+    id: -1
+    type: 0
+    windowRect:
+      serializedVersion: 2
+      x: -376.5
+      y: 151
+      width: 100
+      height: 60
+    position: {x: 0, y: 0}
+    entryBox:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    contents:
+    - text: 
+      exitBox:
+        serializedVersion: 2
+        x: -276.5
+        y: 181
+        width: 10
+        height: 10
+      nextNodes:
+      - index: 1
+        conditions: []
+        impacts: []
+    charac:
+      name: 
+      isPlayable: 0
+      color: {r: 0, g: 0, b: 0, a: 0}
+  dialogs:
+    keys: 0100000002000000030000000400000005000000060000000700000008000000
+    values:
+    - id: 0
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -200.5
+        y: 172
+        width: 200
+        height: 100
+      position: {x: 422, y: 160}
+      entryBox:
+        serializedVersion: 2
+        x: -210.5
+        y: 192
+        width: 10
+        height: 10
+      contents:
+      - text: So, tell me, what's wrong?
+        exitBox:
+          serializedVersion: 2
+          x: -0.5
+          y: 197
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 2
+          conditions: []
+          impacts: []
+      charac:
+        name: doctor
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 1
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 84.5
+        y: 174
+        width: 200
+        height: 100
+      position: {x: 938, y: 359}
+      entryBox:
+        serializedVersion: 2
+        x: 74.5
+        y: 194
+        width: 10
+        height: 10
+      contents:
+      - text: I feel depressed
+        exitBox:
+          serializedVersion: 2
+          x: 284.5
+          y: 199
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 5
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+      - text: I'm sick
+        exitBox:
+          serializedVersion: 2
+          x: 284.5
+          y: 219
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 5
+          conditions: []
+          impacts:
+          - name: energy
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+          - name: love
+            type: 2
+            intModifier: 0
+            floatModifier: 0
+            boolModifier: 0
+      - text: I need to take a day off
+        exitBox:
+          serializedVersion: 2
+          x: 284.5
+          y: 239
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 6
+          conditions: []
+          impacts:
+          - name: money
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+          - name: energy
+            type: 2
+            intModifier: 5
+            floatModifier: 5
+            boolModifier: 0
+      - text: Nothing
+        exitBox:
+          serializedVersion: 2
+          x: 284.5
+          y: 259
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 3
+          conditions: []
+          impacts:
+          - name: ego
+            type: 2
+            intModifier: 5
+            floatModifier: 5
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 2
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 352.5
+        y: 309
+        width: 200
+        height: 100
+      position: {x: 818, y: 278}
+      entryBox:
+        serializedVersion: 2
+        x: 342.5
+        y: 329
+        width: 10
+        height: 10
+      contents:
+      - text: So...why did you want to see me?
+        exitBox:
+          serializedVersion: 2
+          x: 552.5
+          y: 334
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 4
+          conditions: []
+          impacts: []
+      charac:
+        name: doctor
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 3
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 625.5
+        y: 319.5
+        width: 200
+        height: 100
+      position: {x: 956, y: 498}
+      entryBox:
+        serializedVersion: 2
+        x: 615.5
+        y: 339.5
+        width: 10
+        height: 10
+      contents:
+      - text: My family told me to
+        exitBox:
+          serializedVersion: 2
+          x: 825.5
+          y: 344.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 7
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+      - text: My boss told me to
+        exitBox:
+          serializedVersion: 2
+          x: 825.5
+          y: 364.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 7
+          conditions: []
+          impacts:
+          - name: ego
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 4
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 497.5
+        y: 76.5
+        width: 200
+        height: 100
+      position: {x: 668, y: 130}
+      entryBox:
+        serializedVersion: 2
+        x: 487.5
+        y: 96.5
+        width: 10
+        height: 10
+      contents:
+      - text: Take these pills.
+        exitBox:
+          serializedVersion: 2
+          x: 697.5
+          y: 101.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 8
+          conditions: []
+          impacts:
+          - name: money
+            type: 2
+            intModifier: -10
+            floatModifier: -10
+            boolModifier: 0
+      charac:
+        name: doctor
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 5
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 469.5
+        y: 196.5
+        width: 200
+        height: 100
+      position: {x: 762, y: 253}
+      entryBox:
+        serializedVersion: 2
+        x: 459.5
+        y: 216.5
+        width: 10
+        height: 10
+      contents:
+      - text: Take this paper.
+        exitBox:
+          serializedVersion: 2
+          x: 669.5
+          y: 221.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: doctor
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 6
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 916.5
+        y: 304
+        width: 200
+        height: 100
+      position: {x: 907, y: 148}
+      entryBox:
+        serializedVersion: 2
+        x: 906.5
+        y: 324
+        width: 10
+        height: 10
+      contents:
+      - text: Take these pills.
+        exitBox:
+          serializedVersion: 2
+          x: 1116.5
+          y: 329
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 8
+          conditions: []
+          impacts:
+          - name: money
+            type: 2
+            intModifier: -10
+            floatModifier: -10
+            boolModifier: 0
+      charac:
+        name: boss
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 7
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 1113
+        y: 76.5
+        width: 200
+        height: 100
+      position: {x: 1059, y: 120}
+      entryBox:
+        serializedVersion: 2
+        x: 1103
+        y: 96.5
+        width: 10
+        height: 10
+      contents:
+      - text: See you soon.
+        exitBox:
+          serializedVersion: 2
+          x: 1313
+          y: 101.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: doctor
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+  dialogsCount: 8

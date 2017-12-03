@@ -47,7 +47,7 @@ public class Stats : MonoBehaviour
         }
 
         value = (brain.Parameters.GetInt(statName) - 50) * 0.01f;
-        fillAmount.color = Color.Lerp(goodColor, badColor, Mathf.Abs(value));
-        middleImage.color = Color.Lerp(goodColor, badColor, Mathf.Abs(value));
+        fillAmount.color = Color.Lerp(goodColor, badColor, Mathf.Abs(value * 1.5f));
+        middleImage.color = Color.Lerp(goodColor, badColor, Mathf.Abs(value * 1.5f));
     }
 }

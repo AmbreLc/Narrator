@@ -35,7 +35,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ConversationSO[] mumConversations;
     [SerializeField] private ConversationSO[] dadConversations;
     [SerializeField] private ConversationSO[] bossConversations;
+    [SerializeField] private ConversationSO[] doctorConversations;
+
     [SerializeField] private ConversationSO[] conscienceConversations;
+    [SerializeField] private ConversationSO[] homelessConversations;
+    [SerializeField] private ConversationSO[] landlordConversations;
+
+    [SerializeField] private ConversationSO[] dogConversations;
+    [SerializeField] private ConversationSO[] coworkerConversations;
+
 
     [Header("End Game")]
     [SerializeField] private GameObject endGame;
@@ -203,7 +211,27 @@ public class GameManager : MonoBehaviour
                     break;
                 case 3:
                     Debug.Log("launch conscience conv");
+                    convUI.NewConversation(PickSomeoneConv(doctorConversations));
+                    break;
+                case 4:
+                    Debug.Log("launch conscience conv");
                     convUI.NewConversation(PickSomeoneConv(conscienceConversations));
+                    break;
+                case 5:
+                    Debug.Log("launch conscience conv");
+                    convUI.NewConversation(PickSomeoneConv(homelessConversations));
+                    break;
+                case 6:
+                    Debug.Log("launch conscience conv");
+                    convUI.NewConversation(PickSomeoneConv(landlordConversations));
+                    break;
+                case 7:
+                    Debug.Log("launch conscience conv");
+                    convUI.NewConversation(PickSomeoneConv(dogConversations));
+                    break;
+                case 8:
+                    Debug.Log("launch conscience conv");
+                    convUI.NewConversation(PickSomeoneConv(coworkerConversations));
                     break;
             }
             

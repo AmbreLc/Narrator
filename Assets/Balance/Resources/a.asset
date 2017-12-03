@@ -17,8 +17,8 @@ MonoBehaviour:
     type: 0
     windowRect:
       serializedVersion: 2
-      x: -128.5
-      y: 143
+      x: -987.5
+      y: 46.5
       width: 100
       height: 60
     position: {x: 0, y: 0}
@@ -32,12 +32,12 @@ MonoBehaviour:
     - text: 
       exitBox:
         serializedVersion: 2
-        x: -28.5
-        y: 173
+        x: -887.5
+        y: 76.5
         width: 10
         height: 10
       nextNodes:
-      - index: 1
+      - index: 2
         conditions: []
         impacts: []
     charac:
@@ -45,84 +45,57 @@ MonoBehaviour:
       isPlayable: 0
       color: {r: 0, g: 0, b: 0, a: 0}
   dialogs:
-    keys: 01000000020000000300000004000000
+    keys: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000120000001300000014000000
     values:
     - id: 0
       type: 1
       windowRect:
         serializedVersion: 2
-        x: 47.5
-        y: 164
+        x: -979.5
+        y: 234.5
         width: 200
         height: 100
-      position: {x: 422, y: 160}
+      position: {x: 471, y: 173}
       entryBox:
         serializedVersion: 2
-        x: 37.5
-        y: 184
+        x: -989.5
+        y: 254.5
         width: 10
         height: 10
       contents:
-      - text: So, tell me, what's wrong?
+      - text: What should I say ?
         exitBox:
           serializedVersion: 2
-          x: 247.5
-          y: 189
+          x: -779.5
+          y: 259.5
           width: 10
           height: 10
-        nextNodes:
-        - index: 2
-          conditions: []
-          impacts: []
+        nextNodes: []
       charac:
-        name: doctor
-        isPlayable: 0
-        color: {r: 1, g: 1, b: 1, a: 1}
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
     - id: 1
-      type: 2
+      type: 1
       windowRect:
         serializedVersion: 2
-        x: 332.5
-        y: 166
+        x: -824.5
+        y: 46.5
         width: 200
         height: 100
-      position: {x: 938, y: 359}
+      position: {x: 394, y: 219}
       entryBox:
         serializedVersion: 2
-        x: 322.5
-        y: 186
+        x: -834.5
+        y: 66.5
         width: 10
         height: 10
       contents:
-      - text: I feel depressed
+      - text: Hey.
         exitBox:
           serializedVersion: 2
-          x: 532.5
-          y: 191
-          width: 10
-          height: 10
-        nextNodes: []
-      - text: I'm sick
-        exitBox:
-          serializedVersion: 2
-          x: 532.5
-          y: 211
-          width: 10
-          height: 10
-        nextNodes: []
-      - text: I need to take a day off
-        exitBox:
-          serializedVersion: 2
-          x: 532.5
-          y: 231
-          width: 10
-          height: 10
-        nextNodes: []
-      - text: Nothing
-        exitBox:
-          serializedVersion: 2
-          x: 532.5
-          y: 251
+          x: -624.5
+          y: 71.5
           width: 10
           height: 10
         nextNodes:
@@ -130,74 +103,628 @@ MonoBehaviour:
           conditions: []
           impacts: []
       charac:
-        name: you
-        isPlayable: 1
-        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
     - id: 2
       type: 1
       windowRect:
         serializedVersion: 2
-        x: 600.5
-        y: 301
+        x: -591.5
+        y: 54.5
         width: 200
         height: 100
-      position: {x: 818, y: 278}
+      position: {x: 582, y: 188}
       entryBox:
         serializedVersion: 2
-        x: 590.5
-        y: 321
+        x: -601.5
+        y: 74.5
         width: 10
         height: 10
       contents:
-      - text: So...why did you want to see me?
+      - text: We're 25 today, some say it's the golden age.
         exitBox:
           serializedVersion: 2
-          x: 800.5
-          y: 326
+          x: -391.5
+          y: 79.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 5
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 3
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -427.5
+        y: 224.5
+        width: 200
+        height: 100
+      position: {x: 766, y: 298}
+      entryBox:
+        serializedVersion: 2
+        x: -437.5
+        y: 244.5
+        width: 10
+        height: 10
+      contents:
+      - text: We will see, maybe we will become the most well balanced human being
+          on earth, we knows ?
+        exitBox:
+          serializedVersion: 2
+          x: -227.5
+          y: 249.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 6
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 4
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: -704.5
+        y: 226.5
+        width: 200
+        height: 100
+      position: {x: 788, y: 220}
+      entryBox:
+        serializedVersion: 2
+        x: -714.5
+        y: 246.5
+        width: 10
+        height: 10
+      contents:
+      - text: I'm not sure of this...
+        exitBox:
+          serializedVersion: 2
+          x: -504.5
+          y: 251.5
           width: 10
           height: 10
         nextNodes:
         - index: 4
           conditions: []
           impacts: []
-      charac:
-        name: doctor
-        isPlayable: 0
-        color: {r: 1, g: 1, b: 1, a: 1}
-    - id: 3
-      type: 2
-      windowRect:
-        serializedVersion: 2
-        x: 873.5
-        y: 330
-        width: 200
-        height: 100
-      position: {x: 956, y: 498}
-      entryBox:
-        serializedVersion: 2
-        x: 863.5
-        y: 350
-        width: 10
-        height: 10
-      contents:
-      - text: My family told me to
+      - text: Well, it is indeed !
         exitBox:
           serializedVersion: 2
-          x: 1073.5
-          y: 355
+          x: -504.5
+          y: 271.5
           width: 10
           height: 10
-        nextNodes: []
-      - text: My boss told me to
+        nextNodes:
+        - index: 4
+          conditions: []
+          impacts: []
+      - text: Who are you ?
         exitBox:
           serializedVersion: 2
-          x: 1073.5
-          y: 375
+          x: -504.5
+          y: 291.5
           width: 10
           height: 10
-        nextNodes: []
+        nextNodes:
+        - index: 7
+          conditions: []
+          impacts: []
       charac:
         name: you
         isPlayable: 1
         color: {r: 0.8, g: 0.8, b: 1, a: 1}
-  dialogsCount: 4
+    - id: 5
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 111.5
+        y: 249.5
+        width: 200
+        height: 100
+      position: {x: 822, y: 193}
+      entryBox:
+        serializedVersion: 2
+        x: 101.5
+        y: 269.5
+        width: 10
+        height: 10
+      contents:
+      - text: Remember how we do that ?
+        exitBox:
+          serializedVersion: 2
+          x: 311.5
+          y: 274.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 14
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 6
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -851.5
+        y: 520.5
+        width: 200
+        height: 100
+      position: {x: 437, y: 388}
+      entryBox:
+        serializedVersion: 2
+        x: -861.5
+        y: 540.5
+        width: 10
+        height: 10
+      contents:
+      - text: 'Me ? I''m you.
+
+          Or more likely a part of you.'
+        exitBox:
+          serializedVersion: 2
+          x: -651.5
+          y: 545.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 8
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 7
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -633.5
+        y: 556.5
+        width: 200
+        height: 100
+      position: {x: 716, y: 508}
+      entryBox:
+        serializedVersion: 2
+        x: -643.5
+        y: 576.5
+        width: 10
+        height: 10
+      contents:
+      - text: You know, this little voice in your head.
+        exitBox:
+          serializedVersion: 2
+          x: -433.5
+          y: 581.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 9
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 8
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: -417.5
+        y: 642.5
+        width: 200
+        height: 100
+      position: {x: 755, y: 524}
+      entryBox:
+        serializedVersion: 2
+        x: -427.5
+        y: 662.5
+        width: 10
+        height: 10
+      contents:
+      - text: Am I mad ?
+        exitBox:
+          serializedVersion: 2
+          x: -217.5
+          y: 667.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 10
+          conditions: []
+          impacts: []
+      - text: Oh I see.
+        exitBox:
+          serializedVersion: 2
+          x: -217.5
+          y: 687.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 11
+          conditions: []
+          impacts: []
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 9
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -391.5
+        y: 513.5
+        width: 200
+        height: 100
+      position: {x: 1046, y: 576}
+      entryBox:
+        serializedVersion: 2
+        x: -401.5
+        y: 533.5
+        width: 10
+        height: 10
+      contents:
+      - text: 'Not that I know.
+
+          You''re like everyone, plural.'
+        exitBox:
+          serializedVersion: 2
+          x: -191.5
+          y: 538.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 12
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 10
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -165.5
+        y: 703.5
+        width: 200
+        height: 100
+      position: {x: 1002, y: 664}
+      entryBox:
+        serializedVersion: 2
+        x: -175.5
+        y: 723.5
+        width: 10
+        height: 10
+      contents:
+      - text: Nice !
+        exitBox:
+          serializedVersion: 2
+          x: 34.5
+          y: 728.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 12
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 11
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -168
+        y: 391.5
+        width: 200
+        height: 100
+      position: {x: 1093, y: 436}
+      entryBox:
+        serializedVersion: 2
+        x: -178
+        y: 411.5
+        width: 10
+        height: 10
+      contents:
+      - text: You know, I'm sure we have everything we need to go through this so
+          called "golden age" !
+        exitBox:
+          serializedVersion: 2
+          x: 32
+          y: 416.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 13
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 12
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 75
+        y: 452
+        width: 200
+        height: 100
+      position: {x: 808, y: 321}
+      entryBox:
+        serializedVersion: 2
+        x: 65
+        y: 472
+        width: 10
+        height: 10
+      contents:
+      - text: Managing our life and our needs with brio !
+        exitBox:
+          serializedVersion: 2
+          x: 275
+          y: 477
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 6
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 13
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 384
+        y: 280.5
+        width: 200
+        height: 100
+      position: {x: 1025, y: 176}
+      entryBox:
+        serializedVersion: 2
+        x: 374
+        y: 300.5
+        width: 10
+        height: 10
+      contents:
+      - text: Not really...
+        exitBox:
+          serializedVersion: 2
+          x: 584
+          y: 305.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 15
+          conditions: []
+          impacts: []
+      - text: Of course !
+        exitBox:
+          serializedVersion: 2
+          x: 584
+          y: 325.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 18
+          conditions: []
+          impacts:
+          - name: slidersOn
+            type: 1
+            intModifier: 0
+            floatModifier: 0
+            boolModifier: 1
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 14
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 462
+        y: 85.5
+        width: 200
+        height: 100
+      position: {x: 1277, y: 96}
+      entryBox:
+        serializedVersion: 2
+        x: 452
+        y: 105.5
+        width: 10
+        height: 10
+      contents:
+      - text: 'We have 4 needs:'
+        exitBox:
+          serializedVersion: 2
+          x: 662
+          y: 110.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 20
+          conditions: []
+          impacts:
+          - name: slidersOn
+            type: 1
+            intModifier: 0
+            floatModifier: 0
+            boolModifier: 1
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 15
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 818
+        y: 176.5
+        width: 200
+        height: 100
+      position: {x: 1373, y: 263}
+      entryBox:
+        serializedVersion: 2
+        x: 808
+        y: 196.5
+        width: 10
+        height: 10
+      contents:
+      - text: If we neglect or overdo one of them, we lose balance.
+        exitBox:
+          serializedVersion: 2
+          x: 1018
+          y: 201.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 17
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 16
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 1076
+        y: 146.5
+        width: 200
+        height: 100
+      position: {x: 1310, y: 442}
+      entryBox:
+        serializedVersion: 2
+        x: 1066
+        y: 166.5
+        width: 10
+        height: 10
+      contents:
+      - text: And it's months of depression, burn out and so on
+        exitBox:
+          serializedVersion: 2
+          x: 1276
+          y: 171.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 19
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 17
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 1085
+        y: 445
+        width: 200
+        height: 100
+      position: {x: 1032, y: 290}
+      entryBox:
+        serializedVersion: 2
+        x: 1075
+        y: 465
+        width: 10
+        height: 10
+      contents:
+      - text: Okay, so now's the big day, let's try our best !
+        exitBox:
+          serializedVersion: 2
+          x: 1285
+          y: 470
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 18
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 1082
+        y: 272
+        width: 200
+        height: 100
+      position: {x: 1218, y: 360}
+      entryBox:
+        serializedVersion: 2
+        x: 1072
+        y: 292
+        width: 10
+        height: 10
+      contents:
+      - text: But this won't happend, I believe in us to keep the balance !
+        exitBox:
+          serializedVersion: 2
+          x: 1282
+          y: 297
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 18
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 19
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 734
+        y: 83
+        width: 200
+        height: 100
+      position: {x: 734, y: 83}
+      entryBox:
+        serializedVersion: 2
+        x: 724
+        y: 103
+        width: 10
+        height: 10
+      contents:
+      - text: '- to have money
+
+          - to love and be loved
+
+          - to have time for ourselves
+
+          - to achieve things'
+        exitBox:
+          serializedVersion: 2
+          x: 934
+          y: 108
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 16
+          conditions: []
+          impacts: []
+      charac:
+        name: conscience
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+  dialogsCount: 20

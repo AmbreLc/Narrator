@@ -24,6 +24,9 @@ MonoBehaviour:
   - name: boss
     isPlayable: 0
     color: {r: 1, g: 1, b: 1, a: 1}
+  - name: doctor
+    isPlayable: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
   - name: new character 0
     isPlayable: 0
     color: {r: 1, g: 1, b: 1, a: 1}
@@ -41,11 +44,11 @@ MonoBehaviour:
       - love
       - ego
       - energy
-      values: 32000000320000000a00000032000000
+      values: 3c0000002d0000001900000041000000
     boolValues:
       keys:
       - slidersOn
-      values: 00
+      values: 01
     names:
     - money
     - love
