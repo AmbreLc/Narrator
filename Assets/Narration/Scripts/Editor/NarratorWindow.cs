@@ -1040,7 +1040,7 @@ namespace Narrator
                     GenericMenu menu = new GenericMenu();
                     for (int j = 0; j < brain.Parameters.Names.Count; j++)
                     {
-                        menu.AddItem(new GUIContent(brain.Parameters.Names[j]), false, UpdateSelectedLinkParameter_Impact, new Vector2(i, j));
+                        menu.AddItem(new GUIContent(brain.Parameters.Names[j]), false, UpdateSelectedLinkImpact_Parameter, new Vector2(i, j));
                     }
                     menu.ShowAsContext();
                 }
@@ -1065,7 +1065,7 @@ namespace Narrator
                     case Parameters.TYPE.i:
                         int iValue = EditorGUILayout.IntField(imp.intModifier);
                         if (imp.intModifier != iValue)
-                            UpdateSelectedLinkImpact(i, iValue);
+                            UpdateSelectedLinkImpact_Marker(i, iValue);
                         break;
                     default:
                         break;
@@ -1116,7 +1116,8 @@ namespace Narrator
             conversationList[currentConversationIndex].UpdateCondition(links[selectedLinkIndex].start, (int)links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].conditions[currentCondition]);
         }
 
-        void UpdateSelectedLinkParameter_Impact(object _obj)
+
+        void UpdateSelectedLinkImpact_Parameter(object _obj)
         {
             Vector2 index = (Vector2)_obj;
 
@@ -1125,12 +1126,12 @@ namespace Narrator
             conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, (int)index.x, links[selectedLinkIndex].impacts[(int)index.x]);
         }
 
-        void UpdateSelectedLinkImpact(int _index, float _value)
+        void UpdateSelectedLinkImpact_Marker(int _index, float _value)
         {
             links[selectedLinkIndex].impacts[_index].floatModifier = _value;
             links[selectedLinkIndex].impacts[_index].intModifier = (int)_value;
 
-            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].impacts[_index]);
+            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, _index, links[selectedLinkIndex].impacts[_index]);
         }
 
         void UpdateSelectedLinkMarkerImpact_boolTrue(object _obj)

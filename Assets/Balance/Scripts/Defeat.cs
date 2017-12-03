@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Balance
-{
+public class Defeat : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

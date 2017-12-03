@@ -1,0 +1,298 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79361de3e8ff26741b2e4f2f0f705471, type: 3}
+  m_Name: mum2
+  m_EditorClassIdentifier: 
+  conversationName: mum2
+  entry:
+    id: -1
+    type: 0
+    windowRect:
+      serializedVersion: 2
+      x: -10
+      y: 153
+      width: 100
+      height: 60
+    position: {x: 0, y: 0}
+    entryBox:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    contents:
+    - text: 
+      exitBox:
+        serializedVersion: 2
+        x: 90
+        y: 183
+        width: 10
+        height: 10
+      nextNodes:
+      - index: 1
+        conditions: []
+        impacts: []
+    charac:
+      name: 
+      isPlayable: 0
+      color: {r: 0, g: 0, b: 0, a: 0}
+  dialogs:
+    keys: 01000000020000000300000004000000050000000600000007000000
+    values:
+    - id: 0
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 41
+        y: 295
+        width: 200
+        height: 100
+      position: {x: 390, y: 255}
+      entryBox:
+        serializedVersion: 2
+        x: 31
+        y: 315
+        width: 10
+        height: 10
+      contents:
+      - text: We club together your father and I to buy a present for your cousin's
+          birthday, are you in ?
+        exitBox:
+          serializedVersion: 2
+          x: 241
+          y: 320
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 2
+          conditions: []
+          impacts: []
+      charac:
+        name: mum
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 1
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 286
+        y: 343
+        width: 200
+        height: 100
+      position: {x: 775, y: 215}
+      entryBox:
+        serializedVersion: 2
+        x: 276
+        y: 363
+        width: 10
+        height: 10
+      contents:
+      - text: Yes of course !
+        exitBox:
+          serializedVersion: 2
+          x: 486
+          y: 368
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 3
+          conditions: []
+          impacts:
+          - name: money
+            type: 2
+            intModifier: -10
+            floatModifier: -10
+            boolModifier: 0
+      - text: Sorry I can't...
+        exitBox:
+          serializedVersion: 2
+          x: 486
+          y: 388
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 4
+          conditions: []
+          impacts: []
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 2
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 560
+        y: 242
+        width: 200
+        height: 100
+      position: {x: 786, y: 257}
+      entryBox:
+        serializedVersion: 2
+        x: 550
+        y: 262
+        width: 10
+        height: 10
+      contents:
+      - text: Oow thank you sweetie!
+        exitBox:
+          serializedVersion: 2
+          x: 760
+          y: 267
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: mum
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 3
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 572
+        y: 423
+        width: 200
+        height: 100
+      position: {x: 832, y: 370}
+      entryBox:
+        serializedVersion: 2
+        x: 562
+        y: 443
+        width: 10
+        height: 10
+      contents:
+      - text: How come?
+        exitBox:
+          serializedVersion: 2
+          x: 772
+          y: 448
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 5
+          conditions: []
+          impacts: []
+      charac:
+        name: mum
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 4
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 866
+        y: 447
+        width: 200
+        height: 100
+      position: {x: 1076, y: 526}
+      entryBox:
+        serializedVersion: 2
+        x: 856
+        y: 467
+        width: 10
+        height: 10
+      contents:
+      - text: I don't have enough money
+        exitBox:
+          serializedVersion: 2
+          x: 1066
+          y: 472
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 6
+          conditions: []
+          impacts:
+          - name: ego
+            type: 2
+            intModifier: -10
+            floatModifier: -10
+            boolModifier: 0
+      - text: I don't know him very well, why should I be in ?
+        exitBox:
+          serializedVersion: 2
+          x: 1066
+          y: 492
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 7
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: -10
+            floatModifier: -10
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 5
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 1092.5
+        y: 322.5
+        width: 200
+        height: 100
+      position: {x: 929, y: 348}
+      entryBox:
+        serializedVersion: 2
+        x: 1082.5
+        y: 342.5
+        width: 10
+        height: 10
+      contents:
+      - text: Well no problem, we will pay for you !
+        exitBox:
+          serializedVersion: 2
+          x: 1292.5
+          y: 347.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: mum
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 6
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 1181.5
+        y: 488.5
+        width: 200
+        height: 100
+      position: {x: 632, y: 483}
+      entryBox:
+        serializedVersion: 2
+        x: 1171.5
+        y: 508.5
+        width: 10
+        height: 10
+      contents:
+      - text: 'Because...he''s part of the family.
+
+          I thought your father and I taught you these things, apparently I was wrong...'
+        exitBox:
+          serializedVersion: 2
+          x: 1381.5
+          y: 513.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: mum
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+  dialogsCount: 7

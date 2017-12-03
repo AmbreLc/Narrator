@@ -1,0 +1,1667 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79361de3e8ff26741b2e4f2f0f705471, type: 3}
+  m_Name: dad2
+  m_EditorClassIdentifier: 
+  conversationName: dad2
+  entry:
+    id: -1
+    type: 0
+    windowRect:
+      serializedVersion: 2
+      x: -2249.5
+      y: -67.5
+      width: 100
+      height: 60
+    position: {x: 0, y: 0}
+    entryBox:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    contents:
+    - text: 
+      exitBox:
+        serializedVersion: 2
+        x: -2149.5
+        y: -37.5
+        width: 10
+        height: 10
+      nextNodes:
+      - index: 1
+        conditions: []
+        impacts: []
+    charac:
+      name: 
+      isPlayable: 0
+      color: {r: 0, g: 0, b: 0, a: 0}
+  dialogs:
+    keys: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f00000020000000210000002200000023000000240000002500000026000000270000002800000029000000
+    values:
+    - id: 0
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -2088.5
+        y: 25.5
+        width: 200
+        height: 100
+      position: {x: 487, y: 237}
+      entryBox:
+        serializedVersion: 2
+        x: -2098.5
+        y: 45.5
+        width: 10
+        height: 10
+      contents:
+      - text: Hi kiddo !
+        exitBox:
+          serializedVersion: 2
+          x: -1888.5
+          y: 50.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 2
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 1
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: -1837.5
+        y: 68.5
+        width: 200
+        height: 100
+      position: {x: 786, y: 142}
+      entryBox:
+        serializedVersion: 2
+        x: -1847.5
+        y: 88.5
+        width: 10
+        height: 10
+      contents:
+      - text: Hey dad!
+        exitBox:
+          serializedVersion: 2
+          x: -1637.5
+          y: 93.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 4
+          conditions: []
+          impacts: []
+      - text: '...'
+        exitBox:
+          serializedVersion: 2
+          x: -1637.5
+          y: 113.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 3
+          conditions: []
+          impacts: []
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 2
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -1692.5
+        y: 245.5
+        width: 200
+        height: 100
+      position: {x: 972, y: 318}
+      entryBox:
+        serializedVersion: 2
+        x: -1702.5
+        y: 265.5
+        width: 10
+        height: 10
+      contents:
+      - text: '...
+
+          Is there something wrong?'
+        exitBox:
+          serializedVersion: 2
+          x: -1492.5
+          y: 270.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 12
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 3
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -1533.5
+        y: -20.5
+        width: 200
+        height: 100
+      position: {x: 873, y: 177}
+      entryBox:
+        serializedVersion: 2
+        x: -1543.5
+        y: -0.4999997
+        width: 10
+        height: 10
+      contents:
+      - text: How are you today?
+        exitBox:
+          serializedVersion: 2
+          x: -1333.5
+          y: 4.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 5
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: 0
+            floatModifier: 0
+            boolModifier: 0
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 4
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: -1252
+        y: 7.5
+        width: 200
+        height: 100
+      position: {x: 745, y: 140}
+      entryBox:
+        serializedVersion: 2
+        x: -1262
+        y: 27.5
+        width: 10
+        height: 10
+      contents:
+      - text: Great!
+        exitBox:
+          serializedVersion: 2
+          x: -1052
+          y: 32.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 6
+          conditions: []
+          impacts:
+          - name: energy
+            type: 2
+            intModifier: 5
+            floatModifier: 5
+            boolModifier: 0
+      - text: I'm ok.
+        exitBox:
+          serializedVersion: 2
+          x: -1052
+          y: 52.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 7
+          conditions: []
+          impacts: []
+      - text: Not so good...
+        exitBox:
+          serializedVersion: 2
+          x: -1052
+          y: 72.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 9
+          conditions: []
+          impacts:
+          - name: energy
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 5
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -994
+        y: -118.5
+        width: 200
+        height: 100
+      position: {x: 962, y: 102}
+      entryBox:
+        serializedVersion: 2
+        x: -1004
+        y: -98.5
+        width: 10
+        height: 10
+      contents:
+      - text: 'Fantastic! So do I!
+
+          Tell me, you remember the name of this restaurant we went to for your last
+          mum birthday ?'
+        exitBox:
+          serializedVersion: 2
+          x: -794
+          y: -93.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 8
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 6
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -1135.5
+        y: 210
+        width: 200
+        height: 100
+      position: {x: 824, y: 344}
+      entryBox:
+        serializedVersion: 2
+        x: -1145.5
+        y: 230
+        width: 10
+        height: 10
+      contents:
+      - text: 'Okay, well at least you''re alive!
+
+          You know if there is anything wrong we can talk'
+        exitBox:
+          serializedVersion: 2
+          x: -935.5
+          y: 235
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 13
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 7
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: -695.5
+        y: -91
+        width: 200
+        height: 100
+      position: {x: 1041, y: 187}
+      entryBox:
+        serializedVersion: 2
+        x: -705.5
+        y: -71
+        width: 10
+        height: 10
+      contents:
+      - text: Yes of course !
+        exitBox:
+          serializedVersion: 2
+          x: -495.5
+          y: -66
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 17
+          conditions: []
+          impacts:
+          - name: ego
+            type: 2
+            intModifier: 5
+            floatModifier: 5
+            boolModifier: 0
+      - text: Not really...
+        exitBox:
+          serializedVersion: 2
+          x: -495.5
+          y: -46
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 21
+          conditions: []
+          impacts:
+          - name: ego
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+          - name: love
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 8
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -963.5
+        y: 16
+        width: 200
+        height: 100
+      position: {x: 734, y: 506}
+      entryBox:
+        serializedVersion: 2
+        x: -973.5
+        y: 36
+        width: 10
+        height: 10
+      contents:
+      - text: 'I see...well me neither.
+
+          I wanted to invite your mum to this restaurant we went to for her last birthday...'
+        exitBox:
+          serializedVersion: 2
+          x: -763.5
+          y: 41
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 10
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 9
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -685.5
+        y: 35
+        width: 200
+        height: 100
+      position: {x: 1064, y: 595}
+      entryBox:
+        serializedVersion: 2
+        x: -695.5
+        y: 55
+        width: 10
+        height: 10
+      contents:
+      - text: 'And guess what?
+
+          I don''t remember its name nor where the fuck it was.'
+        exitBox:
+          serializedVersion: 2
+          x: -485.5
+          y: 60
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 11
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 10
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: -371.5
+        y: 27
+        width: 200
+        height: 100
+      position: {x: 1309, y: 535}
+      entryBox:
+        serializedVersion: 2
+        x: -381.5
+        y: 47
+        width: 10
+        height: 10
+      contents:
+      - text: It's not big deal dad, I can tell you.
+        exitBox:
+          serializedVersion: 2
+          x: -171.5
+          y: 52
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 17
+          conditions: []
+          impacts: []
+      - text: You have forgotten a lot of stuff lately?
+        exitBox:
+          serializedVersion: 2
+          x: -171.5
+          y: 72
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 38
+          conditions: []
+          impacts: []
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 11
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: -1437
+        y: 349.5
+        width: 200
+        height: 100
+      position: {x: 737, y: 556}
+      entryBox:
+        serializedVersion: 2
+        x: -1447
+        y: 369.5
+        width: 10
+        height: 10
+      contents:
+      - text: Yes.
+        exitBox:
+          serializedVersion: 2
+          x: -1237
+          y: 374.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 14
+          conditions: []
+          impacts:
+          - name: ego
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+      - text: No
+        exitBox:
+          serializedVersion: 2
+          x: -1237
+          y: 394.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 16
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: -15
+            floatModifier: -15
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 12
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: -861
+        y: 302.5
+        width: 200
+        height: 100
+      position: {x: 989, y: 441}
+      entryBox:
+        serializedVersion: 2
+        x: -871
+        y: 322.5
+        width: 10
+        height: 10
+      contents:
+      - text: It's nothing, everyday life and stuff
+        exitBox:
+          serializedVersion: 2
+          x: -661
+          y: 327.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 16
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+      - text: Well indeed there is a problem...
+        exitBox:
+          serializedVersion: 2
+          x: -661
+          y: 347.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 14
+          conditions: []
+          impacts: []
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 13
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -598
+        y: 414
+        width: 200
+        height: 100
+      position: {x: 601, y: 640}
+      entryBox:
+        serializedVersion: 2
+        x: -608
+        y: 434
+        width: 10
+        height: 10
+      contents:
+      - text: Tell me more about this.
+        exitBox:
+          serializedVersion: 2
+          x: -398
+          y: 439
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 15
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 14
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: -330
+        y: 434.5
+        width: 200
+        height: 100
+      position: {x: 888, y: 420}
+      entryBox:
+        serializedVersion: 2
+        x: -340
+        y: 454.5
+        width: 10
+        height: 10
+      contents:
+      - text: It's about money...
+        exitBox:
+          serializedVersion: 2
+          x: -130
+          y: 459.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 22
+          conditions: []
+          impacts:
+          - name: money
+            type: 2
+            intModifier: 20
+            floatModifier: 20
+            boolModifier: 0
+          - name: ego
+            type: 2
+            intModifier: -20
+            floatModifier: -20
+            boolModifier: 0
+      - text: It's about work...
+        exitBox:
+          serializedVersion: 2
+          x: -130
+          y: 479.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 23
+          conditions: []
+          impacts: []
+      - text: It's about my friends...
+        exitBox:
+          serializedVersion: 2
+          x: -130
+          y: 499.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 24
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: 5
+            floatModifier: 5
+            boolModifier: 0
+          - name: love
+            type: 2
+            intModifier: 5
+            floatModifier: 5
+            boolModifier: 0
+      - text: I'm overwhelmed by everything...
+        exitBox:
+          serializedVersion: 2
+          x: -130
+          y: 519.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 26
+          conditions: []
+          impacts:
+          - name: ego
+            type: 2
+            intModifier: -2
+            floatModifier: -2
+            boolModifier: 0
+          - name: energy
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+          - name: money
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+          - name: ego
+            type: 2
+            intModifier: -2
+            floatModifier: -2
+            boolModifier: 0
+          - name: love
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 15
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -641.5
+        y: 550.5
+        width: 200
+        height: 100
+      position: {x: 656, y: 606}
+      entryBox:
+        serializedVersion: 2
+        x: -651.5
+        y: 570.5
+        width: 10
+        height: 10
+      contents:
+      - text: 'Okay...
+
+          Well see you later then.'
+        exitBox:
+          serializedVersion: 2
+          x: -441.5
+          y: 575.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 16
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 11
+        y: -67
+        width: 200
+        height: 100
+      position: {x: 899, y: 277}
+      entryBox:
+        serializedVersion: 2
+        x: 1
+        y: -47
+        width: 10
+        height: 10
+      contents:
+      - text: 'Thanks kiddo!
+
+          Sorry to bother you about that.'
+        exitBox:
+          serializedVersion: 2
+          x: 211
+          y: -42
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 18
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 17
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 295
+        y: -181.5
+        width: 200
+        height: 100
+      position: {x: 1246, y: 74}
+      entryBox:
+        serializedVersion: 2
+        x: 285
+        y: -161.5
+        width: 10
+        height: 10
+      contents:
+      - text: No problem, I'll text you the adress
+        exitBox:
+          serializedVersion: 2
+          x: 495
+          y: -156.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 19
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: 10
+            floatModifier: 10
+            boolModifier: 0
+          - name: ego
+            type: 2
+            intModifier: 5
+            floatModifier: 5
+            boolModifier: 0
+      - text: I'll text it to you, but you should see a doctor about forgetting stuff.
+        exitBox:
+          serializedVersion: 2
+          x: 495
+          y: -136.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 20
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: 5
+            floatModifier: 5
+            boolModifier: 0
+          - name: ego
+            type: 2
+            intModifier: 10
+            floatModifier: 10
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 18
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 703
+        y: -215.5
+        width: 200
+        height: 100
+      position: {x: 1322, y: 233}
+      entryBox:
+        serializedVersion: 2
+        x: 693
+        y: -195.5
+        width: 10
+        height: 10
+      contents:
+      - text: Thanks again, see you later :)
+        exitBox:
+          serializedVersion: 2
+          x: 903
+          y: -190.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 19
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 555
+        y: -47.5
+        width: 200
+        height: 100
+      position: {x: 1267, y: 300}
+      entryBox:
+        serializedVersion: 2
+        x: 545
+        y: -27.5
+        width: 10
+        height: 10
+      contents:
+      - text: We will see, I'm not senile yet kiddo!
+        exitBox:
+          serializedVersion: 2
+          x: 755
+          y: -22.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 20
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -371.5
+        y: -200.5
+        width: 200
+        height: 100
+      position: {x: 733, y: 157}
+      entryBox:
+        serializedVersion: 2
+        x: -381.5
+        y: -180.5
+        width: 10
+        height: 10
+      contents:
+      - text: 'Really?
+
+          Too bad...well I''ll figure out something else, see you later kiddo'
+        exitBox:
+          serializedVersion: 2
+          x: -171.5
+          y: -175.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 21
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -7
+        y: 281
+        width: 200
+        height: 100
+      position: {x: 936, y: 348}
+      entryBox:
+        serializedVersion: 2
+        x: -17
+        y: 301
+        width: 10
+        height: 10
+      contents:
+      - text: Oh I see...take this, it stays between us ;)
+        exitBox:
+          serializedVersion: 2
+          x: 193
+          y: 306
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 22
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 1
+        y: 420
+        width: 200
+        height: 100
+      position: {x: 901, y: 486}
+      entryBox:
+        serializedVersion: 2
+        x: -9
+        y: 440
+        width: 10
+        height: 10
+      contents:
+      - text: It's shitty? Why don't you quit?
+        exitBox:
+          serializedVersion: 2
+          x: 201
+          y: 445
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 25
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 23
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 38
+        y: 538
+        width: 200
+        height: 100
+      position: {x: 933, y: 550}
+      entryBox:
+        serializedVersion: 2
+        x: 28
+        y: 558
+        width: 10
+        height: 10
+      contents:
+      - text: 'Oh you know, people come and leave, it''s life!
+
+          You''re still amazing, I''m sure you''ll make new ones ;)'
+        exitBox:
+          serializedVersion: 2
+          x: 238
+          y: 563
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 24
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 272
+        y: 416
+        width: 200
+        height: 100
+      position: {x: 1281, y: 334}
+      entryBox:
+        serializedVersion: 2
+        x: 262
+        y: 436
+        width: 10
+        height: 10
+      contents:
+      - text: I like it, but it's too much.
+        exitBox:
+          serializedVersion: 2
+          x: 472
+          y: 441
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 30
+          conditions: []
+          impacts: []
+      - text: What if I find nothing else?
+        exitBox:
+          serializedVersion: 2
+          x: 472
+          y: 461
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 34
+          conditions: []
+          impacts: []
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 25
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -36
+        y: 670
+        width: 200
+        height: 100
+      position: {x: 810, y: 603}
+      entryBox:
+        serializedVersion: 2
+        x: -46
+        y: 690
+        width: 10
+        height: 10
+      contents:
+      - text: You can make a break and come live with us if you need to.
+        exitBox:
+          serializedVersion: 2
+          x: 164
+          y: 695
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 27
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 26
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 262
+        y: 662
+        width: 200
+        height: 100
+      position: {x: 1200, y: 627}
+      entryBox:
+        serializedVersion: 2
+        x: 252
+        y: 682
+        width: 10
+        height: 10
+      contents:
+      - text: Good idea, I'll come tomorrow.
+        exitBox:
+          serializedVersion: 2
+          x: 462
+          y: 687
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 28
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: 30
+            floatModifier: 30
+            boolModifier: 0
+          - name: energy
+            type: 2
+            intModifier: 30
+            floatModifier: 30
+            boolModifier: 0
+      - text: No thanks, I want to deal with it on my own.
+        exitBox:
+          serializedVersion: 2
+          x: 462
+          y: 707
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 29
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: 10
+            floatModifier: 10
+            boolModifier: 0
+          - name: energy
+            type: 2
+            intModifier: 5
+            floatModifier: 5
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 27
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 552.5
+        y: 541.5
+        width: 200
+        height: 100
+      position: {x: 1222, y: 512}
+      entryBox:
+        serializedVersion: 2
+        x: 542.5
+        y: 561.5
+        width: 10
+        height: 10
+      contents:
+      - text: Nice, your mum is going to be so happy to see you back for a while!
+        exitBox:
+          serializedVersion: 2
+          x: 752.5
+          y: 566.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 28
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 556.5
+        y: 702.5
+        width: 200
+        height: 100
+      position: {x: 1245, y: 628}
+      entryBox:
+        serializedVersion: 2
+        x: 546.5
+        y: 722.5
+        width: 10
+        height: 10
+      contents:
+      - text: 'I understand, good luck kiddo.
+
+          If you need anything your mum and I are here you know.'
+        exitBox:
+          serializedVersion: 2
+          x: 756.5
+          y: 727.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 29
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 514
+        y: 268.5
+        width: 200
+        height: 100
+      position: {x: 989, y: 208}
+      entryBox:
+        serializedVersion: 2
+        x: 504
+        y: 288.5
+        width: 10
+        height: 10
+      contents:
+      - text: I see, you should ask your boss to take some rest, have a break, I'm
+          sure you deserve it!
+        exitBox:
+          serializedVersion: 2
+          x: 714
+          y: 293.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 31
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 30
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 760
+        y: 224.5
+        width: 200
+        height: 100
+      position: {x: 1193, y: 161}
+      entryBox:
+        serializedVersion: 2
+        x: 750
+        y: 244.5
+        width: 10
+        height: 10
+      contents:
+      - text: You're right, I'll ask for a break.
+        exitBox:
+          serializedVersion: 2
+          x: 960
+          y: 249.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 32
+          conditions: []
+          impacts:
+          - name: energy
+            type: 2
+            intModifier: 10
+            floatModifier: 10
+            boolModifier: 0
+          - name: ego
+            type: 2
+            intModifier: -5
+            floatModifier: -5
+            boolModifier: 0
+      - text: No way, I can't have a break now!
+        exitBox:
+          serializedVersion: 2
+          x: 960
+          y: 269.5
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 33
+          conditions: []
+          impacts:
+          - name: ego
+            type: 2
+            intModifier: 10
+            floatModifier: 10
+            boolModifier: 0
+          - name: energy
+            type: 2
+            intModifier: -10
+            floatModifier: -10
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 31
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 1232.5
+        y: 282
+        width: 200
+        height: 100
+      position: {x: 1199, y: 99}
+      entryBox:
+        serializedVersion: 2
+        x: 1222.5
+        y: 302
+        width: 10
+        height: 10
+      contents:
+      - text: It's the good choice, kep going kiddo!
+        exitBox:
+          serializedVersion: 2
+          x: 1432.5
+          y: 307
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 32
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 1038.5
+        y: 130
+        width: 200
+        height: 100
+      position: {x: 1206, y: 278}
+      entryBox:
+        serializedVersion: 2
+        x: 1028.5
+        y: 150
+        width: 10
+        height: 10
+      contents:
+      - text: Too bad...well good luck kiddo, don't push yourself too hard :/
+        exitBox:
+          serializedVersion: 2
+          x: 1238.5
+          y: 155
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 33
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 539.5
+        y: 423
+        width: 200
+        height: 100
+      position: {x: 987, y: 330}
+      entryBox:
+        serializedVersion: 2
+        x: 529.5
+        y: 443
+        width: 10
+        height: 10
+      contents:
+      - text: You will, don't worry too much.
+        exitBox:
+          serializedVersion: 2
+          x: 739.5
+          y: 448
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 35
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 34
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 829.5
+        y: 479
+        width: 200
+        height: 100
+      position: {x: 1278, y: 342}
+      entryBox:
+        serializedVersion: 2
+        x: 819.5
+        y: 499
+        width: 10
+        height: 10
+      contents:
+      - text: What a lie! We can't know for sure...
+        exitBox:
+          serializedVersion: 2
+          x: 1029.5
+          y: 504
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 36
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: -15
+            floatModifier: -15
+            boolModifier: 0
+      - text: You're right. I'll do what's necessary and find a better job.
+        exitBox:
+          serializedVersion: 2
+          x: 1029.5
+          y: 524
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 32
+          conditions: []
+          impacts:
+          - name: energy
+            type: 2
+            intModifier: 20
+            floatModifier: 20
+            boolModifier: 0
+          - name: ego
+            type: 2
+            intModifier: -10
+            floatModifier: -10
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 35
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 1156.5
+        y: 470.5
+        width: 200
+        height: 100
+      position: {x: 1044, y: 483}
+      entryBox:
+        serializedVersion: 2
+        x: 1146.5
+        y: 490.5
+        width: 10
+        height: 10
+      contents:
+      - text: 'Calm down kiddo.
+
+          It''s not a lie it''s called optimism, you should try to remember what it
+          is before yelling at people who are trying to help.'
+        exitBox:
+          serializedVersion: 2
+          x: 1356.5
+          y: 495.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 36
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 1155.5
+        y: 590.5
+        width: 200
+        height: 100
+      position: {x: 1254, y: 449}
+      entryBox:
+        serializedVersion: 2
+        x: 1145.5
+        y: 610.5
+        width: 10
+        height: 10
+      contents:
+      - text: 
+        exitBox:
+          serializedVersion: 2
+          x: 1355.5
+          y: 615.5
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 37
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: -50.5
+        y: 112
+        width: 200
+        height: 100
+      position: {x: 949, y: 393}
+      entryBox:
+        serializedVersion: 2
+        x: -60.5
+        y: 132
+        width: 10
+        height: 10
+      contents:
+      - text: Maybe...I know, I should see a doctor and all...It's troubling me.
+        exitBox:
+          serializedVersion: 2
+          x: 149.5
+          y: 137
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 39
+          conditions: []
+          impacts: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 38
+      type: 2
+      windowRect:
+        serializedVersion: 2
+        x: 201.5
+        y: 146
+        width: 200
+        height: 100
+      position: {x: 1242, y: 397}
+      entryBox:
+        serializedVersion: 2
+        x: 191.5
+        y: 166
+        width: 10
+        height: 10
+      contents:
+      - text: We can go together if you want
+        exitBox:
+          serializedVersion: 2
+          x: 401.5
+          y: 171
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 40
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: 15
+            floatModifier: 15
+            boolModifier: 0
+          - name: ego
+            type: 2
+            intModifier: 5
+            floatModifier: 5
+            boolModifier: 0
+      - text: You should go, maybe she can help. And if it's nothing you'll know.
+        exitBox:
+          serializedVersion: 2
+          x: 401.5
+          y: 191
+          width: 10
+          height: 10
+        nextNodes:
+        - index: 41
+          conditions: []
+          impacts:
+          - name: love
+            type: 2
+            intModifier: 5
+            floatModifier: 5
+            boolModifier: 0
+          - name: ego
+            type: 2
+            intModifier: 2
+            floatModifier: 2
+            boolModifier: 0
+      charac:
+        name: you
+        isPlayable: 1
+        color: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - id: 39
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 466.5
+        y: 63
+        width: 200
+        height: 100
+      position: {x: 1235, y: 376}
+      entryBox:
+        serializedVersion: 2
+        x: 456.5
+        y: 83
+        width: 10
+        height: 10
+      contents:
+      - text: 'That''s nice to ear, thanks kiddo :)
+
+          I''ll tell you when I''ll go see her!'
+        exitBox:
+          serializedVersion: 2
+          x: 666.5
+          y: 88
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+    - id: 40
+      type: 1
+      windowRect:
+        serializedVersion: 2
+        x: 481.5
+        y: 165
+        width: 200
+        height: 100
+      position: {x: 1250, y: 485}
+      entryBox:
+        serializedVersion: 2
+        x: 471.5
+        y: 185
+        width: 10
+        height: 10
+      contents:
+      - text: You're right...maybe I'll go.
+        exitBox:
+          serializedVersion: 2
+          x: 681.5
+          y: 190
+          width: 10
+          height: 10
+        nextNodes: []
+      charac:
+        name: dad
+        isPlayable: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+  dialogsCount: 41

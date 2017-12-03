@@ -18,8 +18,17 @@ MonoBehaviour:
   - name: dad
     isPlayable: 0
     color: {r: 1, g: 1, b: 1, a: 1}
+  - name: conscience
+    isPlayable: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - name: boss
+    isPlayable: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - name: new character 0
+    isPlayable: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
   pcs:
-  - name: Player1
+  - name: you
     isPlayable: 1
     color: {r: 0.8, g: 0.8, b: 1, a: 1}
   parameters:
@@ -32,12 +41,14 @@ MonoBehaviour:
       - love
       - ego
       - energy
-      values: 32000000320000003c00000032000000
+      values: 32000000320000000a00000032000000
     boolValues:
-      keys: []
-      values: 
+      keys:
+      - slidersOn
+      values: 00
     names:
     - money
     - love
     - ego
     - energy
+    - slidersOn
