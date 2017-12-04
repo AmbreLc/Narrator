@@ -1219,25 +1219,31 @@ namespace Narrator
         {
             string [] guid = AssetDatabase.FindAssets("t:NarratorBrainSO", null);
 
+            // Load the brain if there is one in Assets folder
             if (guid.Length == 1)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid[0]);
-                path = path.Replace(".asset", string.Empty);
-                path = path.Substring(path.IndexOf("Resources") + "Resources/".Length);
-                brain = Resources.Load<NarratorBrainSO>(path);
+                brain = AssetDatabase.LoadAssetAtPath(path, typeof(NarratorBrainSO)) as NarratorBrainSO;
+
                 if (brain == null)
-                    Debug.LogError("Could not load brain at : " + path + "\n Is brain asset in a Resources folder ?");
+                    Debug.LogError("Could not load brain at : " + path);
             }
             // Generate a brain if there is none
             else if (guid.Length == 0)
             {
                 brain = CreateInstance<NarratorBrainSO>();
-                //AssetDatabase.CreateAsset(brain, "Assets/Resources/"); // "brain.asset");
+                AssetDatabase.CreateAsset(brain, "Assets/NarratorBrain.asset");
             }
-            
+            // Narrator can't handle more than two brains for the moment : the first encountered is taken, others are ignored
             else
             { 
-                Debug.LogError("More than one brain : caca");
+                Debug.LogWarning("Narrator can't handle more than two brains, the first one encounter has been loaded, other(s) will be ignored");
+
+                string path = AssetDatabase.GUIDToAssetPath(guid[0]);
+                brain = AssetDatabase.LoadAssetAtPath(path, typeof(NarratorBrainSO)) as NarratorBrainSO;
+
+                if (brain == null)
+                    Debug.LogError("Could not load brain at : " + path);
             }
 
             if (brain.NPCs == null)

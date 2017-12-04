@@ -7,6 +7,12 @@ namespace Narrator
 
     public class ConversationUI : MonoBehaviour
     {
+        enum DisplayType
+        {
+            blunt,
+            fade
+        }
+
         enum State
         {
             fadeIn,
@@ -15,11 +21,13 @@ namespace Narrator
         }
         State state = State.fadeIn;
 
+        [Header("Scriptable objects")]
         [SerializeField] private NarratorBrainSO brain;
         [SerializeField] private ConversationSO conversation;
 
 
-        private Node currentNode = new Node();
+        [Header("UI elements")]
+        [SerializeField] private DisplayType displayType;
 
         [SerializeField] private bool displayInterlocutor = true;
         [SerializeField] private Text targetText;
@@ -28,53 +36,58 @@ namespace Narrator
         [SerializeField] private Button nextButton;
         [SerializeField] private Button[] choicesButtons;
 
+        //[Header("Informations")]
+        private Node currentNode = new Node();
         List<string> choices = new List<string>();
 
-        [Header("Informations")]
-        [SerializeField] private bool isOver = false;
-        private float fading;
-        
+        private bool isOver = false;
         public bool IsOver { get { return isOver; } }
+
+        private float fading;
+
 
 
 
         // Use this for initialization
         void Start()
         {
-            isOver = false;
-            currentNode = conversation.Entry;
-            GoToNextNode();
+            if (conversation == null)
+            {
+                this.enabled = false;
+                Debug.LogError("ConversationUI : missing ConversationSO, can't display dialogs. Component has been disabled.");
+            }
+            else if (brain == null)
+            {
+                this.enabled = false;
+                Debug.LogError("ConversationUI : missing BrainSO, can't display dialogs. Component has been disabled.");
+            }
+            else
+            {
+                Init();
+            }
         }
 
         public void Init()
         {
             isOver = false;
             currentNode = conversation.Entry;
-            GoToNextNode();
+            GoToNextNode(0);
 
-            if (currentNode.type == Node.Type.choice)
-                DisplayChoices();
-            else if (currentNode.type == Node.Type.speak)
-                DisplayDialog();
-
-            state = State.fadeIn;
-            fading = 0.0f;
+            if (displayType == DisplayType.fade)
+            {
+                state = State.fadeIn;
+                fading = 0.0f;
+            }
+            else
+            {
+                state = State.current;
+            }
         }
 
         public void NewConversation(ConversationSO _conv)
         {
             conversation = _conv;
-            isOver = false;
-            currentNode = conversation.Entry;
-            GoToNextNode();
-
-            if (currentNode.type == Node.Type.choice)
-                DisplayChoices();
-            else if (currentNode.type == Node.Type.speak)
-                DisplayDialog();
-
-            state = State.fadeIn;
-            fading = 0.0f;
+            Init();
         }
 
         // Update is called once per frame
@@ -84,11 +97,9 @@ namespace Narrator
                 DisplayChoices();
             else if (currentNode.type == Node.Type.speak)
                 DisplayDialog();
-            else if (currentNode.type == Node.Type.entry)
-                GoToNextNode();
+
 
             SetOpacity();
-
             if (state == State.fadeIn)
             {
                 if (fading < 1.0f)
@@ -101,12 +112,9 @@ namespace Narrator
                 if (fading > 0.0f)
                     fading -= Time.deltaTime;
                 else
-                {
-                    isOver = true;
-                    currentNode = conversation.Entry;
-                    Debug.Log("fin de la conversation");
-                }
+                    EndConversation();
             }
+
         }
 
 
@@ -125,7 +133,7 @@ namespace Narrator
                 else
                     choicesButtons[i].gameObject.SetActive(false);
             }
-            
+
         }
 
         void DisplayDialog()
@@ -141,51 +149,50 @@ namespace Narrator
 
             for (int i = 0; i < choicesButtons.Length; i++)
                 choicesButtons[i].gameObject.SetActive(false);
-            
+
         }
 
-        public void GoToNextNode()
+        public void GoToNextNode(int _index)
         {
+            // Update current node
+            currentNode = conversation.GoToNextNode(brain, currentNode, _index);
 
-            // Choix du next node
-            int nextNodeIndex = TestNextNodes(0);
-
-            if (nextNodeIndex == -1)
+            // Test : end of the conversation
+            if(currentNode == null)
             {
                 state = State.fadeOut;
             }
-            else
+
+            // Obsolete
             {
-                // Actualisation du noeud courant
-                currentNode = conversation.Dialogs.dictionary[currentNode.contents[0].nextNodes[nextNodeIndex].index];
-                // Actualisation du (des) texte(s) affiché(s)
-                choices.Clear();
-                for(int i = 0; i < currentNode.contents.Count; i++)
-                    choices.Add(currentNode.contents[i].text);
+                /*
+                int nextNodeIndex = TestNextNodes(_index);
+                if (nextNodeIndex == -1)
+                {
+                    state = State.fadeOut;
+                }
+                else
+                {
+                    // Actualisation du noeud courant
+                    currentNode = conversation.Dialogs.dictionary[currentNode.contents[_index].nextNodes[nextNodeIndex].index];
+                    // Actualisation du (des) texte(s) affiché(s)
+                    choices.Clear();
+                    for (int i = 0; i < currentNode.contents.Count; i++)
+                        choices.Add(currentNode.contents[i].text);
+                }
+                */
             }
         }
 
-        public void ChoseNextNode(int _index)
-        {        
-            // Choix du next node
-            int nextNodeIndex = TestNextNodes(_index);
-
-            if (nextNodeIndex == -1)
-            {
-                state = State.fadeOut;
-            }
-            else
-            {
-                // Actualisation du noeud courant
-                currentNode = conversation.Dialogs.dictionary[currentNode.contents[_index].nextNodes[nextNodeIndex].index];
-                // Actualisation du (des) texte(s) affiché(s)
-                choices.Clear();
-                for (int i = 0; i < currentNode.contents.Count; i++)
-                    choices.Add(currentNode.contents[i].text);
-            }
+        void EndConversation()
+        {
+            isOver = true;
+            currentNode = conversation.Entry;
         }
 
-
+        // Obsolete : moved to ConversationSO
+        
+        /*
         int TestNextNodes(int _contentIndex)
         {
             for (int i = 0; i < currentNode.contents[_contentIndex].nextNodes.Count; i++)
@@ -211,6 +218,9 @@ namespace Narrator
 
             return -1;
         }
+        */
+        
+
 
         void SetOpacity()
         {
