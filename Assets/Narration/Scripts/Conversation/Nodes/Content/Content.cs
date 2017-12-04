@@ -52,7 +52,7 @@ namespace Narrator
             bool hasRemoved = false;
             for (int i = 0; i < nextNodes.Count; i++)
             {
-                if (nextNodes[i].index == _index)
+                if (nextNodes[i].index == _index + 1)
                 {
                     nextNodes.RemoveAt(i);
                     hasRemoved = true;

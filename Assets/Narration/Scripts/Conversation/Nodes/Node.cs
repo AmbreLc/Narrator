@@ -29,8 +29,6 @@ namespace Narrator
             choice
         };
 
-        [SerializeField] protected int id;
-        public int ID { get { return id; } }
         [SerializeField] public Type type;
         [SerializeField] [HideInInspector] public Rect windowRect;
         [SerializeField] [HideInInspector] public Vector2 position;

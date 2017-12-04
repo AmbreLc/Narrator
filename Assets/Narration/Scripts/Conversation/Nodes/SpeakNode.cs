@@ -20,7 +20,6 @@ namespace Narrator
     {
         public void CreateSpeakNode(int _id)
         {
-            id = _id;
             type = Type.speak;
             charac = new Character();
 
@@ -35,7 +34,6 @@ namespace Narrator
 
         public void CreateSpeakNode(int _id, int _choicesCount)
         {
-            id = _id;
             type = _choicesCount > 1 ? Type.choice : Type.speak;
             charac = new Character();
 

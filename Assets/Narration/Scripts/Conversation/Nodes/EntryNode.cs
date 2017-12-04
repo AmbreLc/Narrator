@@ -23,7 +23,6 @@ namespace Narrator
         {
             windowRect = new Rect(250.0f, 100.0f, 100.0f, 60.0f);
 
-            id = -1;
             charac = null;
             type = Type.entry;
 

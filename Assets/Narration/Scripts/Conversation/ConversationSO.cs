@@ -42,20 +42,18 @@ namespace Narrator
             get { return entry; }
         }
 
-        [SerializeField] private Dialogs dialogs;
-        public Dialogs Dialogs
+        [SerializeField] private List<Node> dialogs;
+        public List<Node> Dialogs
         {
             get { return dialogs; }
         }
 
-        [SerializeField] private int dialogsCount;
+        public int GetDialogsCount { get { return Dialogs.Count; } }
 
 
         public void AddDialogNode(Node _newNode)
         {
-            dialogsCount = dialogs.dictionary.Count + 1;
-            dialogs.dictionary.Add(dialogsCount, _newNode);
-            Debug.Log("Add dialog, index " + dialogsCount);
+            dialogs.Add(_newNode);
         }
 
         /// <summary>
@@ -65,35 +63,62 @@ namespace Narrator
         /// <param name="_end"></param>
         public void AddLinkToDialog(Node _start, Node _end, int _startIndex)
         {
-            int startIndex = -1;
-            int endIndex = -1;
+            // Obsolete
+            {
+                /*
+                int startIndex = -1;
+                int endIndex = -1;
 
-            // If the starting node is the entry one
+                // If the starting node is the entry one
+                if (_start.type == Node.Type.entry)
+                    startIndex = 0;
+
+                // if the start and/or end node(s) is/are speaknode(s)
+                foreach (Node node in dialogs)
+                {
+                    if (node.windowRect == _start.windowRect)
+                    {
+                        startIndex = node.ID;
+                    }
+                    else if (node.windowRect == _end.windowRect)
+                    {
+                        endIndex = node.ID;
+                    }
+                }
+
+                if (startIndex == -1 || endIndex == -1)
+                    Debug.LogError("Error : dialog missing in conversation, cannot link");
+                else if (startIndex == 0)
+                    entry.contents[_startIndex].AddNextNode(endIndex);
+                else
+                {
+                    dialogs[startIndex].contents[_startIndex].AddNextNode(endIndex);
+                }
+                */
+            }
+
+            int startNodeIndex = -1;
+            int endNodeIndex = -1;
+
             if (_start.type == Node.Type.entry)
-                startIndex = 0;
+                startNodeIndex = 0;
 
-            // if the start and/or end node(s) is/are speaknode(s)
-            foreach (KeyValuePair<int, Node> entry in dialogs.dictionary)
+            for (int i = 0; i < dialogs.Count; i++)
             {
-                if(entry.Value.windowRect == _start.windowRect)
-                {
-                    startIndex = entry.Key;
-                }
-                else if(entry.Value.windowRect == _end.windowRect)
-                {
-                    endIndex = entry.Key;
-                }
+                if (startNodeIndex == -1 && dialogs[i] == _start)
+                    startNodeIndex = i;
+                else if (endNodeIndex == -1 && dialogs[i] == _end)
+                    endNodeIndex = i + 1;
             }
 
-            if (startIndex == -1 || endIndex == -1)
+            if (startNodeIndex == -1 || endNodeIndex == -1)
                 Debug.LogError("Error : dialog missing in conversation, cannot link");
-            else if (startIndex == 0)
-                entry.contents[_startIndex].AddNextNode(endIndex);
+            else if (startNodeIndex == 0)
+                entry.contents[_startIndex].AddNextNode(endNodeIndex);
             else
-            {
-                dialogs.dictionary[startIndex].contents[_startIndex].AddNextNode(endIndex);
-            }
+                dialogs[startNodeIndex].contents[_startIndex].AddNextNode(endNodeIndex);
         }
+
 
         public void DeleteLinkFromDialog(Node _start, Node _end, int _contentIndex)
         {
@@ -105,16 +130,12 @@ namespace Narrator
                 startIndex = 0;
 
             // if the start and/or end node(s) is/are speaknode(s)
-            foreach (KeyValuePair<int, Node> entry in dialogs.dictionary)
+            for (int i = 0; i < dialogs.Count; i++)
             {
-                if (entry.Value.windowRect == _start.windowRect)
-                {
-                    startIndex = entry.Key;
-                }
-                else if (entry.Value.windowRect == _end.windowRect)
-                {
-                    endIndex = entry.Key;
-                }
+                if (startIndex == -1 && _start == dialogs[i])
+                    startIndex = i;             
+                else if (endIndex == -1 && _end == dialogs[i])
+                    endIndex = i;
             }
 
             if (startIndex == -1 || endIndex == -1)
@@ -122,67 +143,113 @@ namespace Narrator
             else if (startIndex == 0)
                 entry.contents[_contentIndex].RemoveNextNode(endIndex);
             else
-                dialogs.dictionary[startIndex].contents[_contentIndex].RemoveNextNode(endIndex);
+                dialogs[startIndex].contents[_contentIndex].RemoveNextNode(endIndex);
 
-#if UNITY_EDITOR
-            UnityEditor.EditorUtility.SetDirty(this);
-            UnityEditor.AssetDatabase.SaveAssets();
-#endif
-
+            Save();
         }
+
+        public void DeleteNodeFromDialog(Node _node)
+        {
+            if (Dialogs.Contains(_node))
+            {
+                int nodeIndex = 0;
+                for (int i = 0; i < Dialogs.Count; i++)
+                {
+                    if (Dialogs[i] == _node)
+                        nodeIndex = i;
+                }
+               
+                bool goBreak = true;
+                while (goBreak == true)
+                {
+                    goBreak = false;
+                    for (int i = 0; i < Entry.contents.Count; i++)
+                    {
+                        if (goBreak == true) break;
+                        for (int j = 0; j < Entry.contents[i].nextNodes.Count; j++)
+                        {
+                            if (goBreak == true) break;
+                            if (Entry.contents[i].nextNodes[j].index == nodeIndex)
+                            {
+                                Entry.contents[i].nextNodes.RemoveAt(j);
+                                goBreak = true;
+                            }
+                        }
+                    }
+                }
+
+                goBreak = true;
+                while (goBreak == true)
+                {
+                    goBreak = false;
+                    for (int a = 0; a < Dialogs.Count; a++)
+                    {
+                        if (goBreak == true) break;
+                        for (int i = 0; i < Dialogs[a].contents.Count; i++)
+                        {
+                            if (goBreak == true) break;
+                            for (int j = 0; j < Dialogs[a].contents[i].nextNodes.Count; j++)
+                            {
+                                if (goBreak == true) break;
+                                if (Dialogs[a].contents[i].nextNodes[j].index == nodeIndex)
+                                {
+                                    Dialogs[a].contents[i].nextNodes.RemoveAt(j);
+                                    goBreak = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            else
+                Debug.LogError("Conversation doesn't contain the node you're trying to delete");
+                  
+            
+            Dialogs.Remove(_node);
+            Save();
+        }
+
 
 
         public void AddCondition(Node _start, int _contentIndex, int _nextNodeIndex, Condition _condition)
         {
             _start.contents[_contentIndex].nextNodes[_nextNodeIndex].conditions.Add(_condition);
-
-#if UNITY_EDITOR
-            UnityEditor.EditorUtility.SetDirty(this);
-            UnityEditor.AssetDatabase.SaveAssets();
-#endif
+            Save();
         }
 
         public void UpdateCondition(Node _start, int _contentIndex, int _nextNodeIndex, int _conditionIndex, Condition _condition)
         {
             _start.contents[_contentIndex].nextNodes[_nextNodeIndex].conditions[_conditionIndex] = _condition;
-
-#if UNITY_EDITOR
-            UnityEditor.EditorUtility.SetDirty(this);
-            UnityEditor.AssetDatabase.SaveAssets();
-#endif
+            Save();
         }
 
 
         public void AddImpact(Node _start, int _contentIndex, int _nextNodeIndex, Impact _impact)
         {
             _start.contents[_contentIndex].nextNodes[_nextNodeIndex].impacts.Add(_impact);
-
-#if UNITY_EDITOR
-            UnityEditor.EditorUtility.SetDirty(this);
-            UnityEditor.AssetDatabase.SaveAssets();
-#endif
+            Save();
         }
 
         public void UpdateImpact(Node _start, int _contentIndex, int _nextNodeIndex, int _impactIndex, Impact _impact)
         {
             _start.contents[_contentIndex].nextNodes[_nextNodeIndex].impacts[_impactIndex] = _impact;
-
-#if UNITY_EDITOR
-            UnityEditor.EditorUtility.SetDirty(this);
-            UnityEditor.AssetDatabase.SaveAssets();
-#endif
+            Save();
         }
 
 
         public void CreateConversation()
         {
             conversationName = "New Conversation";
-            dialogsCount = 0;
             entry = new EntryNode();
             entry.CreateEntryNode();
-            dialogs = Dialogs.New<Dialogs>();
+            dialogs = new List<Node>();
 
+            Save();
+        }
 
+        private void Save()
+        {
 #if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
             UnityEditor.AssetDatabase.SaveAssets();
@@ -216,7 +283,7 @@ namespace Narrator
                     {
                         _brain.ApplyImpact(_currentNode.contents[_contentIndex].nextNodes[i].impacts[j]);
                     }
-                    return Dialogs.dictionary[_currentNode.contents[_contentIndex].nextNodes[i].index];
+                    return Dialogs[_currentNode.contents[_contentIndex].nextNodes[i].index];
                 }
             }
 

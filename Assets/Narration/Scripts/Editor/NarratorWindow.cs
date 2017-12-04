@@ -152,13 +152,13 @@ namespace Narrator
                     currentConv.Entry.windowRect = GUI.Window((int)windowID.entryNode, currentConv.Entry.windowRect, DrawEntryNode, "Entry");
                     currentConv.Entry.DrawBox();
                 }
-                for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
+                for (int i = 0; i < currentConv.Dialogs.Count; i++)
                 {
-                    if (currentConv.Dialogs.dictionary[i] != null)
+                    if (currentConv.Dialogs[i] != null)
                     {
-                        GUI.backgroundColor = currentConv.Dialogs.dictionary[i].charac.Color;
-                        currentConv.Dialogs.dictionary[i].windowRect = GUI.Window(i + (int)windowID.dialogs, currentConv.Dialogs.dictionary[i].windowRect, DrawSpeakNode, currentConv.Dialogs.dictionary[i].charac.Name);
-                        currentConv.Dialogs.dictionary[i].DrawBox();
+                        GUI.backgroundColor = currentConv.Dialogs[i].charac.Color;
+                        currentConv.Dialogs[i].windowRect = GUI.Window(i + (int)windowID.dialogs, currentConv.Dialogs[i].windowRect, DrawSpeakNode, currentConv.Dialogs[i].charac.Name);
+                        currentConv.Dialogs[i].DrawBox();
                         GUI.backgroundColor = Color.white;
                     }
                 }
@@ -263,17 +263,17 @@ namespace Narrator
                 bool clickedOnWindow = false;
                 if (clickedOnTransition == false)
                 {
-                    for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
+                    for (int i = 0; i < currentConv.Dialogs.Count; i++)
                     {
-                        if (currentConv.Dialogs.dictionary[i] != null && currentConv.Dialogs.dictionary[i].windowRect.Contains(mousePos))
+                        if (currentConv.Dialogs[i] != null && currentConv.Dialogs[i].windowRect.Contains(mousePos))
                         {
 
                             // Faire un truc
                             clickedOnWindow = true;
-                            selectedNodeIndex = currentConv.Dialogs.dictionary[i].ID;
+                            selectedNodeIndex = i;
 
                             GenericMenu menu = new GenericMenu();
-                            if (currentConv.Dialogs.dictionary[i].charac.IsPlayable)
+                            if (currentConv.Dialogs[i].charac.IsPlayable)
                                 menu.AddItem(new GUIContent("Add choice"), false, AddChoiceOnNode, i);
                             menu.AddItem(new GUIContent("Add link"), false, SpeakMenu, "makeLink");
                             menu.AddSeparator("");
@@ -362,12 +362,12 @@ namespace Narrator
             bool clickedOnWindow = false;
             if (clickedOnLink == false)
             {
-                for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
+                for (int i = 0; i < currentConv.Dialogs.Count; i++)
                 {
-                    if (currentConv.Dialogs.dictionary[i] != null && currentConv.Dialogs.dictionary[i].windowRect.Contains(mousePos) == true)
+                    if (currentConv.Dialogs[i] != null && currentConv.Dialogs[i].windowRect.Contains(mousePos) == true)
                     {
                         clickedOnWindow = true;
-                        selectedNodeIndex = currentConv.Dialogs.dictionary[i].ID;
+                        selectedNodeIndex = i;
                         break;
                     }
                 }
@@ -387,9 +387,9 @@ namespace Narrator
         {
             backDrag += _delta;
             currentConv.Entry.windowRect.position += _delta * 0.5f;
-            for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
+            for (int i = 0; i < currentConv.Dialogs.Count; i++)
             {
-                currentConv.Dialogs.dictionary[i].windowRect.position += _delta * 0.5f;
+                currentConv.Dialogs[i].windowRect.position += _delta * 0.5f;
             }
             Repaint();
         }
@@ -495,9 +495,9 @@ namespace Narrator
                 Link link;
                 for (int i = 0; i < currentConv.Entry.contents[0].nextNodes.Count; i++)
                 {
-                    link = new Link(currentConv.Entry, 0, currentConv.Dialogs.dictionary[currentConv.Entry.contents[0].nextNodes[i].index], linkColor);
+                    link = new Link(currentConv.Entry, 0, currentConv.Dialogs[currentConv.Entry.contents[0].nextNodes[i].index - 1], linkColor);
                     link.startBoxIndex = 0;
-                    link.nextNodeIndex = i;
+                    link.nextNodeIndex = i + 1;
                     for(int k = 0; k < currentConv.Entry.contents[0].nextNodes[i].conditions.Count; k++)
                     {
                         link.conditions.Add(currentConv.Entry.contents[0].nextNodes[i].conditions[k]);
@@ -510,26 +510,26 @@ namespace Narrator
                 }
 
                 // Pour chaque dialogue
-                for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
+                for (int i = 0; i < currentConv.Dialogs.Count; i++)
                 {
                     // Pour chaque boxe de sortie
-                    for (int j = 0; j < currentConv.Dialogs.dictionary[i].contents.Count; j ++)
+                    for (int j = 0; j < currentConv.Dialogs[i].contents.Count; j ++)
                     {
                         // Récupération de tous les liens
-                        for (int k = 0; k < currentConv.Dialogs.dictionary[i].contents[j].nextNodes.Count; k++)
+                        for (int k = 0; k < currentConv.Dialogs[i].contents[j].nextNodes.Count; k++)
                         {
-                            link = new Link(currentConv.Dialogs.dictionary[i], j, currentConv.Dialogs.dictionary[currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].index], linkColor);
+                            link = new Link(currentConv.Dialogs[i], j, currentConv.Dialogs[currentConv.Dialogs[i].contents[j].nextNodes[k].index - 1], linkColor);
                             link.startBoxIndex = j;
                             link.nextNodeIndex = k;
                             // pour chaque lien : conditions
-                            for (int l = 0; l < currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].conditions.Count; l++)
+                            for (int l = 0; l < currentConv.Dialogs[i].contents[j].nextNodes[k].conditions.Count; l++)
                             {
-                                link.conditions.Add(currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].conditions[l]);
+                                link.conditions.Add(currentConv.Dialogs[i].contents[j].nextNodes[k].conditions[l]);
                             }
                             // pour chaque lien : impacts
-                            for (int l = 0; l < currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].impacts.Count; l++)
+                            for (int l = 0; l < currentConv.Dialogs[i].contents[j].nextNodes[k].impacts.Count; l++)
                             {
-                                link.impacts.Add(currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].impacts[l]);
+                                link.impacts.Add(currentConv.Dialogs[i].contents[j].nextNodes[k].impacts[l]);
                             }
                             links.Add(link);
                         }
@@ -757,7 +757,7 @@ namespace Narrator
         {
             Character charac = (Character)_obj;
             SpeakNode newNode = new SpeakNode();
-            newNode.CreateSpeakNode(currentConv.Dialogs.dictionary.Count);
+            newNode.CreateSpeakNode(currentConv.Dialogs.Count);
             newNode.charac = charac;
             newNode.position = new Vector2(mousePos.x, mousePos.y);
             newNode.windowRect = new Rect(newNode.position.x, newNode.position.y, 200, 100);
@@ -772,7 +772,7 @@ namespace Narrator
         {
             Character charac = (Character)_obj;
             SpeakNode newNode = new SpeakNode();
-            newNode.CreateSpeakNode(currentConv.Dialogs.dictionary.Count, 2);
+            newNode.CreateSpeakNode(currentConv.Dialogs.Count, 2);
             newNode.charac = charac;
             newNode.position = new Vector2(mousePos.x, mousePos.y);
             newNode.windowRect = new Rect(newNode.position.x, newNode.position.y, 200, 100);
@@ -790,12 +790,12 @@ namespace Narrator
             content.Initialize();
 
             int index = (int)_nodeIndex;
-            currentConv.Dialogs.dictionary[index].contents.Add(content);
+            currentConv.Dialogs[index].contents.Add(content);
         }
 
         void DrawSpeakNode(int _id)
         {
-            currentConv.Dialogs.dictionary[_id - (int)windowID.dialogs].DrawWindow();
+            currentConv.Dialogs[_id - (int)windowID.dialogs].DrawWindow();
             GUI.DragWindow();
         }
 
@@ -806,17 +806,16 @@ namespace Narrator
 
         void DeleteNode(int _nodeIndex)
         {
-            if (selectedNodeIndex > 0)
+            if (selectedNodeIndex >= 0 && selectedLinkIndex < currentConv.Dialogs.Count)
             {
-                Node node = currentConv.Dialogs.dictionary[_nodeIndex];
-                //Supression des liens entrants et sortants du noeud
+                // Delete links linked to the node
                 bool searchingLinks = true;
                 while (searchingLinks)
                 {
                     searchingLinks = false;
                     for (int i = 0; i < links.Count; i++)
                     {
-                        if (links[i].end == node || links[i].start == node)
+                        if (links[i].end == currentConv.Dialogs[_nodeIndex] || links[i].start == currentConv.Dialogs[_nodeIndex])
                         {
                             links.RemoveAt(i);
                             searchingLinks = true;
@@ -824,13 +823,12 @@ namespace Narrator
                         }
                     }
                 }
-
-                // Supression du noeud
-                currentConv.Dialogs.dictionary.Remove(selectedNodeIndex);
+                // Delete node
+                currentConv.DeleteNodeFromDialog(currentConv.Dialogs[_nodeIndex]);
+                selectedNodeIndex = 0;
             }
-
-            EditorUtility.SetDirty(currentConv);
-            AssetDatabase.SaveAssets();
+            else
+                Debug.Log("Can't delete node number " + _nodeIndex + ": it doesn't exist");
         }
 
         void SpeakMenu(object _obj)
@@ -842,7 +840,7 @@ namespace Narrator
                     if (selectedNodeIndex == -1)
                         node = currentConv.Entry;
                     else
-                        node = currentConv.Dialogs.dictionary[selectedNodeIndex];
+                        node = currentConv.Dialogs[selectedNodeIndex];
                     tempLink = new Link(node, 0, linkColor);
                     break;
                 case "deleteNode":
@@ -870,14 +868,14 @@ namespace Narrator
                 }
                 else
                 {
-                    for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
+                    for (int i = 0; i < currentConv.Dialogs.Count; i++)
                     {
-                        for (int j = 0; j < currentConv.Dialogs.dictionary[i].contents.Count; j++)
+                        for (int j = 0; j < currentConv.Dialogs[i].contents.Count; j++)
                         {
-                            if (currentConv.Dialogs.dictionary[i].contents[j].exitBox.Contains(mousePos))
+                            if (currentConv.Dialogs[i].contents[j].exitBox.Contains(mousePos))
                             {
-                                selectedNodeIndex = currentConv.Dialogs.dictionary[i].ID;
-                                tempLink = new Link(currentConv.Dialogs.dictionary[i], j, linkColor);
+                                selectedNodeIndex = i;
+                                tempLink = new Link(currentConv.Dialogs[i], j, linkColor);
                                 break;
                             }
                         }
@@ -888,11 +886,11 @@ namespace Narrator
 
         void EndDrawingLink()
         {
-            for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
+            for (int i = 0; i < currentConv.Dialogs.Count; i++)
             {
-                if (currentConv.Dialogs.dictionary[i].entryBox.Contains(mousePos))
+                if (currentConv.Dialogs[i].entryBox.Contains(mousePos))
                 {
-                    tempLink.EndTrace(currentConv.Dialogs.dictionary[i], conversationList[currentConversationIndex]);
+                    tempLink.EndTrace(currentConv.Dialogs[i], conversationList[currentConversationIndex]);
                     links.Add(tempLink);
                     break;
                 }
