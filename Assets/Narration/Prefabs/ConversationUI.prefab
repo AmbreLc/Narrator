@@ -824,8 +824,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92e1b80ba89597c4a830b289ae9dbf2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brain: {fileID: 11400000, guid: cc3c6b1b64d73e0438503c06151e4c75, type: 2}
-  conversation: {fileID: 11400000, guid: 0571fe6cb50a35940b830dcf60bb2557, type: 2}
+  brain: {fileID: 0}
+  conversation: {fileID: 0}
+  displayType: 0
   displayInterlocutor: 1
   targetText: {fileID: 114207977413197106}
   speakerText: {fileID: 114252505226198376}
@@ -834,7 +835,6 @@ MonoBehaviour:
   - {fileID: 114594880160073916}
   - {fileID: 114324342325487726}
   - {fileID: 114287181243476812}
-  isOver: 0
 --- !u!222 &222001203441803866
 CanvasRenderer:
   m_ObjectHideFlags: 1
