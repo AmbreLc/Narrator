@@ -174,6 +174,95 @@ namespace Narrator
         }
 
 
+        public void SaveFloatModifications(string _exKey, string _newKey, float _newValue, bool _isDeleting)
+        {
+            // Delete a parameter
+            if (_isDeleting && FloatValues.dictionary.ContainsKey(_exKey))
+            {
+                if (Names.Contains(_exKey))
+                    Names.Remove(_exKey);
+                FloatValues.dictionary.Remove(_exKey);
+            }
+            // Modifie a parameter
+            else
+            {
+                // Rename
+                if (_exKey != string.Empty && FloatValues.dictionary.ContainsKey(_newKey) == false)
+                {
+                    if (Names.Contains(_exKey))
+                        Names.Remove(_exKey);
+                    Names.Add(_newKey);
+
+                    FloatValues.dictionary.Remove(_exKey);
+                    FloatValues.dictionary.Add(_newKey, _newValue);
+                }
+                // Change value
+                else if (FloatValues.dictionary.ContainsKey(_newKey) && _newValue != FloatValues.dictionary[_newKey])
+                {
+                    FloatValues.dictionary[_newKey] = _newValue;
+                }
+            }
+        }
+        public void SaveIntModifications(string _exKey, string _newKey, int _newValue, bool _isDeleting)
+        {
+            // Delete a parameter
+            if (_isDeleting && IntValues.dictionary.ContainsKey(_exKey))
+            {
+                if (Names.Contains(_exKey))
+                    Names.Remove(_exKey);
+                IntValues.dictionary.Remove(_exKey);
+            }
+            // Modifie a parameter
+            else
+            {
+                // Rename
+                if (_exKey != string.Empty && IntValues.dictionary.ContainsKey(_newKey) == false)
+                {
+                    if (Names.Contains(_exKey))
+                        Names.Remove(_exKey);
+                    Names.Add(_newKey);
+
+                    IntValues.dictionary.Remove(_exKey);
+                    IntValues.dictionary.Add(_newKey, _newValue);
+                }
+                // Change value
+                else if (IntValues.dictionary.ContainsKey(_newKey) && _newValue != IntValues.dictionary[_newKey])
+                {
+                    IntValues.dictionary[_newKey] = _newValue;
+                }
+            }
+        }
+        public void SaveBoolModifications(string _exKey, string _newKey, bool _newValue, bool _isDeleting)
+        {
+            // Delete a parameter
+            if (_isDeleting && BoolValues.dictionary.ContainsKey(_exKey))
+            {
+                if (Names.Contains(_exKey))
+                    Names.Remove(_exKey);
+
+                BoolValues.dictionary.Remove(_exKey);
+                
+            }
+            // Change a parameter
+            else
+            {
+                if (_exKey != string.Empty && BoolValues.dictionary.ContainsKey(_newKey) == false)
+                {
+                    if (Names.Contains(_exKey))
+                        Names.Remove(_exKey);
+                    Names.Add(_newKey);
+
+                    BoolValues.dictionary.Remove(_exKey);
+                    BoolValues.dictionary.Add(_newKey, _newValue);
+                }
+                else if (BoolValues.dictionary.ContainsKey(_newKey) && _newValue != BoolValues.dictionary[_newKey])
+                {
+                    BoolValues.dictionary[_newKey] = _newValue;
+                }
+            }
+        }
+
+
         public bool TestFloat(string _key, OPERATOR _condition, float _marker)
         {
             if(floatValues.dictionary.ContainsKey(_key) == false)

@@ -94,7 +94,7 @@ namespace Narrator
             }
         }
 
-        public void DeleteLinkFromDialog(Node _start, Node _end, int _startIndex)
+        public void DeleteLinkFromDialog(Node _start, Node _end, int _contentIndex)
         {
             int startIndex = -1;
             int endIndex = -1;
@@ -119,10 +119,15 @@ namespace Narrator
             if (startIndex == -1 || endIndex == -1)
                 Debug.LogError("Error : dialog missing in conversation, cannot link");
             else if (startIndex == 0)
-                entry.contents[_startIndex].RemoveNextNode(endIndex);
+                entry.contents[_contentIndex].RemoveNextNode(endIndex);
             else
-                dialogs.dictionary[startIndex].contents[_startIndex].RemoveNextNode(endIndex);
-        
+                dialogs.dictionary[startIndex].contents[_contentIndex].RemoveNextNode(endIndex);
+
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
+
         }
 
 
@@ -182,8 +187,41 @@ namespace Narrator
             UnityEditor.AssetDatabase.SaveAssets();
 #endif
         }
-        
 
+        /// <summary>
+        /// Return the next node of the conversation, or null if there is none
+        /// </summary>
+        /// <param name="_brain"></param>
+        /// <param name="_currentNode"></param>
+        /// <param name="_contentIndex"></param>
+        /// <param name="_applyImpact"></param>
+        /// <returns></returns>
+        public Node GoToNextNode(NarratorBrainSO _brain, Node _currentNode, int _contentIndex, bool _applyImpact = true)
+        {
+            for (int i = 0; i < _currentNode.contents[_contentIndex].nextNodes.Count; i++)
+            {
+                bool canGoNextNode = true;
+
+                for (int j = 0; j < _currentNode.contents[_contentIndex].nextNodes[i].conditions.Count; j++)
+                {
+                    if (_currentNode.contents[_contentIndex].nextNodes[i].conditions[j].IsComplete(_brain.Parameters) == false)
+                    {
+                        canGoNextNode = false;
+                    }
+                }
+                if (canGoNextNode)
+                {
+                    for (int j = 0; j < _currentNode.contents[_contentIndex].nextNodes[i].impacts.Count; j++)
+                    {
+                        _brain.ApplyImpact(_currentNode.contents[_contentIndex].nextNodes[i].impacts[j]);
+                    }
+                    return Dialogs.dictionary[_currentNode.contents[_contentIndex].nextNodes[i].index];
+                }
+            }
+
+            return null;
+        }
+  
     }
 
 }

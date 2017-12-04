@@ -64,6 +64,41 @@ namespace Narrator
             UnityEditor.AssetDatabase.SaveAssets();
 #endif
         }
+
+
+        public void ApplyImpact(Impact _impact)
+        {
+            switch(_impact.type)
+            {
+                case Parameters.TYPE.i:
+                    if(parameters.IntValues.dictionary.ContainsKey(_impact.name) == true)
+                    {
+                        parameters.SetInt(_impact.name, parameters.IntValues.dictionary[_impact.name] + _impact.intModifier);
+                    }
+                    break;
+                case Parameters.TYPE.f:
+                    if (parameters.FloatValues.dictionary.ContainsKey(_impact.name) == true)
+                    {
+                        parameters.SetFloat(_impact.name, parameters.FloatValues.dictionary[_impact.name] + _impact.floatModifier);
+                    }
+                    break;
+                case Parameters.TYPE.b:
+                    if (parameters.BoolValues.dictionary.ContainsKey(_impact.name) == true)
+                    {
+                        parameters.SetBool(_impact.name, _impact.boolModifier);
+                    }
+                    break;
+                default:
+                    Debug.LogError("Can't apply impact : unknown type");
+                    break;
+            }
+        }
+
+
     }
+
+
+
+  
 
 }

@@ -18,10 +18,11 @@ namespace Narrator
     [System.Serializable]
     public class SpeakNode : Node
     {
-        public void CreateSpeakNode()
+        public void CreateSpeakNode(int _id)
         {
-            charac = new Character();
+            id = _id;
             type = Type.speak;
+            charac = new Character();
 
             entryBox = new Rect(windowRect.x - 10.0f, windowRect.y + windowRect.height * 0.8f, 10.0f, 10.0f);
 
@@ -32,10 +33,11 @@ namespace Narrator
             contents.Add(content);
         }
 
-        public void CreateSpeakNode(int _choicesCount)
+        public void CreateSpeakNode(int _id, int _choicesCount)
         {
-            charac = new Character();
+            id = _id;
             type = _choicesCount > 1 ? Type.choice : Type.speak;
+            charac = new Character();
 
             entryBox = new Rect(windowRect.x - 10.0f, windowRect.y + windowRect.height * 0.8f, 10.0f, 10.0f);
 

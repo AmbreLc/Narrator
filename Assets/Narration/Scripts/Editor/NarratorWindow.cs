@@ -65,7 +65,7 @@ namespace Narrator
         private Vector2 backDrag;
             // Dialogs
         private ConversationSO currentConv;
-        private int selectedNodeIndex;
+        private int selectedNodeIndex = -1;
             // Links
         private List<Link> links = new List<Link>();
         private Link tempLink;
@@ -73,7 +73,7 @@ namespace Narrator
         // Selected link window
         private int selectedLinkIndex = -1;
         private int currentCondition = 0;
-        private int currentImpact = 0;
+        //private int currentImpact = 0;
 
 
 
@@ -108,6 +108,7 @@ namespace Narrator
 
         private void Update()
         {
+            //Debug.Log("selected node index : " + selectedNodeIndex);
             stopWatch.Reset();
             stopWatch.Start();
             Repaint();
@@ -272,7 +273,7 @@ namespace Narrator
 
                             // Faire un truc
                             clickedOnWindow = true;
-                            selectedNodeIndex = i;
+                            selectedNodeIndex = currentConv.Dialogs.dictionary[i].ID;
 
                             GenericMenu menu = new GenericMenu();
                             if (currentConv.Dialogs.dictionary[i].charac.IsPlayable)
@@ -299,9 +300,7 @@ namespace Narrator
                             clickedOnLink = true;
 
                             GenericMenu menu = new GenericMenu();
-                            menu.AddItem(new GUIContent("Add condition"), false, AddParameterOnLink, links[i]);
                             menu.AddItem(new GUIContent("Remove link"), false, RemoveLink, links[i]);
-
                             menu.ShowAsContext();
                             e.Use();
                         }
@@ -351,7 +350,6 @@ namespace Narrator
                 links[selectedLinkIndex].IsUnselected();
                 selectedLinkIndex = -1;
                 currentCondition = 0;
-                currentImpact = 0;
             }
 
             // OU dessin d'un lien
@@ -363,7 +361,25 @@ namespace Narrator
                     EndDrawingLink();
             }
 
-           
+            // OU sélection d'un node
+            bool clickedOnWindow = false;
+            if (clickedOnLink == false)
+            {
+                for (int i = 1; i <= currentConv.Dialogs.dictionary.Count; i++)
+                {
+                    if (currentConv.Dialogs.dictionary[i] != null && currentConv.Dialogs.dictionary[i].windowRect.Contains(mousePos) == true)
+                    {
+                        clickedOnWindow = true;
+                        selectedNodeIndex = currentConv.Dialogs.dictionary[i].ID;
+                        break;
+                    }
+                }
+                if(clickedOnWindow == false && currentConv.Entry.windowRect.Contains(mousePos) == true)
+                {
+                    clickedOnWindow = true;
+                    selectedNodeIndex = -1;
+                }
+            }
         }
 
         /// <summary>
@@ -489,6 +505,10 @@ namespace Narrator
                     {
                         link.conditions.Add(currentConv.Entry.contents[0].nextNodes[i].conditions[k]);
                     }
+                    for (int k = 0; k < currentConv.Entry.contents[0].nextNodes[i].impacts.Count; k++)
+                    {
+                        link.impacts.Add(currentConv.Entry.contents[0].nextNodes[i].impacts[k]);
+                    }
                     links.Add(link);
                 }
 
@@ -503,10 +523,16 @@ namespace Narrator
                         {
                             link = new Link(currentConv.Dialogs.dictionary[i], j, currentConv.Dialogs.dictionary[currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].index], linkColor);
                             link.startBoxIndex = j;
-                            link.nextNodeIndex = i -1;
+                            link.nextNodeIndex = k;
+                            // pour chaque lien : conditions
                             for (int l = 0; l < currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].conditions.Count; l++)
                             {
                                 link.conditions.Add(currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].conditions[l]);
+                            }
+                            // pour chaque lien : impacts
+                            for (int l = 0; l < currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].impacts.Count; l++)
+                            {
+                                link.impacts.Add(currentConv.Dialogs.dictionary[i].contents[j].nextNodes[k].impacts[l]);
                             }
                             links.Add(link);
                         }
@@ -618,7 +644,7 @@ namespace Narrator
                     }
                     GUILayout.EndHorizontal();
                 }
-                //SaveFloatModifications(exKey, newKey, newFValue, isDeleting);
+                //brain.Parameters.SaveFloatModifications(exKey, newKey, newFValue, isDeleting);
             }
 
             EditorGUILayout.LabelField("Int");
@@ -646,7 +672,7 @@ namespace Narrator
                     }
                     GUILayout.EndHorizontal();
                 }
-                //SaveIntModifications(exKey, newKey, newIValue, isDeleting);
+                brain.Parameters.SaveIntModifications(exKey, newKey, newIValue, isDeleting);
             }
 
             EditorGUILayout.LabelField("Bool");
@@ -674,7 +700,7 @@ namespace Narrator
                     }
                     GUILayout.EndHorizontal();
                 }
-                //SaveBoolModifications(exKey, newKey, newBValue, isDeleting);
+                brain.Parameters.SaveBoolModifications(exKey, newKey, newBValue, isDeleting);
             }
         }
 
@@ -701,65 +727,7 @@ namespace Narrator
             AssetDatabase.SaveAssets();
         }
 
-        void SaveFloatModifications(string _exKey, string _newKey, float _newValue, bool _isDeleting)
-        {
-            if (_isDeleting && brain.Parameters.FloatValues.dictionary.ContainsKey(_exKey))
-            {
-                brain.Parameters.FloatValues.dictionary.Remove(_exKey);
-            }
-            else
-            {
-                if (_exKey != string.Empty && brain.Parameters.FloatValues.dictionary.ContainsKey(_newKey) == false)
-                {
-                    brain.Parameters.FloatValues.dictionary.Remove(_exKey);
-                    brain.Parameters.FloatValues.dictionary.Add(_newKey, _newValue);
-                }
-                else if (brain.Parameters.FloatValues.dictionary.ContainsKey(_newKey) && _newValue != brain.Parameters.FloatValues.dictionary[_newKey])
-                {
-                    brain.Parameters.FloatValues.dictionary[_newKey] = _newValue;
-                }
-            }
-        }
-
-        void SaveIntModifications(string _exKey, string _newKey, int _newValue, bool _isDeleting)
-        {
-            if (_isDeleting && brain.Parameters.IntValues.dictionary.ContainsKey(_exKey))
-            {
-                brain.Parameters.IntValues.dictionary.Remove(_exKey);
-            }
-            else
-            {
-                if (_exKey != string.Empty && brain.Parameters.IntValues.dictionary.ContainsKey(_newKey) == false)
-                {
-                    brain.Parameters.IntValues.dictionary.Remove(_exKey);
-                    brain.Parameters.IntValues.dictionary.Add(_newKey, _newValue);
-                }
-                else if (brain.Parameters.IntValues.dictionary.ContainsKey(_newKey) && _newValue != brain.Parameters.IntValues.dictionary[_newKey])
-                {
-                    brain.Parameters.IntValues.dictionary[_newKey] = _newValue;
-                }
-            }
-        }
-
-        void SaveBoolModifications(string _exKey, string _newKey, bool _newValue, bool _isDeleting)
-        {
-            if (_isDeleting && brain.Parameters.BoolValues.dictionary.ContainsKey(_exKey))
-            {
-                brain.Parameters.BoolValues.dictionary.Remove(_exKey);
-            }
-            else
-            {
-                if (_exKey != string.Empty && brain.Parameters.BoolValues.dictionary.ContainsKey(_newKey) == false)
-                {
-                    brain.Parameters.BoolValues.dictionary.Remove(_exKey);
-                    brain.Parameters.BoolValues.dictionary.Add(_newKey, _newValue);
-                }
-                else if (brain.Parameters.BoolValues.dictionary.ContainsKey(_newKey) && _newValue != brain.Parameters.BoolValues.dictionary[_newKey])
-                {
-                    brain.Parameters.BoolValues.dictionary[_newKey] = _newValue;
-                }
-            }
-        }
+        
 
 
         //________________ MODIFICATIONS : CHARACTERS ________________//
@@ -792,7 +760,7 @@ namespace Narrator
         {
             Character charac = (Character)_obj;
             SpeakNode newNode = new SpeakNode();
-            newNode.CreateSpeakNode();
+            newNode.CreateSpeakNode(currentConv.Dialogs.dictionary.Count);
             newNode.charac = charac;
             newNode.position = new Vector2(mousePos.x, mousePos.y);
             newNode.windowRect = new Rect(newNode.position.x, newNode.position.y, 200, 100);
@@ -807,7 +775,7 @@ namespace Narrator
         {
             Character charac = (Character)_obj;
             SpeakNode newNode = new SpeakNode();
-            newNode.CreateSpeakNode(2);
+            newNode.CreateSpeakNode(currentConv.Dialogs.dictionary.Count, 2);
             newNode.charac = charac;
             newNode.position = new Vector2(mousePos.x, mousePos.y);
             newNode.windowRect = new Rect(newNode.position.x, newNode.position.y, 200, 100);
@@ -874,7 +842,7 @@ namespace Narrator
             {
                 case "makeLink":
                     Node node = new Node();
-                    if (selectedNodeIndex == 0)
+                    if (selectedNodeIndex == -1)
                         node = currentConv.Entry;
                     else
                         node = currentConv.Dialogs.dictionary[selectedNodeIndex];
@@ -900,7 +868,7 @@ namespace Narrator
             {
                 if (currentConv.Entry.contents[0].exitBox.Contains(mousePos))
                 {
-                    selectedNodeIndex = 0;
+                    selectedNodeIndex = -1;
                     tempLink = new Link(currentConv.Entry, 0, linkColor);
                 }
                 else
@@ -911,8 +879,8 @@ namespace Narrator
                         {
                             if (currentConv.Dialogs.dictionary[i].contents[j].exitBox.Contains(mousePos))
                             {
-                                selectedNodeIndex = i;
-                                tempLink = new Link(currentConv.Dialogs.dictionary[selectedNodeIndex], j, linkColor);
+                                selectedNodeIndex = currentConv.Dialogs.dictionary[i].ID;
+                                tempLink = new Link(currentConv.Dialogs.dictionary[i], j, linkColor);
                                 break;
                             }
                         }
@@ -929,7 +897,6 @@ namespace Narrator
                 {
                     tempLink.EndTrace(currentConv.Dialogs.dictionary[i], conversationList[currentConversationIndex]);
                     links.Add(tempLink);
-                    tempLink.Save(currentConv);
                     break;
                 }
             }
@@ -1065,7 +1032,6 @@ namespace Narrator
             // Affichage de chaque impact qu'entrainera le lien une fois franchi
             for (int i = 0; i < links[selectedLinkIndex].impacts.Count; i++)
             {
-                currentImpact = i;
                 imp = links[selectedLinkIndex].impacts[i];
                 GUILayout.BeginHorizontal();
                 // paramètre de l'impact
@@ -1074,7 +1040,7 @@ namespace Narrator
                     GenericMenu menu = new GenericMenu();
                     for (int j = 0; j < brain.Parameters.Names.Count; j++)
                     {
-                        menu.AddItem(new GUIContent(brain.Parameters.Names[j]), false, UpdateSelectedLinkParameter_Impact, j);
+                        menu.AddItem(new GUIContent(brain.Parameters.Names[j]), false, UpdateSelectedLinkImpact_Parameter, new Vector2(i, j));
                     }
                     menu.ShowAsContext();
                 }
@@ -1086,8 +1052,8 @@ namespace Narrator
                         if (EditorGUILayout.DropdownButton(new GUIContent(boolStr), FocusType.Keyboard))
                         {
                             GenericMenu menu = new GenericMenu();
-                            menu.AddItem(new GUIContent("true"), false, UpdateSelectedLinkMarkerImpact_bool, true);
-                            menu.AddItem(new GUIContent("false"), false, UpdateSelectedLinkMarkerImpact_bool, false);
+                            menu.AddItem(new GUIContent("true"), false, UpdateSelectedLinkMarkerImpact_boolTrue, i);
+                            menu.AddItem(new GUIContent("false"), false, UpdateSelectedLinkMarkerImpact_boolFalse, i);
                             menu.ShowAsContext();
                         }
                         break;
@@ -1099,7 +1065,7 @@ namespace Narrator
                     case Parameters.TYPE.i:
                         int iValue = EditorGUILayout.IntField(imp.intModifier);
                         if (imp.intModifier != iValue)
-                            UpdateSelectedLinkImpact(iValue);
+                            UpdateSelectedLinkImpact_Marker(i, iValue);
                         break;
                     default:
                         break;
@@ -1150,30 +1116,39 @@ namespace Narrator
             conversationList[currentConversationIndex].UpdateCondition(links[selectedLinkIndex].start, (int)links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].conditions[currentCondition]);
         }
 
-        void UpdateSelectedLinkParameter_Impact(object _obj)
+
+        void UpdateSelectedLinkImpact_Parameter(object _obj)
+        {
+            Vector2 index = (Vector2)_obj;
+
+            links[selectedLinkIndex].impacts[(int)index.x].name = brain.Parameters.Names[(int)index.y];
+            links[selectedLinkIndex].impacts[(int)index.x].type = brain.Parameters.GetType(links[selectedLinkIndex].impacts[(int)index.x].name);
+            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, (int)index.x, links[selectedLinkIndex].impacts[(int)index.x]);
+        }
+
+        void UpdateSelectedLinkImpact_Marker(int _index, float _value)
+        {
+            links[selectedLinkIndex].impacts[_index].floatModifier = _value;
+            links[selectedLinkIndex].impacts[_index].intModifier = (int)_value;
+
+            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, _index, links[selectedLinkIndex].impacts[_index]);
+        }
+
+        void UpdateSelectedLinkMarkerImpact_boolTrue(object _obj)
         {
             int index = (int)_obj;
-
-            links[selectedLinkIndex].impacts[currentImpact].name = brain.Parameters.Names[index];
-            links[selectedLinkIndex].impacts[currentImpact].type = brain.Parameters.GetType(links[selectedLinkIndex].impacts[currentImpact].name);
-            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].impacts[currentImpact]);
+            links[selectedLinkIndex].impacts[index].boolModifier = true;
+            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, (int)links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].impacts[index]);
         }
 
-        void UpdateSelectedLinkImpact(float _value)
+        void UpdateSelectedLinkMarkerImpact_boolFalse(object _obj)
         {
-            links[selectedLinkIndex].impacts[currentImpact].floatModifier = _value;
-            links[selectedLinkIndex].impacts[currentImpact].intModifier = (int)_value;
-
-            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].impacts[currentImpact]);
+            int index = (int)_obj;
+            links[selectedLinkIndex].impacts[index].boolModifier = true;
+            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, (int)links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].impacts[index]);
         }
 
-        void UpdateSelectedLinkMarkerImpact_bool(object _obj)
-        {
-            bool value = (bool)_obj;
 
-            links[selectedLinkIndex].impacts[currentImpact].boolModifier = value;
-            conversationList[currentConversationIndex].UpdateImpact(links[selectedLinkIndex].start, (int)links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].impacts[currentImpact]);
-        }
 
 
 
@@ -1244,25 +1219,31 @@ namespace Narrator
         {
             string [] guid = AssetDatabase.FindAssets("t:NarratorBrainSO", null);
 
+            // Load the brain if there is one in Assets folder
             if (guid.Length == 1)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid[0]);
-                path = path.Replace(".asset", string.Empty);
-                path = path.Substring(path.IndexOf("Resources") + "Resources/".Length);
-                brain = Resources.Load<NarratorBrainSO>(path);
+                brain = AssetDatabase.LoadAssetAtPath(path, typeof(NarratorBrainSO)) as NarratorBrainSO;
+
                 if (brain == null)
-                    Debug.LogError("Could not load brain at : " + path + "\n Is brain asset in a Resources folder ?");
+                    Debug.LogError("Could not load brain at : " + path);
             }
             // Generate a brain if there is none
             else if (guid.Length == 0)
             {
                 brain = CreateInstance<NarratorBrainSO>();
-                //AssetDatabase.CreateAsset(brain, "Assets/Resources/"); // "brain.asset");
+                AssetDatabase.CreateAsset(brain, "Assets/NarratorBrain.asset");
             }
-            
+            // Narrator can't handle more than two brains for the moment : the first encountered is taken, others are ignored
             else
             { 
-                Debug.LogError("More than one brain : caca");
+                Debug.LogWarning("Narrator can't handle more than two brains, the first one encounter has been loaded, other(s) will be ignored");
+
+                string path = AssetDatabase.GUIDToAssetPath(guid[0]);
+                brain = AssetDatabase.LoadAssetAtPath(path, typeof(NarratorBrainSO)) as NarratorBrainSO;
+
+                if (brain == null)
+                    Debug.LogError("Could not load brain at : " + path);
             }
 
             if (brain.NPCs == null)

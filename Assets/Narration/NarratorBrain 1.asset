@@ -9,31 +9,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f44db6fc48e0b6f45b0bba3938ccde96, type: 3}
-  m_Name: ConversationBrain
+  m_Name: NarratorBrain 1
   m_EditorClassIdentifier: 
-  npcs:
-  - name: new character 0
-    isPlayable: 0
-    color: {r: 1, g: 1, b: 1, a: 1}
+  npcs: []
   pcs:
   - name: Player1
     isPlayable: 1
     color: {r: 0.8, g: 0.8, b: 1, a: 1}
   parameters:
     floatValues:
-      keys:
-      - NewFloat0
-      values:
-      - 0
+      keys: []
+      values: []
     intValues:
-      keys:
-      - NewInt0
-      values: 00000000
+      keys: []
+      values: 
     boolValues:
-      keys:
-      - NewBool0
-      values: 00
-    names:
-    - NewFloat0
-    - NewInt0
-    - NewBool0
+      keys: []
+      values: 
+    names: []
