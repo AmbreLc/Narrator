@@ -139,12 +139,9 @@ namespace Narrator
                 tempLink.Draw(mousePos);
             for (int i = 0; i < links.Count; i++)
             {
+                //troulala le code a changé
                 links[i].Draw(mousePos);
                 GUI.Box(links[i].linkRect, "");
-                for(int j=0; j < links[i].conditions.Count; j++)
-                {
-                    // draw condition
-                }
             }
 
             // Display all nodes
@@ -905,14 +902,6 @@ namespace Narrator
             AssetDatabase.SaveAssets();
         }
 
-        void AddParameterOnLink(object _link)
-        {
-            Link link = (Link)_link;
-            Condition condition = new Condition();
-            //condition.
-            //link.conditions.Add()
-        }
-
         void RemoveLink(object _link)
         {
             Link link = _link as Link;
@@ -1188,7 +1177,6 @@ namespace Narrator
 
         }
 
-
         /// <summary>
         /// Get all the ConversationSO in Resources folder of the project
         /// </summary>
@@ -1199,11 +1187,18 @@ namespace Narrator
             foreach (string guid in guids)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
+
+                // Obsolete
+                /*
                 path = path.Replace(".asset", string.Empty);
                 path = path.Substring(path.IndexOf("Resources") + "Resources/".Length);
                 ConversationSO newConv = Resources.Load<ConversationSO>(path);
+                */
+
+                ConversationSO newConv = AssetDatabase.LoadAssetAtPath(path, typeof(ConversationSO)) as ConversationSO;
+
                 if (newConv == null)
-                    Debug.LogError("Could not load conversation at : " + path + "\n Is conversation asset in a Resources folder ?");
+                    Debug.LogError("Failed loading conversation at : " + path);
                 else
                 {
                     conversationList.Add(newConv);

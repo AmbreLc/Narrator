@@ -22,13 +22,14 @@ using System.Collections.Generic;
 namespace Narrator
 {
 #if UNITY_EDITOR
-    [CreateAssetMenu(fileName = "Conversation.asset", menuName = "Narrator/Conversation")]
+    // bugged because of SerializedDictionary not initialized when asset generated
+    //[CreateAssetMenu(fileName = "Conversation.asset", menuName = "Narrator/Conversation")]
 #endif
 
     [System.Serializable]
     public class ConversationSO : ScriptableObject
     {
-        [SerializeField] private string conversationName;
+        [SerializeField] private string conversationName = "conversation";
         public string ConversationName
         {
             get { return conversationName; }

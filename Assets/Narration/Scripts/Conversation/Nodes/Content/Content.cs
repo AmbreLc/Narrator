@@ -43,6 +43,7 @@ namespace Narrator
         {
             NextNode node = new NextNode();
             node.index = _index;
+            
             nextNodes.Add(node);
         }
 

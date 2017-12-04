@@ -44,7 +44,7 @@ namespace Narrator
             moving = true;
             startBoxIndex = (short)_startIndex;
 
-            nextNodeIndex = _start.contents[_startIndex].nextNodes.Count + 1;
+            nextNodeIndex = _start.contents[_startIndex].nextNodes.Count;
 
             linkRect = new Rect(0.0f, 0.0f, 20.0f, 20.0f);
             conditions = new List<Condition>();
