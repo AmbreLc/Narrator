@@ -1,16 +1,22 @@
 ﻿/* NARRATOR PACKAGE
- * NarratorEditor.cs
+ * NarratorWindow.cs
  * Created by Ambre Lacour, 05/10/2017
- * Editor script : Display & edit conversations
+ * Editor window : Display & edit conversations
  * 
  * The Narrator window :
- *      - loads all the ConversationSO it can find in resources folders
- *      - creates conversations
- *      - edits conversations i.e. :
- *             =>create/edit dialogs,
- *             =>create/edit links between dialogs
- *             =>add/remove characters
- *             =>add/remove parameters & conditions to manage the narration tree
+ *      - loads all the ConversationSO it can find in Assets folder
+ *      
+ *      - loads or generates a Conversation Brain
+ *      
+ *      - can creates conversations
+ *      
+ *      - can edits conversations i.e. :
+ *             =>create/edit/remove dialogs,
+ *             =>create/edit/remove links between dialogs
+
+ *      - can edit brain i.e. :
+ *             =>add/edit/remove characters
+ *             =>add/edit/remove parameters
  */
 
 
@@ -24,6 +30,8 @@ namespace Narrator
 {
     public class NarratorWindow : EditorWindow
     {
+
+        // windowID: distinguish the different windows
         enum windowID
         {
             conversations,
@@ -32,6 +40,8 @@ namespace Narrator
             entryNode,
             dialogs,
         }
+
+        // Mouse & inputs infos
 
         private Vector2 mousePos;
         private float zoomValue = 1.0f;
@@ -42,6 +52,7 @@ namespace Narrator
 
 
         // Left window
+
             // Conversations list
         Rect leftWindow_Up = new Rect(0.0f, 0.0f, 200.0f, 200.0f);
         Rect addConvRect = new Rect(170.0f, 0.0f, 20.0f, 15.0f);
@@ -49,7 +60,8 @@ namespace Narrator
         List<ConversationSO> conversationList;
         string[] conversationsNames;
         int currentConversationIndex = 0;
-        // Conversation brain : Characters & params list
+
+            // Conversation brain : Characters & params list
         NarratorBrainSO brain;
         Rect leftWindow_Down = new Rect(0.0f, 200.0f, 200.0f, 200.0f);
         Rect charOrParamsRect = new Rect(0.0f, 0.0f, 200.0f, 20.0f);
@@ -59,29 +71,31 @@ namespace Narrator
 
 
         // Main window
+
             // Background
         private Rect backgroundRect = new Rect(0.0f, 0.0f, 800.0f, 800.0f);
         private Vector2 backOffset;
         private Vector2 backDrag;
+
             // Dialogs
         private ConversationSO currentConv;
         private int selectedNodeIndex = -1;
+
             // Links
         private List<Link> links = new List<Link>();
         private Link tempLink;
         private Color linkColor = Color.white;
+
         // Selected link window
+        static private LinkEditor linkEditor;
         private int selectedLinkIndex = -1;
         private int currentCondition = 0;
-        //private int currentImpact = 0;
 
 
-
-        //Menu item
+        // Menu item : display the Narrator window from the menu button
         [MenuItem("Window/Narrator")]
         static void ShowEditor()
         {
-            // Création de la fenêtre
             NarratorWindow editor = GetWindow<NarratorWindow>("Narrator");
             editor.stopWatch.Start();
             editor.Start();
@@ -108,7 +122,6 @@ namespace Narrator
 
         private void Update()
         {
-            //Debug.Log("selected node index : " + selectedNodeIndex);
             stopWatch.Reset();
             stopWatch.Start();
             Repaint();
@@ -139,7 +152,6 @@ namespace Narrator
                 tempLink.Draw(mousePos);
             for (int i = 0; i < links.Count; i++)
             {
-                //troulala le code a changé
                 links[i].Draw(mousePos);
                 GUI.Box(links[i].linkRect, "");
             }
@@ -208,21 +220,25 @@ namespace Narrator
         /// <param name="e"></param>
         private void HandleRightClick(Event e)
         {
+            // Click on conversation list
             if (convSelectionRect.Contains(mousePos))
             {
-                // Clic sur la liste des conversation
+                
             }
+
+            // OR click on up left window
             else if (leftWindow_Up.Contains(mousePos))
-            {
-                // Clic sur la fenêtre de gauche
+            {               
                 GenericMenu menu = new GenericMenu();
                 menu.AddItem(new GUIContent("Add conversation"), false, CreateConversation, "createConv");
                 menu.ShowAsContext();
                 e.Use();
             }
+
+            // OR click on down left window (characters or parameters)
             else if (leftWindow_Down.Contains(mousePos))
             {
-                // Clic sur la fenêtre de gauche (persos et parametres)
+                
                 GenericMenu menu = new GenericMenu();
                 if (charOrParamsIndex == 0)
                 {
@@ -241,9 +257,11 @@ namespace Narrator
                 e.Use();
 
             }
+
+            // OR click on the main window
             else
             {
-                // clic sur les infos d'une transition
+                // Click on a link already selected
                 bool clickedOnTransition = false;
                 if(selectedLinkIndex != -1)
                 {
@@ -259,7 +277,8 @@ namespace Narrator
                         e.Use();
                     }
                 }
-                // OU clic sur l'un des noeuds de dialogue
+
+                // OR click on a dialog node
                 bool clickedOnWindow = false;
                 if (clickedOnTransition == false)
                 {
@@ -267,8 +286,6 @@ namespace Narrator
                     {
                         if (currentConv.Dialogs[i] != null && currentConv.Dialogs[i].windowRect.Contains(mousePos))
                         {
-
-                            // Faire un truc
                             clickedOnWindow = true;
                             selectedNodeIndex = i;
 
@@ -285,7 +302,7 @@ namespace Narrator
                     }
                 }
 
-                // OU clic sur l'un des liens
+                // Or click on a link
                 bool clickedOnLink = false;
                 if (clickedOnTransition == false && clickedOnWindow == false)
                 {
@@ -304,7 +321,7 @@ namespace Narrator
                     }
                 }
 
-                // OU clic ailleurs
+                // OR click elsewhere
                 if (clickedOnTransition == false && clickedOnWindow == false && clickedOnLink == false)
                 {
                     GenericMenu menu = new GenericMenu();
@@ -328,7 +345,7 @@ namespace Narrator
         /// </summary>
         private void HandleLeftClick()
         {
-            // Affichage des infos d'un lien
+            // Click on a link : display infos
             bool clickedOnLink = false;
             for (int i = 0; i < links.Count; i++)
             {
@@ -342,6 +359,7 @@ namespace Narrator
                     tempLink = null;
                 }
             }
+            // If click elsewhere : reinit selected link infos
             if (clickedOnLink == false && selectedLinkIndex != -1)
             {
                 links[selectedLinkIndex].IsUnselected();
@@ -349,7 +367,7 @@ namespace Narrator
                 currentCondition = 0;
             }
 
-            // OU dessin d'un lien
+            // OR click to begin/end drawing a new link
             if (clickedOnLink == false)
             {
                 if (tempLink == null)
@@ -358,7 +376,7 @@ namespace Narrator
                     EndDrawingLink();
             }
 
-            // OU sélection d'un node
+            // Or click on a node : selection
             bool clickedOnWindow = false;
             if (clickedOnLink == false)
             {
@@ -411,8 +429,8 @@ namespace Narrator
             backgroundRect.width = position.width;
             backgroundRect.height = position.height;
             GUI.Box(backgroundRect, GUIContent.none);
-            DrawGrid(10, 0.2f, Color.black);
-            DrawGrid(100, 0.4f, Color.black);
+            DrawGrid(15, 0.1f, Color.white);
+            DrawGrid(150, 0.6f, Color.black);
             GUI.backgroundColor = Color.white;
         }
 
@@ -468,7 +486,7 @@ namespace Narrator
                 CreateConversation("");
             }
 
-            // Conversations list display
+            // Display conversations list
             if (conversationList.Count != 0)
             {
                 int tempIndex = currentConversationIndex;
@@ -487,12 +505,14 @@ namespace Narrator
         {
             if (conversationList.Count != 0 && conversationList[currentConversationIndex] != null)
             {
+                // Nodes
                 currentConv = conversationList[currentConversationIndex];
 
-                links.Clear();
-
                 // Links
+                links.Clear();
                 Link link;
+
+                // Entry node's links
                 for (int i = 0; i < currentConv.Entry.contents[0].nextNodes.Count; i++)
                 {
                     link = new Link(currentConv.Entry, 0, currentConv.Dialogs[currentConv.Entry.contents[0].nextNodes[i].index - 1], linkColor);
@@ -509,24 +529,24 @@ namespace Narrator
                     links.Add(link);
                 }
 
-                // Pour chaque dialogue
+                // Dialog nodes' links
                 for (int i = 0; i < currentConv.Dialogs.Count; i++)
                 {
-                    // Pour chaque boxe de sortie
+                    // For each exit box
                     for (int j = 0; j < currentConv.Dialogs[i].contents.Count; j ++)
                     {
-                        // Récupération de tous les liens
+                        // Initialize all the links
                         for (int k = 0; k < currentConv.Dialogs[i].contents[j].nextNodes.Count; k++)
                         {
                             link = new Link(currentConv.Dialogs[i], j, currentConv.Dialogs[currentConv.Dialogs[i].contents[j].nextNodes[k].index - 1], linkColor);
                             link.startBoxIndex = j;
                             link.nextNodeIndex = k;
-                            // pour chaque lien : conditions
+                            // For each link : initialize conditions
                             for (int l = 0; l < currentConv.Dialogs[i].contents[j].nextNodes[k].conditions.Count; l++)
                             {
                                 link.conditions.Add(currentConv.Dialogs[i].contents[j].nextNodes[k].conditions[l]);
                             }
-                            // pour chaque lien : impacts
+                            // For each link : initialize impacts
                             for (int l = 0; l < currentConv.Dialogs[i].contents[j].nextNodes[k].impacts.Count; l++)
                             {
                                 link.impacts.Add(currentConv.Dialogs[i].contents[j].nextNodes[k].impacts[l]);
@@ -538,7 +558,7 @@ namespace Narrator
                 }
             }
 
-            // characters
+            // characters : distinguish playable & non-playable characters on display
             characters.Clear();
             for (int i = 0; i < brain.NPCs.Count; i++)
                 characters.Add(brain.NPCs[i]);
@@ -563,8 +583,7 @@ namespace Narrator
         /// </summary>
         /// <param name="_id"></param>
         void DrawLeftWindow_CharAndParams(int _id)
-        {
-                     
+        {                  
             switch (charOrParamsIndex = GUI.Toolbar(charOrParamsRect, charOrParamsIndex, charOrParams))
             {
                 case 0:
@@ -581,29 +600,34 @@ namespace Narrator
         /// </summary>
         void DrawCharactersList()
         {
-            EditorGUILayout.LabelField("Player(s)");
-            for (int i = 0; i < characters.Count; i++)
+            if (brain != null)
             {
-                if (characters[i].IsPlayable == true)
+                EditorGUILayout.LabelField("Player(s)");
+                for (int i = 0; i < characters.Count; i++)
                 {
-                    GUILayout.BeginHorizontal();
-                    characters[i].Name = EditorGUILayout.TextField(characters[i].Name);
-                    characters[i].Color = EditorGUILayout.ColorField(characters[i].Color);
-                    GUILayout.EndHorizontal();
+                    if (characters[i].IsPlayable == true)
+                    {
+                        GUILayout.BeginHorizontal();
+                        characters[i].Name = EditorGUILayout.TextField(characters[i].Name);
+                        characters[i].Color = EditorGUILayout.ColorField(characters[i].Color);
+                        GUILayout.EndHorizontal();
+                    }
                 }
-            }
 
-            EditorGUILayout.LabelField("Character(s)");
-            for (int i = 0; i < characters.Count; i++)
-            {
-                if (characters[i].IsPlayable == false)
+                EditorGUILayout.LabelField("Character(s)");
+                for (int i = 0; i < characters.Count; i++)
                 {
-                    GUILayout.BeginHorizontal();
-                    characters[i].Name = EditorGUILayout.TextField(characters[i].Name);
-                    characters[i].Color = EditorGUILayout.ColorField(characters[i].Color);
-                    GUILayout.EndHorizontal();
+                    if (characters[i].IsPlayable == false)
+                    {
+                        GUILayout.BeginHorizontal();
+                        characters[i].Name = EditorGUILayout.TextField(characters[i].Name);
+                        characters[i].Color = EditorGUILayout.ColorField(characters[i].Color);
+                        GUILayout.EndHorizontal();
+                    }
                 }
             }
+            else
+                Debug.LogError("Can't display characters : conversation brain is null");
         }
 
         /// <summary>
@@ -611,17 +635,16 @@ namespace Narrator
         /// </summary>
         void DrawParametersList()
         {
-
-            string exKey = string.Empty;
-            string newKey = string.Empty;
-            float newFValue = 0.0f;
-            int newIValue = 0;
-            bool newBValue = false;
-            bool isDeleting = false;
-
-            EditorGUILayout.LabelField("Float");
             if (brain != null)
             {
+                string exKey = string.Empty;
+                string newKey = string.Empty;
+                float newFValue = 0.0f;
+                int newIValue = 0;
+                bool newBValue = false;
+                bool isDeleting = false;
+
+                EditorGUILayout.LabelField("Float");
                 foreach (string str in brain.Parameters.FloatValues.dictionary.Keys)
                 {
                     GUILayout.BeginHorizontal();
@@ -642,14 +665,11 @@ namespace Narrator
                     GUILayout.EndHorizontal();
                 }
                 //brain.Parameters.SaveFloatModifications(exKey, newKey, newFValue, isDeleting);
-            }
 
-            EditorGUILayout.LabelField("Int");
-            exKey = "";
-            newKey = "";
-            isDeleting = false;
-            if (brain != null)
-            {
+                EditorGUILayout.LabelField("Int");
+                exKey = "";
+                newKey = "";
+                isDeleting = false;
                 foreach (string str in brain.Parameters.IntValues.dictionary.Keys)
                 {
                     GUILayout.BeginHorizontal();
@@ -670,14 +690,11 @@ namespace Narrator
                     GUILayout.EndHorizontal();
                 }
                 brain.Parameters.SaveIntModifications(exKey, newKey, newIValue, isDeleting);
-            }
 
-            EditorGUILayout.LabelField("Bool");
-            exKey = "";
-            newKey = "";
-            isDeleting = false;
-            if (brain != null)
-            {
+                EditorGUILayout.LabelField("Bool");
+                exKey = "";
+                newKey = "";
+                isDeleting = false;
                 foreach (string str in brain.Parameters.BoolValues.dictionary.Keys)
                 {
                     GUILayout.BeginHorizontal();
@@ -699,11 +716,17 @@ namespace Narrator
                 }
                 brain.Parameters.SaveBoolModifications(exKey, newKey, newBValue, isDeleting);
             }
+            else
+                Debug.LogError("Can't display parameters : conversation brain is null");
         }
 
 
-        //________________ MODIFICATIONS : PARAMETERS ________________//
+        //______________ MODIFICATIONS : CONVERSATION BRAIN _______________//
 
+        /// <summary>
+        /// Add a new parameter to the Conversation Brain
+        /// </summary>
+        /// <param name="_obj"></param>
         void CreateParameter(object _obj)
         {
             Parameters.TYPE type = (Parameters.TYPE)_obj;
@@ -724,11 +747,10 @@ namespace Narrator
             AssetDatabase.SaveAssets();
         }
 
-        
-
-
-        //________________ MODIFICATIONS : CHARACTERS ________________//
-
+        /// <summary>
+        /// Add a new character to the Conversation Brain
+        /// </summary>
+        /// <param name="_obj"></param>
         void CreateCharacter(object _obj)
         {
             bool isPlayable = (bool)_obj;
@@ -753,9 +775,14 @@ namespace Narrator
 
 
         //________________ NODES ________________//
-        void CreateDialogNode(object _obj)
+
+        /// <summary>
+        /// Add a new dialog node to the Conversation
+        /// </summary>
+        /// <param Node Character="_character"></param>
+        void CreateDialogNode(object _character)
         {
-            Character charac = (Character)_obj;
+            Character charac = (Character)_character;
             SpeakNode newNode = new SpeakNode();
             newNode.CreateSpeakNode(currentConv.Dialogs.Count);
             newNode.charac = charac;
@@ -768,9 +795,13 @@ namespace Narrator
             AssetDatabase.SaveAssets();
         }
 
-        void CreateChoiceNode(object _obj)
+        /// <summary>
+        /// Add a new choice node to the Conversation
+        /// </summary>
+        /// <param Node Character="_character"></param>
+        void CreateChoiceNode(object _character)
         {
-            Character charac = (Character)_obj;
+            Character charac = (Character)_character;
             SpeakNode newNode = new SpeakNode();
             newNode.CreateSpeakNode(currentConv.Dialogs.Count, 2);
             newNode.charac = charac;
@@ -783,32 +814,50 @@ namespace Narrator
             AssetDatabase.SaveAssets();
         }
 
+        /// <summary>
+        /// Add a choice content on an existing node
+        /// </summary>
+        /// <param name="_nodeIndex"></param>
         void AddChoiceOnNode(object _nodeIndex)
         {
             Content content = new Content();
             content.text = "new choice";
             content.Initialize();
 
-            int index = (int)_nodeIndex;
-            currentConv.Dialogs[index].contents.Add(content);
+            if ((int)_nodeIndex >= 0 && (int)_nodeIndex < currentConv.Dialogs.Count)
+                currentConv.Dialogs[(int)_nodeIndex].contents.Add(content);
+            else
+                Debug.LogError("Fail to add choice on node at index " + (int)_nodeIndex);
         }
 
+        /// <summary>
+        /// Display an existing speak node
+        /// </summary>
+        /// <param name="_id"></param>
         void DrawSpeakNode(int _id)
         {
             currentConv.Dialogs[_id - (int)windowID.dialogs].DrawWindow();
             GUI.DragWindow();
         }
 
+        /// <summary>
+        /// Display the existing entry node
+        /// </summary>
+        /// <param name="_id"></param>
         void DrawEntryNode(int _id)
         {
             GUI.DragWindow();
         }
 
+        /// <summary>
+        /// Delete an existing node and all the links related to it
+        /// </summary>
+        /// <param name="_nodeIndex"></param>
         void DeleteNode(int _nodeIndex)
         {
             if (selectedNodeIndex >= 0 && selectedLinkIndex < currentConv.Dialogs.Count)
             {
-                // Delete links linked to the node
+                // Remove links related to the node
                 bool searchingLinks = true;
                 while (searchingLinks)
                 {
@@ -831,6 +880,10 @@ namespace Narrator
                 Debug.Log("Can't delete node number " + _nodeIndex + ": it doesn't exist");
         }
 
+        /// <summary>
+        /// Menu displayed when a node is right-clicked on
+        /// </summary>
+        /// <param name="_obj"></param>
         void SpeakMenu(object _obj)
         {
             switch(_obj.ToString())
@@ -853,19 +906,23 @@ namespace Narrator
         }
 
 
-
-
         //________________ LINKS ________________//
 
+        /// <summary>
+        /// Create a link begining on the selected exit box
+        /// </summary>
         void BeginDrawingLink()
         {
             if (tempLink == null)
             {
+                // The link begins on the entry node
                 if (currentConv.Entry.contents[0].exitBox.Contains(mousePos))
                 {
                     selectedNodeIndex = -1;
                     tempLink = new Link(currentConv.Entry, 0, linkColor);
                 }
+
+                // OR on a dialog node
                 else
                 {
                     for (int i = 0; i < currentConv.Dialogs.Count; i++)
@@ -884,6 +941,9 @@ namespace Narrator
             }
         }
 
+        /// <summary>
+        /// End the tracing of the link on the selected entry box and save it
+        /// </summary>
         void EndDrawingLink()
         {
             for (int i = 0; i < currentConv.Dialogs.Count; i++)
@@ -896,24 +956,40 @@ namespace Narrator
                 }
             }
             tempLink = null;
+
             EditorUtility.SetDirty(currentConv);
             AssetDatabase.SaveAssets();
         }
 
+
+        /// <summary>
+        /// Delete an existing link and save modifications
+        /// </summary>
+        /// <param name="_link"></param>
         void RemoveLink(object _link)
         {
             Link link = _link as Link;
             currentConv.DeleteLinkFromDialog(link.start, link.end, link.startBoxIndex);
             links.Remove(link);
+
+            EditorUtility.SetDirty(currentConv);
+            AssetDatabase.SaveAssets();
         }
 
         //__________SELECTED LINK______________//
 
+        /// <summary>
+        /// Initialization : called once when Narrator Window opens
+        /// </summary>
         void SelectedLink_Initialize()
         {
+            linkEditor = new LinkEditor();
             selectedLinkIndex = -1;
         }
 
+        /// <summary>
+        /// Add an empty condition on selected link
+        /// </summary>
         void AddConditionOnLink()
         {
             if(selectedLinkIndex != -1)
@@ -923,6 +999,9 @@ namespace Narrator
             }
         }
 
+        /// <summary>
+        /// Add an empty impact on selected link
+        /// </summary>
         void AddImpactOnLink()
         {
             if(selectedLinkIndex != -1)
@@ -932,27 +1011,35 @@ namespace Narrator
             }
         }
 
+        /// <summary>
+        /// Display the selected link, manage and save modifications
+        /// </summary>
+        /// <param name="_id"></param>
         void DrawSelectedLink(int _id)
         {
+            // Display all link's conditions
             GUILayout.Label("Conditions");
             Condition cond = new Condition();
-            // Affichage de chaque condition posée sur le liens
+
             for (int i = 0; i < links[selectedLinkIndex].conditions.Count; i++)
             {
                 currentCondition = i;
                 cond = links[selectedLinkIndex].conditions[i];
+
                 GUILayout.BeginHorizontal();
-                // paramètre de la condition
+
+                // Condition's name (the parameter it refers to)
                 if (EditorGUILayout.DropdownButton(new GUIContent(cond.name), FocusType.Keyboard))
                 {
                     GenericMenu menu = new GenericMenu();
                     for (int j = 0; j < brain.Parameters.Names.Count; j++)
                     {
-                        menu.AddItem(new GUIContent(brain.Parameters.Names[j]), false, UpdateSelectedLinkParameter, j);
+                        menu.AddItem(new GUIContent(brain.Parameters.Names[j]), false, UpdateSelectedLinkParameter, brain.Parameters.Names[j]);
                     }
                     menu.ShowAsContext();
                 }
-                // operateur de la condition
+
+                // Condition's operator (equals, inferior, etc.)
                 switch (links[selectedLinkIndex].conditions[i].type)
                 {
                     case Parameters.TYPE.b:
@@ -981,7 +1068,8 @@ namespace Narrator
                         break;
 
                 }
-                // markeur de la condition
+
+                // Condition's value (the value the parameters will be compared with)
                 string marker = "marker";
                 switch (links[selectedLinkIndex].conditions[i].type)
                 {
@@ -1014,14 +1102,17 @@ namespace Narrator
             }
 
             GUILayout.Space(1.0f);
+
+            // Display all link's impacts
             GUILayout.Label("Impacts");
             Impact imp = new Impact();
-            // Affichage de chaque impact qu'entrainera le lien une fois franchi
+
             for (int i = 0; i < links[selectedLinkIndex].impacts.Count; i++)
             {
                 imp = links[selectedLinkIndex].impacts[i];
                 GUILayout.BeginHorizontal();
-                // paramètre de l'impact
+
+                // Impact's name : the parameter it refers to
                 if (EditorGUILayout.DropdownButton(new GUIContent(imp.name), FocusType.Keyboard))
                 {
                     GenericMenu menu = new GenericMenu();
@@ -1031,7 +1122,8 @@ namespace Narrator
                     }
                     menu.ShowAsContext();
                 }
-                // valeur de l'impact
+
+                // Impact's value : how will it modifies the parameters
                 switch (links[selectedLinkIndex].impacts[i].type)
                 {
                     case Parameters.TYPE.b:
@@ -1057,18 +1149,28 @@ namespace Narrator
                     default:
                         break;
                 }
+
                 GUILayout.EndHorizontal();
             }
+        }
+
+        // Objectif : fusionner les fonctions pour s'y retrouver + facilement
+        void UpdateSelectedLink_Condition(object _linkEditor)
+        {
+            LinkEditor newInfos = (LinkEditor)_linkEditor;
+
+            
+            links[selectedLinkIndex].conditions[currentCondition].name = newInfos.name;
+            links[selectedLinkIndex].conditions[currentCondition].type = brain.Parameters.GetType(links[selectedLinkIndex].conditions[currentCondition].name);
+            conversationList[currentConversationIndex].UpdateCondition(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].conditions[currentCondition]);
+
         }
 
         void UpdateSelectedLinkParameter(object _obj)
         {
             int index = (int)_obj;
 
-            links[selectedLinkIndex].conditions[currentCondition].name = brain.Parameters.Names[index];
-            links[selectedLinkIndex].conditions[currentCondition].type = brain.Parameters.GetType(links[selectedLinkIndex].conditions[currentCondition].name);
-            conversationList[currentConversationIndex].UpdateCondition(links[selectedLinkIndex].start, links[selectedLinkIndex].startBoxIndex, links[selectedLinkIndex].nextNodeIndex, currentCondition, links[selectedLinkIndex].conditions[currentCondition]);
-
+            
         }
 
         void UpdateSelectedLinkOperator(object _obj)
