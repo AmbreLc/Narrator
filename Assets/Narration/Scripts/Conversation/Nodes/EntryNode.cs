@@ -28,7 +28,7 @@ namespace Narrator
 
             contents = new List<Content>();
             Content content = new Content();
-            content.Initialize();
+            content.InitializeForEntryNode();
             contents.Add(content);
         }
     }

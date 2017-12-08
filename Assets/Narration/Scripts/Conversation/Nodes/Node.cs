@@ -38,7 +38,7 @@ namespace Narrator
         [SerializeField] public Character charac;
 
 #if UNITY_EDITOR
-        public void DrawWindow()
+        public void DrawWindow(int _currentLangage)
         {
             if (contents.Count > 1)
                 type = Type.choice;
@@ -46,7 +46,11 @@ namespace Narrator
             for (int i = 0; i < contents.Count; i++)
             {
                 if (type != Type.entry)
-                    contents[i].text = EditorGUILayout.TextArea(contents[i].text);
+                {
+                    if (contents[i].texts.Count <= _currentLangage)
+                        contents[i].texts.Add("What should I say ?");
+                    contents[i].texts[_currentLangage] = EditorGUILayout.TextArea(contents[i].texts[_currentLangage]);
+                }
             }
         }
         public void DrawBox()

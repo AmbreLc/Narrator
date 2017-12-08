@@ -22,21 +22,26 @@ namespace Narrator
     [System.Serializable]
     public class Content
     {
-        public string text;
+        public List<string> texts;
         public Rect exitBox;
         public List<NextNode> nextNodes;
 
-        public void Initialize()
+        public void Initialize(NarratorBrainSO brain)
         {
-            text = "";
+            texts = new List<string>();
+            for (int i = 0; i < brain.Langages.Count; i++)
+            {
+                texts.Add("What should I say ?");
+            }
+
             nextNodes = new List<NextNode>();
             exitBox = new Rect();
         }
 
-        public void Initialize(Rect _rect)
+        public void InitializeForEntryNode()
         {
             nextNodes = new List<NextNode>();
-            exitBox = new Rect(_rect);
+            exitBox = new Rect();
         }
 
         public void AddNextNode(int _index)
@@ -52,7 +57,7 @@ namespace Narrator
             bool hasRemoved = false;
             for (int i = 0; i < nextNodes.Count; i++)
             {
-                if (nextNodes[i].index == _index + 1)
+                if (nextNodes[i].index == _index)
                 {
                     nextNodes.RemoveAt(i);
                     hasRemoved = true;
@@ -61,5 +66,6 @@ namespace Narrator
             if (hasRemoved == false)
                 Debug.LogError("Failed to find end node link, deletion won't be effective.");
         }
+
     }
 }

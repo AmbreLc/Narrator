@@ -18,7 +18,7 @@ namespace Narrator
     [System.Serializable]
     public class SpeakNode : Node
     {
-        public void CreateSpeakNode(int _id)
+        public void CreateSpeakNode(int id, NarratorBrainSO brain)
         {
             type = Type.speak;
             charac = new Character();
@@ -27,12 +27,11 @@ namespace Narrator
 
             contents = new List<Content>();
             Content content = new Content();
-            content.Initialize();
-            content.text = "What should I say ?";
+            content.Initialize(brain);
             contents.Add(content);
         }
 
-        public void CreateSpeakNode(int _id, int _choicesCount)
+        public void CreateSpeakNode(int _id, int _choicesCount, NarratorBrainSO brain)
         {
             type = _choicesCount > 1 ? Type.choice : Type.speak;
             charac = new Character();
@@ -42,13 +41,11 @@ namespace Narrator
             contents = new List<Content>();
 
             Content content = new Content();
-            content.Initialize();
-            content.text = "Choice A";
+            content.Initialize(brain);
             contents.Add(content);
 
             content = new Content();
-            content.Initialize();
-            content.text = "Choice B";
+            content.Initialize(brain);
             contents.Add(content);
         }
     }

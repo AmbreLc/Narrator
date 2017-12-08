@@ -32,6 +32,24 @@ namespace Narrator
             set { parameters = value; }
         }
 
+        [SerializeField] private List<string> langages;
+        public List<string> Langages
+        {
+            get { return langages; }
+        }
+
+        private int currentLangageIndex;
+        public int CurrentLangageIndex
+        {
+            set { currentLangageIndex = value; }
+            get { return currentLangageIndex; }
+        }
+        public string CurrentLangage
+        {
+            set { if (langages.Contains(value)) currentLangageIndex = langages.IndexOf(value); else Debug.LogError(value + " langage doesn't exist"); }
+            get { return langages[currentLangageIndex]; }
+        }
+
 
         public void AddCharacter(Character _character)
         {
@@ -59,12 +77,15 @@ namespace Narrator
 
             parameters = new Parameters();
 
+            langages = new List<string>();
+            langages.Add("English");
+            currentLangageIndex = 0;
+
 #if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
             UnityEditor.AssetDatabase.SaveAssets();
 #endif
         }
-
 
         public void ApplyImpact(Impact _impact)
         {
@@ -92,6 +113,22 @@ namespace Narrator
                     Debug.LogError("Can't apply impact : unknown type");
                     break;
             }
+        }
+
+        public void AddLangage(string name = "New langage")
+        {
+            langages.Add(name);
+        }
+
+        public string[] GetLangagesArray()
+        {
+            string[] returnArray = new string[langages.Count];
+            for (int i = 0; i <langages.Count; i++)
+            {
+                returnArray[i] = langages[i];
+            }
+
+            return returnArray;
         }
 
 

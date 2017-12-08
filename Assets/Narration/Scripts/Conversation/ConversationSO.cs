@@ -21,6 +21,7 @@ using System.Collections.Generic;
 
 namespace Narrator
 {
+
 #if UNITY_EDITOR
     // bugged because of SerializedDictionary not initialized when asset generated
     //[CreateAssetMenu(fileName = "Conversation.asset", menuName = "Narrator/Conversation")]
@@ -97,23 +98,25 @@ namespace Narrator
                 */
             }
 
-            int startNodeIndex = -1;
-            int endNodeIndex = -1;
+            int startNodeIndex = -2;
+            int endNodeIndex = -2;
 
             if (_start.type == Node.Type.entry)
-                startNodeIndex = 0;
-
-            for (int i = 0; i < dialogs.Count; i++)
             {
-                if (startNodeIndex == -1 && dialogs[i] == _start)
+                startNodeIndex = -1;
+            }
+
+                for (int i = 0; i < dialogs.Count; i++)
+            {
+                if (startNodeIndex == -2 && dialogs[i] == _start)
                     startNodeIndex = i;
-                else if (endNodeIndex == -1 && dialogs[i] == _end)
+                else if (endNodeIndex == -2 && dialogs[i] == _end)
                     endNodeIndex = i + 1;
             }
 
-            if (startNodeIndex == -1 || endNodeIndex == -1)
+            if (startNodeIndex == -2 || endNodeIndex == -2)
                 Debug.LogError("Error : dialog missing in conversation, cannot link");
-            else if (startNodeIndex == 0)
+            else if (startNodeIndex == -1)
                 entry.contents[_startIndex].AddNextNode(endNodeIndex);
             else
                 dialogs[startNodeIndex].contents[_startIndex].AddNextNode(endNodeIndex);
@@ -122,25 +125,25 @@ namespace Narrator
 
         public void DeleteLinkFromDialog(Node _start, Node _end, int _contentIndex)
         {
-            int startIndex = -1;
-            int endIndex = -1;
+            int startIndex = -2;
+            int endIndex = -2;
 
             // If the starting node is the entry one
             if (_start.type == Node.Type.entry)
-                startIndex = 0;
+                startIndex = -1;
 
             // if the start and/or end node(s) is/are speaknode(s)
             for (int i = 0; i < dialogs.Count; i++)
             {
-                if (startIndex == -1 && _start == dialogs[i])
+                if (startIndex == -2 && _start == dialogs[i])
                     startIndex = i;             
-                else if (endIndex == -1 && _end == dialogs[i])
-                    endIndex = i;
+                else if (endIndex == -2 && _end == dialogs[i])
+                    endIndex = i + 1;
             }
 
-            if (startIndex == -1 || endIndex == -1)
+            if (startIndex == -2 || endIndex == -2)
                 Debug.LogError("Error : dialog missing in conversation, cannot link");
-            else if (startIndex == 0)
+            else if (startIndex == -1)
                 entry.contents[_contentIndex].RemoveNextNode(endIndex);
             else
                 dialogs[startIndex].contents[_contentIndex].RemoveNextNode(endIndex);
