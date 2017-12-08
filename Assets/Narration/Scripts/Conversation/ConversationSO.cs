@@ -286,7 +286,7 @@ namespace Narrator
                     {
                         _brain.ApplyImpact(_currentNode.contents[_contentIndex].nextNodes[i].impacts[j]);
                     }
-                    return Dialogs[_currentNode.contents[_contentIndex].nextNodes[i].index];
+                    return Dialogs[_currentNode.contents[_contentIndex].nextNodes[i].index - 1];
                 }
             }
 

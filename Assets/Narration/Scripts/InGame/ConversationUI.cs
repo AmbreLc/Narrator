@@ -47,8 +47,6 @@ namespace Narrator
 
 
 
-
-        // Use this for initialization
         void Start()
         {
             if (conversation == null)
@@ -81,6 +79,7 @@ namespace Narrator
             else
             {
                 state = State.current;
+                fading = 1.0f;
             }
         }
 
@@ -90,7 +89,7 @@ namespace Narrator
             Init();
         }
 
-        // Update is called once per frame
+
         void Update()
         {
             if (currentNode.type == Node.Type.choice)
@@ -99,20 +98,23 @@ namespace Narrator
                 DisplayDialog();
 
 
-            SetOpacity();
-            if (state == State.fadeIn)
+            if (displayType == DisplayType.fade)
             {
-                if (fading < 1.0f)
-                    fading += Time.deltaTime;
-                else
-                    state = State.current;
-            }
-            else if (state == State.fadeOut)
-            {
-                if (fading > 0.0f)
-                    fading -= Time.deltaTime;
-                else
-                    EndConversation();
+                SetOpacity();
+                if (state == State.fadeIn)
+                {
+                    if (fading < 1.0f)
+                        fading += Time.deltaTime;
+                    else
+                        state = State.current;
+                }
+                else if (state == State.fadeOut)
+                {
+                    if (fading > 0.0f)
+                        fading -= Time.deltaTime;
+                    else
+                        EndConversation();
+                }
             }
 
         }
@@ -160,67 +162,37 @@ namespace Narrator
             // Test : end of the conversation
             if(currentNode == null)
             {
-                state = State.fadeOut;
-            }
-
-            // Obsolete
-            {
-                /*
-                int nextNodeIndex = TestNextNodes(_index);
-                if (nextNodeIndex == -1)
+                switch(displayType)
                 {
-                    state = State.fadeOut;
+                    case DisplayType.blunt:
+                        EndConversation();
+                        break;
+                    case DisplayType.fade:
+                        state = State.fadeOut;
+                        break;
                 }
-                else
-                {
-                    // Actualisation du noeud courant
-                    currentNode = conversation.Dialogs.dictionary[currentNode.contents[_index].nextNodes[nextNodeIndex].index];
-                    // Actualisation du (des) texte(s) affiché(s)
-                    choices.Clear();
-                    for (int i = 0; i < currentNode.contents.Count; i++)
-                        choices.Add(currentNode.contents[i].text);
-                }
-                */
             }
+            else
+                UpdateChoicesList();
+                
         }
 
         void EndConversation()
         {
             isOver = true;
+            fading = 0.0f;
+            SetOpacity();
             currentNode = conversation.Entry;
         }
 
-        // Obsolete : moved to ConversationSO
-        
-        /*
-        int TestNextNodes(int _contentIndex)
+        void UpdateChoicesList()
         {
-            for (int i = 0; i < currentNode.contents[_contentIndex].nextNodes.Count; i++)
+            choices.Clear();
+            for (int i = 0; i < currentNode.contents.Count; i++)
             {
-                bool canGoNextNode = true;
-
-                for (int j = 0; j < currentNode.contents[_contentIndex].nextNodes[i].conditions.Count; j++)
-                {
-                    if (currentNode.contents[_contentIndex].nextNodes[i].conditions[j].IsComplete(brain.Parameters) == false)
-                    {
-                        canGoNextNode = false;
-                    }
-                }
-                if (canGoNextNode)
-                {
-                    for (int j = 0; j < currentNode.contents[_contentIndex].nextNodes[i].impacts.Count; j++)
-                    {
-                        brain.ApplyImpact(currentNode.contents[_contentIndex].nextNodes[i].impacts[j]);
-                    }
-                    return i;
-                }
+                choices.Add(currentNode.contents[i].texts[brain.CurrentLangageIndex]);
             }
-
-            return -1;
         }
-        */
-        
-
 
         void SetOpacity()
         {
