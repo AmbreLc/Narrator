@@ -7,9 +7,27 @@ namespace Narrator
 
     public class ConversationUI : MonoBehaviour
     {
+        enum DisplayType
+        {
+            blunt,
+            fade
+        }
+
+        enum State
+        {
+            fadeIn,
+            current,
+            fadeOut
+        }
+        State state = State.fadeIn;
+
+        [Header("Scriptable objects")]
         [SerializeField] private NarratorBrainSO brain;
         [SerializeField] private ConversationSO conversation;
-        private Node currentNode = new Node();
+
+
+        [Header("UI elements")]
+        [SerializeField] private DisplayType displayType;
 
         [SerializeField] private bool displayInterlocutor = true;
         [SerializeField] private Text targetText;
@@ -18,36 +36,106 @@ namespace Narrator
         [SerializeField] private Button nextButton;
         [SerializeField] private Button[] choicesButtons;
 
+        //[Header("Informations")]
+        private Node currentNode = new Node();
         List<string> choices = new List<string>();
 
+        private bool isOver = false;
+        public bool IsOver { get { return isOver; } }
 
-        // Use this for initialization
+        private float fading;
+
+
+
         void Start()
         {
-            currentNode = conversation.Entry;
-            GoToNextNode();
+            if (conversation == null)
+            {
+                this.enabled = false;
+                Debug.LogError("ConversationUI : missing ConversationSO, can't display dialogs. Component has been disabled.");
+            }
+            else if (brain == null)
+            {
+                this.enabled = false;
+                Debug.LogError("ConversationUI : missing BrainSO, can't display dialogs. Component has been disabled.");
+            }
+            else
+            {
+                Init();
+            }
         }
 
-        // Update is called once per frame
+        public void Init()
+        {
+            isOver = false;
+            currentNode = conversation.Entry;
+            GoToNextNode(0);
+
+            if (displayType == DisplayType.fade)
+            {
+                state = State.fadeIn;
+                fading = 0.0f;
+            }
+            else
+            {
+                state = State.current;
+                fading = 1.0f;
+            }
+        }
+
+        public void NewConversation(ConversationSO _conv)
+        {
+            conversation = _conv;
+            Init();
+        }
+
+
         void Update()
         {
             if (currentNode.type == Node.Type.choice)
                 DisplayChoices();
-            else if(currentNode.type == Node.Type.speak)
+            else if (currentNode.type == Node.Type.speak)
                 DisplayDialog();
+
+
+            if (displayType == DisplayType.fade)
+            {
+                SetOpacity();
+                if (state == State.fadeIn)
+                {
+                    if (fading < 1.0f)
+                        fading += Time.deltaTime;
+                    else
+                        state = State.current;
+                }
+                else if (state == State.fadeOut)
+                {
+                    if (fading > 0.0f)
+                        fading -= Time.deltaTime;
+                    else
+                        EndConversation();
+                }
+            }
+
         }
 
 
         void DisplayChoices()
         {
             targetText.enabled = false;
-            nextButton.enabled = false;
+            nextButton.gameObject.SetActive(false);
 
-            for (int i = 0; i < choices.Count; i++)
+            for (int i = 0; i < choicesButtons.Length; i++)
             {
-                choicesButtons[i].gameObject.SetActive(true);
-                choicesButtons[i].GetComponentInChildren<Text>().text = choices[i];
+                if (i < choices.Count)
+                {
+                    choicesButtons[i].gameObject.SetActive(true);
+                    choicesButtons[i].GetComponentInChildren<Text>().text = choices[i];
+                }
+                else
+                    choicesButtons[i].gameObject.SetActive(false);
             }
+
         }
 
         void DisplayDialog()
@@ -56,79 +144,63 @@ namespace Narrator
                 speakerText.text = currentNode.charac.Name;
 
             targetText.enabled = true;
-            nextButton.enabled = true;
+            nextButton.gameObject.SetActive(true);
 
             SpeakNode speakNode = currentNode as SpeakNode;
             targetText.text = choices[0];
 
             for (int i = 0; i < choicesButtons.Length; i++)
                 choicesButtons[i].gameObject.SetActive(false);
+
         }
 
-        public void GoToNextNode()
+        public void GoToNextNode(int _index)
         {
+            // Update current node
+            currentNode = conversation.GoToNextNode(brain, currentNode, _index);
 
-            // Choix du next node
-            int nextNodeIndex = TestNextNodes(0);
-
-            if (nextNodeIndex == -1)
+            // Test : end of the conversation
+            if(currentNode == null)
             {
-                Debug.Log("fin de la conversation");
-                gameObject.SetActive(false);
-            }
-            else
-            {
-                // Actualisation du noeud courant
-                currentNode = conversation.Dialogs.dictionary[currentNode.contents[0].nextNodes[nextNodeIndex].index];
-                // Actualisation du (des) texte(s) affiché(s)
-                choices.Clear();
-                for(int i = 0; i < currentNode.contents.Count; i++)
-                    choices.Add(currentNode.contents[i].text);
-            }
-        }
-
-        public void ChoseNextNode(int _index)
-        {        
-            // Choix du next node
-            int nextNodeIndex = TestNextNodes(_index);
-
-            if (nextNodeIndex == -1)
-            {
-                Debug.Log("fin de la conversation");
-                gameObject.SetActive(false);
-            }
-            else
-            {
-                // Actualisation du noeud courant
-                currentNode = conversation.Dialogs.dictionary[currentNode.contents[_index].nextNodes[nextNodeIndex].index];
-                // Actualisation du (des) texte(s) affiché(s)
-                choices.Clear();
-                for (int i = 0; i < currentNode.contents.Count; i++)
-                    choices.Add(currentNode.contents[i].text);
-            }
-        }
-
-
-        int TestNextNodes(int _contentIndex)
-        {
-            for (int i = 0; i < currentNode.contents[_contentIndex].nextNodes.Count; i++)
-            {
-                bool canGoNextNode = true;
-
-                for (int j = 0; j < currentNode.contents[_contentIndex].nextNodes[i].conditions.Count; j++)
+                switch(displayType)
                 {
-                    if (currentNode.contents[_contentIndex].nextNodes[i].conditions[j].IsComplete(brain.Parameters) == false)
-                    {
-                        canGoNextNode = false;
-                    }
+                    case DisplayType.blunt:
+                        EndConversation();
+                        break;
+                    case DisplayType.fade:
+                        state = State.fadeOut;
+                        break;
                 }
-                if (canGoNextNode)
-                    return i;
             }
-
-            return -1;
+            else
+                UpdateChoicesList();
+                
         }
 
+        void EndConversation()
+        {
+            isOver = true;
+            fading = 0.0f;
+            SetOpacity();
+            currentNode = conversation.Entry;
+        }
+
+        void UpdateChoicesList()
+        {
+            choices.Clear();
+            for (int i = 0; i < currentNode.contents.Count; i++)
+            {
+                choices.Add(currentNode.contents[i].texts[brain.CurrentLangageIndex]);
+            }
+        }
+
+        void SetOpacity()
+        {
+            foreach (Image i in GetComponentsInChildren<Image>())
+                i.color = new Color(i.color.r, i.color.g, i.color.b, fading);
+            foreach (Text t in GetComponentsInChildren<Text>())
+                t.color = new Color(t.color.r, t.color.g, t.color.b, fading);
+        }
     }
 
 }
