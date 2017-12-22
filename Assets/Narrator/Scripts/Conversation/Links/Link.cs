@@ -60,6 +60,11 @@ namespace Narrator
             startBoxIndex = (short)_startIndex;
 
             linkRect = new Rect(0.0f, 0.0f, 20.0f, 20.0f);
+            Vector3 startPos = new Vector3(start.contents[startBoxIndex].exitBox.x + start.contents[startBoxIndex].exitBox.width / 2, start.contents[startBoxIndex].exitBox.y + start.contents[startBoxIndex].exitBox.height / 2, 0);
+            Vector3 endPos = new Vector3(end.entryBox.x + end.entryBox.width / 2, end.entryBox.y + end.entryBox.height / 2, 0);         
+            linkRect.x = (startPos.x + endPos.x) * 0.5f - linkRect.width * 0.5f;
+            linkRect.y = (startPos.y + endPos.y) * 0.5f - linkRect.height * 0.5f;
+
             conditions = new List<Condition>();
             impacts = new List<Impact>();
         }

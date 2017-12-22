@@ -38,6 +38,13 @@ namespace Narrator
         [SerializeField] public Character charac;
 
 #if UNITY_EDITOR
+        public void DeleteLanguageContent(int _languageIndex)
+        {
+            for(int c = 0; c < contents.Count; c++)
+            {
+                contents[c].texts.RemoveAt(_languageIndex);
+            }
+        }
         public void DrawWindow(int _currentLangage)
         {
             if (contents.Count > 1)

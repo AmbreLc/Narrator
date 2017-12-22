@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,22 +34,22 @@ namespace Narrator
             set { parameters = value; }
         }
 
-        [SerializeField] private List<string> langages;
-        public List<string> Langages
+        [SerializeField] private List<string> languages;
+        public List<string> Languages
         {
-            get { return langages; }
+            get { return languages; }
         }
 
-        private int currentLangageIndex;
-        public int CurrentLangageIndex
+        private int currentLanguageIndex;
+        public int CurrentLanguageIndex
         {
-            set { currentLangageIndex = value; }
-            get { return currentLangageIndex; }
+            set { currentLanguageIndex = value; }
+            get { return currentLanguageIndex; }
         }
-        public string CurrentLangage
+        public string CurrentLanguage
         {
-            set { if (langages.Contains(value)) currentLangageIndex = langages.IndexOf(value); else Debug.LogError(value + " langage doesn't exist"); }
-            get { return langages[currentLangageIndex]; }
+            set { if (languages.Contains(value)) currentLanguageIndex = languages.IndexOf(value); else Debug.LogError(value + " langage doesn't exist"); }
+            get { return languages[currentLanguageIndex]; }
         }
 
 
@@ -57,6 +59,7 @@ namespace Narrator
                 PCs.Add(_character);
             else if (_character.IsPlayable == false && NPCs.Contains(_character) == false)
                 NPCs.Add(_character);
+            SaveCharacterList();
         }
         public void DeleteCharacter(Character _character)
         {
@@ -64,9 +67,25 @@ namespace Narrator
                 PCs.Remove(_character);
             else if (_character.IsPlayable == false && NPCs.Contains(_character) == true)
                 NPCs.Remove(_character);
-
+            SaveCharacterList();
         }
+        public string[] GetCharactersNames()
+        {
+            string[] names = new string[NPCs.Count + PCs.Count];
 
+            for(int i = 0; i < names.Length; i++)
+            {
+                if (i < PCs.Count)
+                    names[i] = PCs[i].Name;
+                else
+                    names[i] = NPCs[i - PCs.Count].Name;
+            }
+            return names;
+        }
+        public void SaveCharacterList()
+        {
+            CharactersEnum.Save(this);
+        }
 
         public void CreateBrain()
         {
@@ -77,9 +96,9 @@ namespace Narrator
 
             parameters = new Parameters();
 
-            langages = new List<string>();
-            langages.Add("English");
-            currentLangageIndex = 0;
+            languages = new List<string>();
+            languages.Add("English");
+            currentLanguageIndex = 0;
 
 #if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
@@ -115,27 +134,45 @@ namespace Narrator
             }
         }
 
-        public void AddLangage(string name = "New langage")
+        public void AddLanguage(string name = "New language")
         {
-            langages.Add(name);
+            languages.Add(name);
+            Save();
         }
 
-        public string[] GetLangagesArray()
+        public void DeleteCurrentLanguage()
         {
-            string[] returnArray = new string[langages.Count];
-            for (int i = 0; i <langages.Count; i++)
+            Debug.Assert(languages.Contains(CurrentLanguage), "Error: brain trying to delete a non-existing language");
+            languages.Remove(CurrentLanguage);
+            Save();
+        }
+
+        public void RenameCurrentLanguage(string name)
+        {
+            Debug.Assert(languages.Contains(CurrentLanguage), "Error: brain trying to rename a non-existing language");
+            languages.Remove(CurrentLanguage);
+            languages.Add(name);
+            Save();
+        }
+
+        public string[] GetLanguagesArray()
+        {
+            string[] returnArray = new string[languages.Count];
+            for (int i = 0; i < languages.Count; i++)
             {
-                returnArray[i] = langages[i];
+                returnArray[i] = languages[i];
             }
 
             return returnArray;
         }
 
 
+        private void Save()
+        {
+#if UNITY_EDITOR
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
+        }
     }
-
-
-
-  
 
 }

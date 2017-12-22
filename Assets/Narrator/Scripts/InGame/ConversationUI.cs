@@ -4,9 +4,19 @@ using UnityEngine.UI;
 
 namespace Narrator
 {
-
+    [System.Serializable]
     public class ConversationUI : MonoBehaviour
     {
+        [System.Serializable]
+        struct CharacterUI
+        {
+            public string characterName;
+            public Text speakerText;
+            public Text contentText;
+            public Button nextButton;
+            public Button[] choicesButtons;
+        }
+
         enum DisplayType
         {
             blunt,
@@ -30,13 +40,9 @@ namespace Narrator
         [SerializeField] private DisplayType displayType;
 
         [SerializeField] private bool displayInterlocutor = true;
-        [SerializeField] private Text targetText;
+        [SerializeField] private CharacterUI[] charactersUI;
+        private bool soloCanvas;
 
-        [SerializeField] private Text speakerText;
-        [SerializeField] private Button nextButton;
-        [SerializeField] private Button[] choicesButtons;
-
-        //[Header("Informations")]
         private Node currentNode = new Node();
         List<string> choices = new List<string>();
 
@@ -67,6 +73,9 @@ namespace Narrator
 
         public void Init()
         {
+            Debug.Assert(charactersUI != null, "No UI to display conversation");
+            soloCanvas = charactersUI.Length == 1;
+
             isOver = false;
             currentNode = conversation.Entry;
             GoToNextNode(0);
@@ -122,35 +131,47 @@ namespace Narrator
 
         void DisplayChoices()
         {
-            targetText.enabled = false;
-            nextButton.gameObject.SetActive(false);
-
-            for (int i = 0; i < choicesButtons.Length; i++)
+            if (soloCanvas)
             {
-                if (i < choices.Count)
-                {
-                    choicesButtons[i].gameObject.SetActive(true);
-                    choicesButtons[i].GetComponentInChildren<Text>().text = choices[i];
-                }
-                else
-                    choicesButtons[i].gameObject.SetActive(false);
-            }
+                charactersUI[0].contentText.enabled = false;
+                charactersUI[0].nextButton.gameObject.SetActive(false);
 
+                for (int i = 0; i < charactersUI[0].choicesButtons.Length; i++)
+                {
+                    if (i < choices.Count)
+                    {
+                        charactersUI[0].choicesButtons[i].gameObject.SetActive(true);
+                        charactersUI[0].choicesButtons[i].GetComponentInChildren<Text>().text = choices[i];
+                    }
+                    else
+                        charactersUI[0].choicesButtons[i].gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+
+            }
         }
 
         void DisplayDialog()
         {
-            if (speakerText.enabled = displayInterlocutor == true)
-                speakerText.text = currentNode.charac.Name;
+            if (soloCanvas)
+            {
+                if (charactersUI[0].speakerText.enabled = displayInterlocutor == true)
+                    charactersUI[0].speakerText.text = currentNode.charac.Name;
 
-            targetText.enabled = true;
-            nextButton.gameObject.SetActive(true);
+                charactersUI[0].contentText.text = choices[0];
+                charactersUI[0].contentText.enabled = true;
 
-            SpeakNode speakNode = currentNode as SpeakNode;
-            targetText.text = choices[0];
+                charactersUI[0].nextButton.gameObject.SetActive(true);
 
-            for (int i = 0; i < choicesButtons.Length; i++)
-                choicesButtons[i].gameObject.SetActive(false);
+                for (int i = 0; i < charactersUI[0].choicesButtons.Length; i++)
+                    charactersUI[0].choicesButtons[i].gameObject.SetActive(false);
+            }
+            else
+            {
+                
+            }
 
         }
 
@@ -190,7 +211,7 @@ namespace Narrator
             choices.Clear();
             for (int i = 0; i < currentNode.contents.Count; i++)
             {
-                choices.Add(currentNode.contents[i].texts[brain.CurrentLangageIndex]);
+                choices.Add(currentNode.contents[i].texts[brain.CurrentLanguageIndex]);
             }
         }
 

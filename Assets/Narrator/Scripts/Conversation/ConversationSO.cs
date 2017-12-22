@@ -159,7 +159,7 @@ namespace Narrator
                 for (int i = 0; i < Dialogs.Count; i++)
                 {
                     if (Dialogs[i] == _node)
-                        nodeIndex = i;
+                        nodeIndex = i + 1;
                 }
                
                 bool goBreak = true;
@@ -254,7 +254,6 @@ namespace Narrator
         private void Save()
         {
 #if UNITY_EDITOR
-            UnityEditor.EditorUtility.SetDirty(this);
             UnityEditor.AssetDatabase.SaveAssets();
 #endif
         }
