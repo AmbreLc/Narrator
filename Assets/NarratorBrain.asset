@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f44db6fc48e0b6f45b0bba3938ccde96, type: 3}
+  m_Name: NarratorBrain
+  m_EditorClassIdentifier: 
+  npcs:
+  - name: Georgette
+    isPlayable: 0
+    color: {r: 1, g: 0.6911765, b: 0.8764707, a: 1}
+  - name: "Le P\xE8re No\xEBl"
+    isPlayable: 0
+    color: {r: 1, g: 0.39705884, b: 0.39705884, a: 1}
+  - name: Ce type
+    isPlayable: 0
+    color: {r: 0.49264705, g: 0.49989185, b: 0.49989185, a: 1}
+  - name: L'inconnue
+    isPlayable: 0
+    color: {r: 0.7205882, g: 1, b: 0.74563897, a: 1}
+  - name: Le viking
+    isPlayable: 0
+    color: {r: 0.6911765, g: 1, b: 0.94888437, a: 1}
+  - name: "Ta m\xE8re"
+    isPlayable: 0
+    color: {r: 0.41911763, g: 0.54330623, b: 1, a: 1}
+  pcs:
+  - name: Roger
+    isPlayable: 1
+    color: {r: 0.8, g: 0.8, b: 1, a: 1}
+  parameters:
+    floatValues:
+      keys:
+      - Georgette
+      - NewFloat0
+      values:
+      - 50
+      - 0
+    intValues:
+      keys:
+      - NumberOfPotatoes
+      - NewInt0
+      - NewInt1
+      - NewInt2
+      values: 00000000000000000000000000000000
+    boolValues:
+      keys:
+      - BelieveInNoel
+      values: 00
+    names:
+    - Georgette
+    - BelieveInNoel
+    - NumberOfPotatoes
+    - NewInt0
+    - NewInt1
+    - NewFloat0
+    - NewInt2
+  languages:
+  - English

@@ -669,6 +669,7 @@ namespace Narrator
                 EditorGUILayout.LabelField("Player(s)");
                 playersListScrollVec = EditorGUILayout.BeginScrollView(playersListScrollVec, GUILayout.Width(leftWindow_Down.width -10), GUILayout.Height(leftWindow_Down.height * 0.4f - 5.0f));
                 int sup = -1;
+                
                 for (int i = 0; i < characters.Count; i++)
                 {
                     if (characters[i].IsPlayable == true)
@@ -687,12 +688,12 @@ namespace Narrator
                             if(name != characters[i].Name)
                             {
                                 characters[i].Name = name;
-                                brain.SaveCharacterList();
                             }
                         }
                         GUILayout.EndHorizontal();
                     }
                 }
+                
                 if (sup != -1)
                 {
                     if (EditorUtility.DisplayDialog("Character suppression", "Are you sure you want to delete " + characters[sup].Name + " ?\nAll his/her nodes will be deleted.", "Yes", "No"))
@@ -708,6 +709,7 @@ namespace Narrator
                 npcsListScrollVec = EditorGUILayout.BeginScrollView(npcsListScrollVec, GUILayout.Width(leftWindow_Down.width -10), GUILayout.Height(leftWindow_Down.height * 0.4f - 5.0f));
 
                 sup = -1;
+                
                 for (int i = 0; i < characters.Count; i++)
                 {
                     if (characters[i].IsPlayable == false)
@@ -726,6 +728,7 @@ namespace Narrator
                         GUILayout.EndHorizontal();
                     }
                 }
+                
                 if (sup != -1)
                 {
                     if (EditorUtility.DisplayDialog("Delete character ?", "Are you sure you want to delete " + characters[sup].Name + " ?\nAll his/her nodes will be deleted.", "Yes", "No"))

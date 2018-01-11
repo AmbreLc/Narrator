@@ -10,7 +10,6 @@ namespace Narrator
         [System.Serializable]
         struct CharacterUI
         {
-            public string characterName;
             public Text speakerText;
             public Text contentText;
             public Button nextButton;
@@ -40,8 +39,7 @@ namespace Narrator
         [SerializeField] private DisplayType displayType;
 
         [SerializeField] private bool displayInterlocutor = true;
-        [SerializeField] private CharacterUI[] charactersUI;
-        private bool soloCanvas;
+        [SerializeField] private CharacterUI charactersUI;
 
         private Node currentNode = new Node();
         List<string> choices = new List<string>();
@@ -73,8 +71,10 @@ namespace Narrator
 
         public void Init()
         {
-            Debug.Assert(charactersUI != null, "No UI to display conversation");
-            soloCanvas = charactersUI.Length == 1;
+            Debug.Assert(charactersUI.choicesButtons != null, "No button to display choices");
+            Debug.Assert(charactersUI.contentText != null, "No UI to display dialog text");
+            Debug.Assert(charactersUI.nextButton != null, "No UI to display next button");
+            Debug.Assert(charactersUI.speakerText != null, "No UI to display speaker text");
 
             isOver = false;
             currentNode = conversation.Entry;
@@ -131,47 +131,36 @@ namespace Narrator
 
         void DisplayChoices()
         {
-            if (soloCanvas)
-            {
-                charactersUI[0].contentText.enabled = false;
-                charactersUI[0].nextButton.gameObject.SetActive(false);
 
-                for (int i = 0; i < charactersUI[0].choicesButtons.Length; i++)
+            charactersUI.contentText.enabled = false;
+            charactersUI.nextButton.gameObject.SetActive(false);
+
+            for (int i = 0; i < charactersUI.choicesButtons.Length; i++)
+            {
+                if (i < choices.Count)
                 {
-                    if (i < choices.Count)
-                    {
-                        charactersUI[0].choicesButtons[i].gameObject.SetActive(true);
-                        charactersUI[0].choicesButtons[i].GetComponentInChildren<Text>().text = choices[i];
-                    }
-                    else
-                        charactersUI[0].choicesButtons[i].gameObject.SetActive(false);
+                    charactersUI.choicesButtons[i].gameObject.SetActive(true);
+                    charactersUI.choicesButtons[i].GetComponentInChildren<Text>().text = choices[i];
                 }
+                else
+                    charactersUI.choicesButtons[i].gameObject.SetActive(false);
             }
-            else
-            {
 
-            }
         }
 
         void DisplayDialog()
         {
-            if (soloCanvas)
-            {
-                if (charactersUI[0].speakerText.enabled = displayInterlocutor == true)
-                    charactersUI[0].speakerText.text = currentNode.charac.Name;
 
-                charactersUI[0].contentText.text = choices[0];
-                charactersUI[0].contentText.enabled = true;
+                if (charactersUI.speakerText.enabled = displayInterlocutor == true)
+                    charactersUI.speakerText.text = currentNode.charac.Name;
 
-                charactersUI[0].nextButton.gameObject.SetActive(true);
+                charactersUI.contentText.text = choices[0];
+                charactersUI.contentText.enabled = true;
 
-                for (int i = 0; i < charactersUI[0].choicesButtons.Length; i++)
-                    charactersUI[0].choicesButtons[i].gameObject.SetActive(false);
-            }
-            else
-            {
-                
-            }
+                charactersUI.nextButton.gameObject.SetActive(true);
+
+                for (int i = 0; i < charactersUI.choicesButtons.Length; i++)
+                    charactersUI.choicesButtons[i].gameObject.SetActive(false);
 
         }
 

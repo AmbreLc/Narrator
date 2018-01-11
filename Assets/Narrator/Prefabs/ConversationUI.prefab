@@ -824,12 +824,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92e1b80ba89597c4a830b289ae9dbf2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brain: {fileID: 11400000, guid: 81b17562def67b34aa639d7011617aa7, type: 2}
-  conversation: {fileID: 11400000, guid: 68e4debc124a55d4a8e06f0500a58c52, type: 2}
+  brain: {fileID: 11400000, guid: 5793304d56322eb4988350d85db58b42, type: 2}
+  conversation: {fileID: 11400000, guid: 56a63de2de7ad45459ff6f714b00b522, type: 2}
   displayType: 0
   displayInterlocutor: 1
   charactersUI:
-  - characterName: 
     speakerText: {fileID: 114252505226198376}
     contentText: {fileID: 114207977413197106}
     nextButton: {fileID: 114816740230599612}

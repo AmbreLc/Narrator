@@ -14,27 +14,27 @@ namespace Narrator
     [System.Serializable]
     public class NarratorBrainSO : ScriptableObject
     {
-        [SerializeField] private List<Character> npcs;
+        [SerializeField, HideInInspector] private List<Character> npcs;
         public List<Character> NPCs
         {
             get { return npcs; }
         }
 
-        [SerializeField] private List<Character> pcs;
+        [SerializeField, HideInInspector] private List<Character> pcs;
         public List<Character> PCs
         {
             get { return pcs; }
         }
 
 
-        [SerializeField] private Parameters parameters;
+        [SerializeField, HideInInspector] private Parameters parameters;
         public Parameters Parameters
         {
             get { return parameters; }
             set { parameters = value; }
         }
 
-        [SerializeField] private List<string> languages;
+        [SerializeField, HideInInspector] private List<string> languages;
         public List<string> Languages
         {
             get { return languages; }
@@ -59,7 +59,6 @@ namespace Narrator
                 PCs.Add(_character);
             else if (_character.IsPlayable == false && NPCs.Contains(_character) == false)
                 NPCs.Add(_character);
-            SaveCharacterList();
         }
         public void DeleteCharacter(Character _character)
         {
@@ -67,7 +66,6 @@ namespace Narrator
                 PCs.Remove(_character);
             else if (_character.IsPlayable == false && NPCs.Contains(_character) == true)
                 NPCs.Remove(_character);
-            SaveCharacterList();
         }
         public string[] GetCharactersNames()
         {
@@ -81,10 +79,6 @@ namespace Narrator
                     names[i] = NPCs[i - PCs.Count].Name;
             }
             return names;
-        }
-        public void SaveCharacterList()
-        {
-            CharactersEnum.Save(this);
         }
 
         public void CreateBrain()
