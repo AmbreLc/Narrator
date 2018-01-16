@@ -30,20 +30,20 @@ namespace Narrator
     [System.Serializable]
     public class ConversationSO : ScriptableObject
     {
-        [SerializeField] private string conversationName = "conversation";
+        [SerializeField, HideInInspector] private string conversationName = "conversation";
         public string ConversationName
         {
             get { return conversationName; }
             set { conversationName = value; /*EditorUtility.SetDirty(this);*/ }
         }
 
-        [SerializeField] private EntryNode entry;
+        [SerializeField, HideInInspector] private EntryNode entry;
         public EntryNode Entry
         {
             get { return entry; }
         }
 
-        [SerializeField] private List<Node> dialogs;
+        [SerializeField, HideInInspector] private List<Node> dialogs;
         public List<Node> Dialogs
         {
             get { return dialogs; }

@@ -1,26 +1,37 @@
-﻿#if UNITY_EDITOR
-using UnityEditor;
+﻿/*
+ * Narrator package : NarratorBrainSO
+ * 
+ * Infos : the brain centralizes all the data used in conversations (characters, parameters, langages).
+        * There is only 1 brain
+        * The brain is saved and loaded from a scriptable object
+        * If your Asset folder doesn't contains any brain, a brain is automatically generated when opening the Narrator window.
+ * 
+ */
+#if UNITY_EDITOR
 #endif
+
 using System.Collections.Generic;
 using UnityEngine;
 
 
 namespace Narrator
 {
-#if UNITY_EDITOR
-    [CreateAssetMenu(fileName = "ConversationBrain.asset", menuName = "Narrator/Conversation Brain")]
-#endif
-
     [System.Serializable]
     public class NarratorBrainSO : ScriptableObject
     {
         [SerializeField, HideInInspector] private List<Character> npcs;
+        /// <summary>
+        /// All non playable characters
+        /// </summary>
         public List<Character> NPCs
         {
             get { return npcs; }
         }
 
         [SerializeField, HideInInspector] private List<Character> pcs;
+        /// <summary>
+        /// All playable characters
+        /// </summary>
         public List<Character> PCs
         {
             get { return pcs; }
@@ -28,31 +39,40 @@ namespace Narrator
 
 
         [SerializeField, HideInInspector] private Parameters parameters;
+        /// <summary>
+        /// All parameters
+        /// </summary>
         public Parameters Parameters
         {
             get { return parameters; }
             set { parameters = value; }
         }
 
-        [SerializeField, HideInInspector] private List<string> languages;
-        public List<string> Languages
+        [SerializeField, HideInInspector] private List<string> langages;
+        /// <summary>
+        /// All langages
+        /// </summary>
+        public List<string> Langages
         {
-            get { return languages; }
+            get { return langages; }
         }
 
-        private int currentLanguageIndex;
-        public int CurrentLanguageIndex
+        private int currentLangageIndex;
+        public int CurrentLangageIndex
         {
-            set { currentLanguageIndex = value; }
-            get { return currentLanguageIndex; }
+            set { currentLangageIndex = value; }
+            get { return currentLangageIndex; }
         }
-        public string CurrentLanguage
+        public string CurrentLangage
         {
-            set { if (languages.Contains(value)) currentLanguageIndex = languages.IndexOf(value); else Debug.LogError(value + " langage doesn't exist"); }
-            get { return languages[currentLanguageIndex]; }
+            set { if (langages.Contains(value)) currentLangageIndex = langages.IndexOf(value); else Debug.LogError(value + " langage doesn't exist"); }
+            get { return langages[currentLangageIndex]; }
         }
 
-
+        /// <summary>
+        /// [EDITOR ONLY] 
+        /// </summary>
+        /// <param name="_character"></param>
         public void AddCharacter(Character _character)
         {
             if (_character.IsPlayable == true && PCs.Contains(_character) == false)
@@ -81,6 +101,9 @@ namespace Narrator
             return names;
         }
 
+        /// <summary>
+        /// [EDITOR ONLY]
+        /// </summary>
         public void CreateBrain()
         {
             npcs = new List<Character>();
@@ -90,9 +113,9 @@ namespace Narrator
 
             parameters = new Parameters();
 
-            languages = new List<string>();
-            languages.Add("English");
-            currentLanguageIndex = 0;
+            langages = new List<string>();
+            langages.Add("English");
+            currentLangageIndex = 0;
 
 #if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
@@ -100,6 +123,10 @@ namespace Narrator
 #endif
         }
 
+        /// <summary>
+        /// [IN GAME] Apply impact on parameters value
+        /// </summary>
+        /// <param name="_impact"></param>
         public void ApplyImpact(Impact _impact)
         {
             switch(_impact.type)
@@ -128,39 +155,56 @@ namespace Narrator
             }
         }
 
-        public void AddLanguage(string name = "New language")
+        /// <summary>
+        /// [EDITOR ONLY] Add new langage to the brain (the modification is saved)
+        /// </summary>
+        /// <param name="name"></param>
+        public void AddLangage(string name = "New language")
         {
-            languages.Add(name);
+            langages.Add(name);
             Save();
         }
 
-        public void DeleteCurrentLanguage()
+        /// <summary>
+        /// [EDITOR ONLY] Delete current langage (the modification is saved)
+        /// </summary>
+        public void DeleteCurrentLangage()
         {
-            Debug.Assert(languages.Contains(CurrentLanguage), "Error: brain trying to delete a non-existing language");
-            languages.Remove(CurrentLanguage);
+            Debug.Assert(langages.Contains(CurrentLangage), "Error: brain trying to delete a non-existing language");
+            langages.Remove(CurrentLangage);
             Save();
         }
 
-        public void RenameCurrentLanguage(string name)
+        /// <summary>
+        /// [EDITOR ONLY] Update current langage name (the modification is saved)
+        /// </summary>
+        /// <param name="name"></param> 
+        public void RenameCurrentLangage(string name)
         {
-            Debug.Assert(languages.Contains(CurrentLanguage), "Error: brain trying to rename a non-existing language");
-            languages.Remove(CurrentLanguage);
-            languages.Add(name);
+            Debug.Assert(langages.Contains(CurrentLangage), "Error: brain trying to rename a non-existing language");
+            langages.Remove(CurrentLangage);
+            langages.Add(name);
             Save();
         }
 
-        public string[] GetLanguagesArray()
+        /// <summary>
+        /// Return brain langages as a string array
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetLangagesArray()
         {
-            string[] returnArray = new string[languages.Count];
-            for (int i = 0; i < languages.Count; i++)
+            string[] returnArray = new string[langages.Count];
+            for (int i = 0; i < langages.Count; i++)
             {
-                returnArray[i] = languages[i];
+                returnArray[i] = langages[i];
             }
 
             return returnArray;
         }
 
-
+        /// <summary>
+        /// [EDITOR ONLY]
+        /// </summary>
         private void Save()
         {
 #if UNITY_EDITOR

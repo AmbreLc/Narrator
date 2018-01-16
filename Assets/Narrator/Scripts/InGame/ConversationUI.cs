@@ -200,7 +200,7 @@ namespace Narrator
             choices.Clear();
             for (int i = 0; i < currentNode.contents.Count; i++)
             {
-                choices.Add(currentNode.contents[i].texts[brain.CurrentLanguageIndex]);
+                choices.Add(currentNode.contents[i].texts[brain.CurrentLangageIndex]);
             }
         }
 

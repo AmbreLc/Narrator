@@ -104,7 +104,7 @@ namespace Narrator
 
         // Menu item : display the Narrator window from the menu button
         [MenuItem("Window/Narrator")]
-        static void ShowEditor()
+        public static void ShowEditor()
         {
             NarratorWindow editor = GetWindow<NarratorWindow>("Narrator");
             editor.stopWatch.Start();
@@ -545,11 +545,11 @@ namespace Narrator
         {
             convListScrollVect = EditorGUILayout.BeginScrollView(convListScrollVect, GUILayout.Width(leftWindow_Up.width - 10), GUILayout.Height(leftWindow_Up.height - 30));
 
-            brain.CurrentLanguageIndex = GUILayout.SelectionGrid(brain.CurrentLanguageIndex, brain.GetLanguagesArray(), 1);
+            brain.CurrentLangageIndex = GUILayout.SelectionGrid(brain.CurrentLangageIndex, brain.GetLangagesArray(), 1);
 
             if (GUILayout.Button("+", GUILayout.Width(leftWindow_Up.width - 20)))
             {
-                brain.AddLanguage();
+                brain.AddLangage();
             }            
 
             EditorGUILayout.EndScrollView();
@@ -601,28 +601,28 @@ namespace Narrator
 
         void RenameLanguageBegin()
         {
-            NarratorPopUp.Init(brain.CurrentLanguage, new Vector2(position.x, position.y) + mousePos);
+            NarratorPopUp.Init(brain.CurrentLangage, new Vector2(position.x, position.y) + mousePos);
         }
 
         void RenameLanguageEnd()
         {
-            brain.RenameCurrentLanguage(NarratorPopUp.GetContent());
+            brain.RenameCurrentLangage(NarratorPopUp.GetContent());
             NarratorPopUp.ClosePopUp();
         }
 
 
         void DeleteLangage()
         {
-            if (EditorUtility.DisplayDialog("Langage suppression", "Are you sure you want to delete " + brain.CurrentLanguage + " language ?\nAll the content in this language will be deleted.", "Yes", "No"))
+            if (EditorUtility.DisplayDialog("Langage suppression", "Are you sure you want to delete " + brain.CurrentLangage + " language ?\nAll the content in this language will be deleted.", "Yes", "No"))
             {
                 for (int i = 0; i < conversationList.Count; i++)
                 {
                     for (int d = 0; d < conversationList[i].Dialogs.Count; d++)
                     {
-                        conversationList[i].Dialogs[d].DeleteLanguageContent(brain.CurrentLanguageIndex);
+                        conversationList[i].Dialogs[d].DeleteLanguageContent(brain.CurrentLangageIndex);
                     }
                 }
-                brain.DeleteCurrentLanguage();
+                brain.DeleteCurrentLangage();
             }
 
         }
@@ -971,7 +971,7 @@ namespace Narrator
         void AddChoiceOnNode(object _nodeIndex)
         {
             Content content = new Content();
-            content.texts[brain.CurrentLanguageIndex] = "new choice";
+            content.texts[brain.CurrentLangageIndex] = "new choice";
             content.Initialize(brain);
 
             if ((int)_nodeIndex >= 0 && (int)_nodeIndex < currentConv.Dialogs.Count)
@@ -986,7 +986,7 @@ namespace Narrator
         /// <param name="_id"></param>
         void DrawSpeakNode(int _id)
         {
-            currentConv.Dialogs[_id - (int)windowID.dialogs].DrawWindow(brain.CurrentLanguageIndex);
+            currentConv.Dialogs[_id - (int)windowID.dialogs].DrawWindow(brain.CurrentLangageIndex);
             GUI.DragWindow();
         }
 

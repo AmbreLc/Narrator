@@ -515,7 +515,7 @@ Prefab:
         type: 2}
       propertyPath: conversation
       value: 
-      objectReference: {fileID: 11400000, guid: 56a63de2de7ad45459ff6f714b00b522,
+      objectReference: {fileID: 11400000, guid: 6f6841d4e0191514f947cb1b1038647f,
         type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8494d26c868145447bf834a2bd5abb13, type: 2}

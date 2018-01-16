@@ -29,7 +29,7 @@ namespace Narrator
         public void Initialize(NarratorBrainSO brain)
         {
             texts = new List<string>();
-            for (int i = 0; i < brain.Languages.Count; i++)
+            for (int i = 0; i < brain.Langages.Count; i++)
             {
                 texts.Add("What should I say ?");
             }
