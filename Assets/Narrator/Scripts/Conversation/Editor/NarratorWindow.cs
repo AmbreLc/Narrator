@@ -1,6 +1,6 @@
-﻿/* NARRATOR PACKAGE
- * NarratorWindow.cs
- * Created by Ambre Lacour, 05/10/2017
+﻿/* NARRATOR PACKAGE : NarratorWindow.cs
+ * Created by Ambre Lacour
+ * 
  * Editor window : Display & edit conversations
  * 
  * The Narrator window :
@@ -32,7 +32,7 @@ namespace Narrator
     public class NarratorWindow : EditorWindow
     {
 
-        // windowID: distinguish the different windows
+        // windowID: distinguish the different windows for display
         enum windowID
         {
             conversations,
@@ -48,9 +48,6 @@ namespace Narrator
         private float zoomValue = 1.0f;
         private Vector2 zoomPos = Vector2.one;
         private System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
-
-        private Vector2 scrollStartMousePos;
-
 
         // Init info
         bool hasBeenInit = false;

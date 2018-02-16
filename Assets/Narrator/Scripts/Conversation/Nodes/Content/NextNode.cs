@@ -1,12 +1,15 @@
-﻿/* NARRATOR PACKAGE
- * SpeakNode.cs
- * Created by Ambre Lacour, 12/10/2017
- * Editor script used by NarrationEditor in the NarratorWindow
+﻿/* NARRATOR PACKAGE : NextNode.cs
+ * Created by Ambre Lacour
  * 
- * A SpeakNode represents a line of dialogue in a conversatio, it:
- *      - is a dragable window in the Narrator Window  
- *      - is linked to other(s) SpeakNode(s) through its speak member (see the Speak class to learn more)
- *      
+ * Informations about the node another node is linking to
+ * 
+ * A NextNode :
+ *      - has an index, refering the Node index in the dialogs list of the conversation
+ *      - has a list of conditions that enable or disable the transition
+ *      - has a list of impact (consequences of the transition)
+ *    
+ * When a conversation tries to reach a NextNode in game, parameters are tested and modified according to its conditions and impacts
+ * The NextNode editing is made via the Link class in the narrator window.
  */
 
 #if UNITY_EDITOR
@@ -22,10 +25,25 @@ namespace Narrator
     [System.Serializable]
     public class NextNode
     {
+        /// <summary>
+        /// Index of the next dialog in the dialogs list of the conversation
+        /// </summary>
         public int index;
+
+        /// <summary>
+        /// List of conditions, next node will be reached only if they are all completed
+        /// </summary>
         public List<Condition> conditions;
+
+        /// <summary>
+        /// List of conditions, will modify parameters if next node is reached
+        /// </summary>
         public List<Impact> impacts;
 
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public NextNode()
         {
             conditions = new List<Condition>();

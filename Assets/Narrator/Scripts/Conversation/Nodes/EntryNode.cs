@@ -1,9 +1,9 @@
-﻿/* NARRATOR PACKAGE
- * EntryNode.cs
- * Created by Ambre Lacour, 22/10/2017
- * Editor script used by NarrationEditor in the NarratorWindow
+﻿/* NARRATOR PACKAGE : EntryNode.cs
+ * Created by Ambre Lacour
  * 
- * An EntryNode represents the begining of a conversation, it:
+ * An EntryNode represents the begining of a conversation
+ * 
+ * An EntryNode :
  *      - is a dragable window in the Narrator Window  
  *      - links to other(s) SpeakNode(s)
  *      
@@ -18,7 +18,9 @@ namespace Narrator
     [System.Serializable]
     public class EntryNode : Node
     {
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public void CreateEntryNode()
         {
             windowRect = new Rect(250.0f, 100.0f, 100.0f, 60.0f);

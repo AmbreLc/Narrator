@@ -1,14 +1,16 @@
 ﻿/*
- * Narrator package : NarratorBrainSO
+ * NARRATOR PACKAGE : NarratorBrainSO
+ * Created by Ambre Lacour
  * 
- * Infos : the brain centralizes all the data used in conversations (characters, parameters, langages).
-        * There is only 1 brain
-        * The brain is saved and loaded from a scriptable object
-        * If your Asset folder doesn't contains any brain, a brain is automatically generated when opening the Narrator window.
+ * Brain SO : Centralize all the data used in conversations (characters, parameters, langages).
+ * 
+ * NB :
+ *       - There is only 1 brain
+ *       - The brain is saved and loaded from a scriptable object
+ *       - If your Asset folder doesn't contains any brain, a brain is automatically generated when opening the Narrator window.
  * 
  */
-#if UNITY_EDITOR
-#endif
+
 
 using System.Collections.Generic;
 using UnityEngine;

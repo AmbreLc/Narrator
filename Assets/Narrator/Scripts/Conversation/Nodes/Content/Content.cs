@@ -1,12 +1,15 @@
-﻿/* NARRATOR PACKAGE
- * SpeakNode.cs
- * Created by Ambre Lacour, 12/10/2017
- * Editor script used by NarrationEditor in the NarratorWindow
+﻿/* NARRATOR PACKAGE: Content.cs
+ * Created by Ambre Lacour
  * 
- * A SpeakNode represents a line of dialogue in a conversatio, it:
- *      - is a dragable window in the Narrator Window  
- *      - is linked to other(s) SpeakNode(s) through its speak member (see the Speak class to learn more)
+ * A content is a dialog line in a node (a node can have more than 1 content)
+ * 
+ * A content :
+ *      - has a list of texts (its dialog line in all the langages)
+ *      - has an exit box to link to other nodes (in the narrator window)
+ *      - has a list of next nodes (the nodes it links to)
  *      
+ * You can create/edit/remove content on nodes in the narrator window
+ * 
  */
 
 #if UNITY_EDITOR
@@ -22,10 +25,31 @@ namespace Narrator
     [System.Serializable]
     public class Content
     {
+        //__________VARIABLES__________//
+
+        /// <summary>
+        /// Lines of dialogs in different langages
+        /// </summary>
         public List<string> texts;
+
+        /// <summary>
+        /// [EDITOR] Box to link the line to other nodes
+        /// </summary>
         public Rect exitBox;
+
+        /// <summary>
+        /// Nodes the content is linking to
+        /// </summary>
         public List<NextNode> nextNodes;
 
+
+
+        //___________METHODS__________//
+
+        /// <summary>
+        /// Create a new Content with default values
+        /// </summary>
+        /// <param name="brain"></param>
         public void Initialize(NarratorBrainSO brain)
         {
             texts = new List<string>();
@@ -38,12 +62,19 @@ namespace Narrator
             exitBox = new Rect();
         }
 
+        /// <summary>
+        /// Create a new Content with entry node values
+        /// </summary>
         public void InitializeForEntryNode()
         {
             nextNodes = new List<NextNode>();
             exitBox = new Rect();
         }
 
+        /// <summary>
+        /// Add a next node
+        /// </summary>
+        /// <param name="_index"></param>
         public void AddNextNode(int _index)
         {
             NextNode node = new NextNode();
@@ -52,6 +83,10 @@ namespace Narrator
             nextNodes.Add(node);
         }
 
+        /// <summary>
+        /// Remove a next node
+        /// </summary>
+        /// <param name="_index"></param>
         public void RemoveNextNode(int _index)
         {
             bool hasRemoved = false;

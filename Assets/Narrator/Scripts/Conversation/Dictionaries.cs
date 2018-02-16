@@ -1,4 +1,11 @@
-﻿using System;
+﻿/* NARRATOR PACKAGE : Dictionaries.cs
+ * Created by Ambre Lacour
+ * 
+ * Classes which enable parameters dictionaries serialization
+ * 
+ */
+
+using System;
 
 namespace Narrator
 {

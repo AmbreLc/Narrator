@@ -1,12 +1,16 @@
-﻿/* NARRATOR PACKAGE
- * SpeakNode.cs
- * Created by Ambre Lacour, 12/10/2017
- * Editor script used by NarrationEditor in the NarratorWindow
+﻿/* NARRATOR PACKAGE : Node.cs
+ * Created by Ambre Lacour
  * 
- * A SpeakNode represents a line of dialogue in a conversatio, it:
+ * A node in a conversation
+ * 
+ * A node :
  *      - is a dragable window in the Narrator Window  
- *      - is linked to other(s) SpeakNode(s) through its speak member (see the Speak class to learn more)
- *      
+ *      - has a type (entry, speak or choice node) according to its content
+ *      - has a list of contents (lines of dialog)
+ *      - has a character (who is speaking ?)
+ * 
+ * EntryNode and SpeakNode derived from Node and are used to build conversations trees
+ * 
  */
 
 #if UNITY_EDITOR
@@ -22,6 +26,9 @@ namespace Narrator
     [System.Serializable]
     public class Node
     {
+        /// <summary>
+        /// Node types
+        /// </summary>
         public enum Type
         {
             entry,
@@ -29,15 +36,43 @@ namespace Narrator
             choice
         };
 
+        /// <summary>
+        /// Node's type
+        /// </summary>
         [SerializeField] public Type type;
+
+        /// <summary>
+        /// [EDITOR ONLY] Rect: defines the node window in the conversation tree (in editor)
+        /// </summary>
         [SerializeField] [HideInInspector] public Rect windowRect;
+
+        /// <summary>
+        /// [EDITOR ONLY] The node window's position in the conversation tree (in editor) 
+        /// </summary>
         [SerializeField] [HideInInspector] public Vector2 position;
+
+        /// <summary>
+        /// Where other nodes link to the node
+        /// </summary>
         [SerializeField] [HideInInspector] public Rect entryBox;
+
+        /// <summary>
+        /// List of contents (lines of dialog)
+        /// </summary>
         [SerializeField] public List<Content> contents;
 
+        /// <summary>
+        /// Character of the node (who is speaking ?)
+        /// </summary>
         [SerializeField] public Character charac;
 
+
 #if UNITY_EDITOR
+
+        /// <summary>
+        /// [EDITOR ONLY] Called when a langage is deleted to delete all content refering to it
+        /// </summary>
+        /// <param name="_languageIndex"></param>
         public void DeleteLanguageContent(int _languageIndex)
         {
             for(int c = 0; c < contents.Count; c++)
@@ -45,6 +80,11 @@ namespace Narrator
                 contents[c].texts.RemoveAt(_languageIndex);
             }
         }
+
+        /// <summary>
+        /// [EDITOR ONLY] Draw the node and its content(s)
+        /// </summary>
+        /// <param name="_currentLangage"></param>
         public void DrawWindow(int _currentLangage)
         {
             if (contents.Count > 1)
@@ -60,6 +100,10 @@ namespace Narrator
                 }
             }
         }
+
+        /// <summary>
+        /// [EDITOR ONLY] Draw the entry and exit boxes of the node
+        /// </summary>
         public void DrawBox()
         {
             if (type != Type.entry)

@@ -1,6 +1,6 @@
-﻿/* NARRATOR PACKAGE
- * ConversationSO.cs
- * Created by Ambre Lacour, 12/10/2017
+﻿/* NARRATOR PACKAGE : ConversationSO.cs
+ * Created by Ambre Lacour
+ * 
  * Scriptable object : contains all datas of a conversation
  * 
  * A conversation:
@@ -8,8 +8,9 @@
  *      - contains a list of SpeakNode
  *      - belongs in a ConversationGroup
  *      
- * You can create a conversation asset in your hierarchy and fill it with the narrator
+ * You can create a conversation asset in your hierarchy and fill it with the narrator window
  */
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -21,37 +22,47 @@ using System.Collections.Generic;
 
 namespace Narrator
 {
-
-#if UNITY_EDITOR
-    // bugged because of SerializedDictionary not initialized when asset generated
-    //[CreateAssetMenu(fileName = "Conversation.asset", menuName = "Narrator/Conversation")]
-#endif
-
     [System.Serializable]
     public class ConversationSO : ScriptableObject
     {
         [SerializeField, HideInInspector] private string conversationName = "conversation";
+        /// <summary>
+        /// The conversation name
+        /// </summary>
         public string ConversationName
         {
             get { return conversationName; }
-            set { conversationName = value; /*EditorUtility.SetDirty(this);*/ }
+            set { conversationName = value; }
         }
 
         [SerializeField, HideInInspector] private EntryNode entry;
+        /// <summary>
+        /// The entry node of the conversation (no dialog, links to next nodes)
+        /// </summary>
         public EntryNode Entry
         {
             get { return entry; }
         }
 
         [SerializeField, HideInInspector] private List<Node> dialogs;
+        /// <summary>
+        /// Conversations nodes (each node includes one content or more) 
+        /// </summary>
         public List<Node> Dialogs
         {
             get { return dialogs; }
         }
 
+
+        /// <summary>
+        /// Get the number of dialog nodes in the conversation
+        /// </summary>
         public int GetDialogsCount { get { return Dialogs.Count; } }
 
-
+        /// <summary>
+        /// [EDITOR ONLY] Add a dialog node to the conversation
+        /// </summary>
+        /// <param name="_newNode"></param>
         public void AddDialogNode(Node _newNode)
         {
             dialogs.Add(_newNode);
@@ -64,40 +75,6 @@ namespace Narrator
         /// <param name="_end"></param>
         public void AddLinkToDialog(Node _start, Node _end, int _startIndex)
         {
-            // Obsolete
-            {
-                /*
-                int startIndex = -1;
-                int endIndex = -1;
-
-                // If the starting node is the entry one
-                if (_start.type == Node.Type.entry)
-                    startIndex = 0;
-
-                // if the start and/or end node(s) is/are speaknode(s)
-                foreach (Node node in dialogs)
-                {
-                    if (node.windowRect == _start.windowRect)
-                    {
-                        startIndex = node.ID;
-                    }
-                    else if (node.windowRect == _end.windowRect)
-                    {
-                        endIndex = node.ID;
-                    }
-                }
-
-                if (startIndex == -1 || endIndex == -1)
-                    Debug.LogError("Error : dialog missing in conversation, cannot link");
-                else if (startIndex == 0)
-                    entry.contents[_startIndex].AddNextNode(endIndex);
-                else
-                {
-                    dialogs[startIndex].contents[_startIndex].AddNextNode(endIndex);
-                }
-                */
-            }
-
             int startNodeIndex = -2;
             int endNodeIndex = -2;
 
@@ -123,6 +100,12 @@ namespace Narrator
         }
 
 
+        /// <summary>
+        ///  [EDITOR ONLY] Delete a link between two dialog nodes
+        /// </summary>
+        /// <param name="_start"></param>
+        /// <param name="_end"></param>
+        /// <param name="_contentIndex"></param>
         public void DeleteLinkFromDialog(Node _start, Node _end, int _contentIndex)
         {
             int startIndex = -2;
@@ -151,6 +134,10 @@ namespace Narrator
             Save();
         }
 
+        /// <summary>
+        /// [EDITOR ONLY] Delete a node in the conversation and all its links
+        /// </summary>
+        /// <param name="_node"></param>
         public void DeleteNodeFromDialog(Node _node)
         {
             if (Dialogs.Contains(_node))
@@ -214,33 +201,63 @@ namespace Narrator
         }
 
 
-
+        /// <summary>
+        /// [EDITOR ONLY] Add a condition on a link between two nodes
+        /// </summary>
+        /// <param name="_start"></param>
+        /// <param name="_contentIndex"></param>
+        /// <param name="_nextNodeIndex"></param>
+        /// <param name="_condition"></param>
         public void AddCondition(Node _start, int _contentIndex, int _nextNodeIndex, Condition _condition)
         {
             _start.contents[_contentIndex].nextNodes[_nextNodeIndex].conditions.Add(_condition);
             Save();
         }
 
+        /// <summary>
+        /// [EDITOR ONLY] Update a condition on a link between two nodes
+        /// </summary>
+        /// <param name="_start"></param>
+        /// <param name="_contentIndex"></param>
+        /// <param name="_nextNodeIndex"></param>
+        /// <param name="_conditionIndex"></param>
+        /// <param name="_condition"></param>
         public void UpdateCondition(Node _start, int _contentIndex, int _nextNodeIndex, int _conditionIndex, Condition _condition)
         {
             _start.contents[_contentIndex].nextNodes[_nextNodeIndex].conditions[_conditionIndex] = _condition;
             Save();
         }
 
-
+        /// <summary>
+        /// [EDITOR ONLY] Add an impact on a link between two nodes
+        /// </summary>
+        /// <param name="_start"></param>
+        /// <param name="_contentIndex"></param>
+        /// <param name="_nextNodeIndex"></param>
+        /// <param name="_impact"></param>
         public void AddImpact(Node _start, int _contentIndex, int _nextNodeIndex, Impact _impact)
         {
             _start.contents[_contentIndex].nextNodes[_nextNodeIndex].impacts.Add(_impact);
             Save();
         }
 
+        /// <summary>
+        /// [EDITOR ONLY] Update an impact on a link between two nodes
+        /// </summary>
+        /// <param name="_start"></param>
+        /// <param name="_contentIndex"></param>
+        /// <param name="_nextNodeIndex"></param>
+        /// <param name="_impactIndex"></param>
+        /// <param name="_impact"></param>
         public void UpdateImpact(Node _start, int _contentIndex, int _nextNodeIndex, int _impactIndex, Impact _impact)
         {
             _start.contents[_contentIndex].nextNodes[_nextNodeIndex].impacts[_impactIndex] = _impact;
             Save();
         }
 
-
+        /// <summary>
+        /// [EDITOR ONLY] Create a new ConversationSO in the Asset folder
+        /// </summary>
         public void CreateConversation()
         {
             conversationName = "New Conversation";
@@ -251,12 +268,16 @@ namespace Narrator
             Save();
         }
 
+        /// <summary>
+        /// [EDITOR ONLY] Save all conversations modifications
+        /// </summary>
         private void Save()
         {
 #if UNITY_EDITOR
             UnityEditor.AssetDatabase.SaveAssets();
 #endif
         }
+
 
         /// <summary>
         /// Return the next node of the conversation, or null if there is none
